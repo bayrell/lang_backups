@@ -1,0 +1,10 @@
+{
+  "description": "Bayrell RTL",
+  "files": [
+    "src/*",
+    "index.js"
+  ],
+  "main": "index.js",
+  "name": "bayrell_rtl",
+  "version": "0.1.12"
+}
