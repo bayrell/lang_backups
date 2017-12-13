@@ -1,0 +1,10 @@
+{
+  "description": "Bayrell Lang",
+  "files": [
+    "*.js",
+    "locale/*.js"
+  ],
+  "main": "index.js",
+  "name": "bayrell_lang",
+  "version": "0.1.21"
+}
