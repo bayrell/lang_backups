@@ -139,6 +139,9 @@ class BayrellTranslatorNodeJS extends BayrellTranslatorES6 {
 		var s = rtl.bind(BayrellTranslatorES6.prototype.op_declare_class, this)(code_tree, level);
 		var arr2 = rtl.explode(".", this._namespace);
 		var obj_name = [];
+		var namespace_arr = rtl.explode(".", this._namespace);
+		rtl.array_push(namespace_arr, str_name);
+		var full_name = rtl.implode(".", namespace_arr);
 		/*
 		rtl::array_shift(arr2);
 		while (rtl::count(arr2) > 0){
@@ -150,7 +153,7 @@ class BayrellTranslatorNodeJS extends BayrellTranslatorES6 {
 		
 		rtl::array_push(obj_name, str_name);
 		*/
-		s = s + this.out("module.exports = " + rtl.toString(str_name) + ";", level);
+		s = s + this.out("module.exports = " + rtl.toString(full_name) + ";", level);
 		/* s = s + this.out("module.exports." + name + " = " + name + ";", level); */
 		return s;
 	}

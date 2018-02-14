@@ -185,6 +185,14 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		this._declare_class_level = true;
 		this._class_name = name;
 		this._class_extend_name = code_tree["extend_name"];
+		var jarr = [];
+		var namespace_arr = rtl.explode(".", this._namespace);
+		for (var i = 0; i < rtl.count(namespace_arr); i++) {
+			var jname = namespace_arr[i];
+			rtl.array_push(jarr, jname);
+			var jstr = rtl.implode(".", jarr);
+			s = s + rtl.toString(this.out("if (typeof " + rtl.toString(jstr) + " == 'undefined') " + rtl.toString(jstr) + " = {};", level));
+		}
 		/* Считаем переменные которые должны быть объявлены в конструкторе */
 		this._constructor_declare_vars = [];
 		for (var i = 0; i < rtl.count(code_tree["childs"]); i++) {
@@ -195,10 +203,10 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		}
 		var extend_name = code_tree["extend_name"];
 		if (!rtl.exists(extend_name)) {
-			s = s + rtl.toString(this.out("class " + rtl.toString(name) + "{", level));
+			s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + " = class {", level));
 		}
 		else {
-			s = s + rtl.toString(this.out("class " + rtl.toString(name) + " extends " + rtl.toString(extend_name) + " {", level));
+			s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + " = class extends " + rtl.toString(extend_name) + "{", level));
 		}
 		if (this._namespace != "BayrellRtl" || this._class_name != "CoreObject") {
 			if (rtl.count(this._constructor_declare_vars) > 0) {
@@ -228,10 +236,10 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 			var code = code_tree["childs"][i];
 			if (code != null && code["op"] == BayrellCode.OP_DECLARE_VAR && code.flags.static) {
 				if (rtl.exists(code.value)) {
-					s = s + rtl.toString(this.out(name + "." + rtl.toString(code["str_name"]) + " = " + rtl.toString(this.run(code.value, level)) + rtl.toString(this._semicolon), level));
+					s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + "." + rtl.toString(code["str_name"]) + " = " + rtl.toString(this.run(code.value, level)) + rtl.toString(this._semicolon), level));
 				}
 				else {
-					s = s + rtl.toString(this.out(name + "." + rtl.toString(code["str_name"]) + " = null" + rtl.toString(this._semicolon), level));
+					s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + "." + rtl.toString(code["str_name"]) + " = null" + rtl.toString(this._semicolon), level));
 				}
 			}
 			i = i + 1;
@@ -475,7 +483,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 			if (rtl.key_exists(code, "str_name")) {
 				str_name = code["str_name"];
 				if (str_name == "self") {
-					str_name = this._class_name;
+					str_name = this._namespace + "." + rtl.toString(this._class_name);
 				}
 			}
 			if (str_name == "constructor" && this._func_name == "constructor") {
