@@ -27,6 +27,15 @@ class BayrellTranslatorNodeJS extends BayrellTranslatorES6 {
 		);
 		return runtime;
 	}
+	op_namespace(code_tree, level){
+		var name = code_tree["str_name"];
+		this._namespace = name;
+		var arr = rtl.explode(".", name);
+		if (arr[0] != "BayrellRtl") {
+			return this.out("var rtl = require('BayrellRtl').Lib.rtl;", level);
+		}
+		return "";
+	}
 	op_use(code_tree, level){
 		/* Инициируем переменные */
 		var _res = "";
@@ -45,22 +54,24 @@ class BayrellTranslatorNodeJS extends BayrellTranslatorES6 {
 			while (pos < sz_arr && pos < sz_arr2 && arr[pos] == arr2[pos]) {
 				pos++;
 			}
-			var module_path = "";
+			var js_path = "";
 			if (pos == sz_arr2) {
-				module_path = "./";
+				js_path = "./";
 			}
 			else {
 				for (var j = pos; j < sz_arr2; j++) {
-					module_path = module_path + "../";
+					js_path = js_path + "../";
 				}
 			}
 			var ch = "";
 			for (var j = pos; j < sz_arr; j++) {
-				module_path = module_path + rtl.toString(ch) + rtl.toString(arr[j]);
+				js_path = js_path + rtl.toString(ch) + rtl.toString(arr[j]);
 				ch = "/";
 			}
-			module_path = module_path + ".js";
-			_res = this.out("var " + rtl.toString(class_name) + " = require('" + rtl.toString(module_path) + "');", level);
+			var module_name = rtl.array_shift(arr);
+			var module_path = rtl.implode(".", arr);
+			js_path = js_path + ".js";
+			_res = this.out("var " + rtl.toString(class_name) + " = require('" + rtl.toString(js_path) + "');", level);
 		}
 		else {
 			var module_name = rtl.array_shift(arr);
@@ -128,14 +139,18 @@ class BayrellTranslatorNodeJS extends BayrellTranslatorES6 {
 		var s = rtl.bind(BayrellTranslatorES6.prototype.op_declare_class, this)(code_tree, level);
 		var arr2 = rtl.explode(".", this._namespace);
 		var obj_name = [];
-		rtl.array_shift(arr2);
-		while (rtl.count(arr2) > 0) {
-			var name = rtl.array_shift(arr2);
-			rtl.array_push(obj_name, name);
-			s = s + this.out("module.exports." + rtl.toString(rtl.implode(".", obj_name)) + " = {};", level);
+		/*
+		rtl::array_shift(arr2);
+		while (rtl::count(arr2) > 0){
+			string name = rtl::array_shift(arr2);
+			rtl::array_push(obj_name, name);
+			
+			s = s + this.out("module.exports." ~ rtl::implode(".", obj_name) ~ " = {};", level);
 		}
-		rtl.array_push(obj_name, str_name);
-		s = s + this.out("module.exports." + rtl.toString(rtl.implode(".", obj_name)) + " = " + rtl.toString(str_name) + ";", level);
+		
+		rtl::array_push(obj_name, str_name);
+		*/
+		s = s + this.out("module.exports = " + rtl.toString(str_name) + ";", level);
 		/* s = s + this.out("module.exports." + name + " = " + name + ";", level); */
 		return s;
 	}

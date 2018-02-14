@@ -200,7 +200,9 @@ class BayrellParserBay extends BayrellCommonParser {
 			var flags = this.readFlags();
 			/* TODO: тип может быть классом с указанием package и namespace. 
 			Нужно использовать функцию matchMultiName */
-			var tp = this.getToken();
+			var tp = this.matchName(
+				["<"]
+			).str_name;
 			if (this.isLookToken("&")) {
 				this.match("&");
 				flags["pointer"] = true;
@@ -259,7 +261,7 @@ class BayrellParserBay extends BayrellCommonParser {
 	 * Сканирует на наличие идентификатора
 	 */
 	matchName(arr1){
-		if (!rtl.exists(arr1)){arr1 = [".", "::", "[", "(", "<"];}
+		if (!rtl.exists(arr1)){arr1 = [".", "::", "[", "("];}
 		if (this._look_token_type == "string") {
 			var value = this.getToken();
 			return BayrellCode.op_string(value);
@@ -626,6 +628,10 @@ class BayrellParserBay extends BayrellCommonParser {
 		if (this.isLookToken("new")) {
 			this.match("new");
 			is_new = true;
+			code_tree = this.matchName(
+				["<", "("]
+			);
+			return BayrellCode.op_new(code_tree);
 		}
 		if (this.isLookToken("clone")) {
 			this.match("clone");
@@ -754,7 +760,9 @@ class BayrellParserBay extends BayrellCommonParser {
 			var extend_name = null;
 			if (this.isLookToken("extends")) {
 				this.match("extends");
-				extend_name = this.getToken();
+				extend_name = this.matchName(
+					["<"]
+				).str_name;
 			}
 			if (this.isLookToken("implements")) {
 				this.match("implements");
@@ -842,6 +850,20 @@ class BayrellParserBay extends BayrellCommonParser {
 			}
 			this._mathSemicolon = false;
 			return BayrellCode.op_if(expr, code_true, code_false, else_if);
+		}
+		else if (this.isLookToken("try")) {
+			this.match("try");
+			var code_try = this.matchOperatorsBlock();
+			this.match("catch");
+			this.match("(");
+			var tp = this.matchName(
+				["<"]
+			).str_name;
+			var name = this.matchIdentifier();
+			this.match(")");
+			var code_catch = this.matchOperatorsBlock();
+			this._mathSemicolon = false;
+			return BayrellCode.op_try_catch(code_try, code_catch, name);
 		}
 		else if (this.isLookToken("while")) {
 			this.match("while");

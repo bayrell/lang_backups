@@ -11,59 +11,59 @@ var m__BayrellTranslate = require('./BayrellTranslate.js');
 var BayrellTranslate = m__BayrellTranslate.BayrellTranslate;
 /* класс BayrellError */
 class BayrellError extends Error {
-    getClassName(){
-        return "bayrell_rtl.BayrellError";
-    }
-    static newInstance(message, code){
-        var e = new BayrellError(message, code);
-        return e;
-    }
-    static createError(name, params, file_name, line, pos){
-        if (!rtl.exists(params)){params = {};}
-        if (!rtl.exists(file_name)){file_name = "";}
-        if (!rtl.exists(line)){line = -1;}
-        if (!rtl.exists(pos)){pos = -1;}
-        var s;
-        var code = -1;
-        s = BayrellTranslate.translate(name, params);
-        if (s == "" && rtl.exists(name[1])) {
-            s = name[1];
-        }
-        if (rtl.is_array(name) && rtl.exists(name[2])) {
-            code = name[2];
-        }
-        if (line != -1 && pos != -1) {
-            s = s + " at Ln:" + rtl.toString(line) + ", Pos:" + rtl.toString(pos);
-        }
-        if (file_name != "") {
-            s = s + " in file:'" + rtl.toString(file_name) + "'";
-        }
-        s = s + ".";
-        var e = BayrellError.newInstance(s, code);
-        e.message = s;
-        e.code = code;
-        e.file_name = file_name;
-        e.line = line;
-        e.pos = pos;
-        /* e.message = e.buildMessage(); */
-        /*
+	getClassName(){
+		return "bayrell_rtl.BayrellError";
+	}
+	static newInstance(message, code){
+		var e = new BayrellError(message, code);
+		return e;
+	}
+	static createError(name, params, file_name, line, pos){
+		if (!rtl.exists(params)){params = {};}
+		if (!rtl.exists(file_name)){file_name = "";}
+		if (!rtl.exists(line)){line = -1;}
+		if (!rtl.exists(pos)){pos = -1;}
+		var s;
+		var code = -1;
+		s = BayrellTranslate.translate(name, params);
+		if (s == "" && rtl.exists(name[1])) {
+			s = name[1];
+		}
+		if (rtl.is_array(name) && rtl.exists(name[2])) {
+			code = name[2];
+		}
+		if (line != -1 && pos != -1) {
+			s = s + " at Ln:" + rtl.toString(line) + ", Pos:" + rtl.toString(pos);
+		}
+		if (file_name != "") {
+			s = s + " in file:'" + rtl.toString(file_name) + "'";
+		}
+		s = s + ".";
+		var e = BayrellError.newInstance(s, code);
+		e.message = s;
+		e.code = code;
+		e.file_name = file_name;
+		e.line = line;
+		e.pos = pos;
+		/* e.message = e.buildMessage(); */
+		/*
 		#switch
 		#case ifcode JAVASCRIPT then
 		//e.stack = arguments.callee.caller;
 		e.stack = new Error().stack;
 		#endswitch
 		*/
-        return e;
-    }
-    constructor(message, code){
-        super();
-        this.message = null;
-        this.code = null;
-        this.file_name = null;
-        this.line = null;
-        this.pos = null;
-    }
-    /*
+		return e;
+	}
+	constructor(message, code){
+		super();
+		this.message = null;
+		this.code = null;
+		this.file_name = null;
+		this.line = null;
+		this.pos = null;
+	}
+	/*
 	string getMessage(){
 		return this.message;
 	}
@@ -80,26 +80,26 @@ class BayrellError extends Error {
 		return this.pos;
 	}
 	*/
-    buildMessage(){
-        var s = this.orig_message;
-        if (this.line != null && this.pos != null) {
-            s = s + " at Ln:" + this.line + ", Pos:" + this.pos;
-        }
-        if (this.file_name != null) {
-            s = s + " in file:'" + this.file_name + "'";
-        }
-        s = s + ".";
-        return s;
-    }
-    getObject(){
-        return {
-            "code": this.getCode(),
-            "file": this.getFile(),
-            "line": this.getLine(),
-            "pos": this.getPos(),
-            "message": this.toString(),
-        };
-    }
+	buildMessage(){
+		var s = this.orig_message;
+		if (this.line != null && this.pos != null) {
+			s = s + " at Ln:" + this.line + ", Pos:" + this.pos;
+		}
+		if (this.file_name != null) {
+			s = s + " in file:'" + this.file_name + "'";
+		}
+		s = s + ".";
+		return s;
+	}
+	getObject(){
+		return {
+			"code": this.getCode(),
+			"file": this.getFile(),
+			"line": this.getLine(),
+			"pos": this.getPos(),
+			"message": this.toString(),
+		};
+	}
 }
 BayrellError.ERROR_OK = ["bayrell_rtl", "ERROR_OK", 1];
 BayrellError.ERROR_REQUEST_SUCCESS = ["bayrell_rtl", "ERROR_REQUEST_SUCCESS", 1];

@@ -363,6 +363,14 @@ class BayrellCode{
 			"arr": arr,
 		};
 	}
+	static op_try_catch(code_try, code_catch, name){
+		return {
+			"op": BayrellCode.OP_TRY_CATCH,
+			"try": code_try,
+			"catch": code_catch,
+			"name": name,
+		};
+	}
 	/* Объявление переменных */
 	static op_declare_var(name, type, value, flags){
 		return {
@@ -831,6 +839,7 @@ BayrellCode.OP_POST_DEC = "post_dec";
 BayrellCode.OP_INC = "inc";
 BayrellCode.OP_DEC = "dec";
 BayrellCode.OP_CONCAT = "concat";
+BayrellCode.OP_TRY_CATCH = "try_catch";
 BayrellCode.OP_CALL = "call";
 BayrellCode.OP_CALC = "calc";
 BayrellCode.OP_RET = "ret";

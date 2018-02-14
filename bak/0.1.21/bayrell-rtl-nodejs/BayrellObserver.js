@@ -12,34 +12,34 @@ var BayrellObservedObject = m__BayrellObservedObject.BayrellObservedObject;
 var m__rtl = require('./rtl.js');
 var rtl = m__rtl.rtl;
 class BayrellObserver extends BayrellObservedObject {
-    /*
+	/*
 	 * Возвращает название текущего класса
 	 * @return {string} 
 	 */
-    getClassName(){
-        return "bayrell_rtl.BayrellObserver";
-    }
-    /*
+	getClassName(){
+		return "bayrell_rtl.BayrellObserver";
+	}
+	/*
 	 * Возвращает название наблюдаемого класса объекта
 	 * @return {string} 
 	 */
-    getObesrvedObjectClassName(){
-        return "bayrell_rtl.BayrellObservedObject";
-    }
-    /*
+	getObesrvedObjectClassName(){
+		return "bayrell_rtl.BayrellObservedObject";
+	}
+	/*
 	 * Конструктор
 	 */
-    constructor(){
-        super();
-        this.data = null;
-        this.data = rtl.new_class(this.getObesrvedObjectClassName());
-        this.data.setObserver(this);
-    }
-    /*
+	constructor(){
+		super();
+		this.data = null;
+		this.data = rtl.new_class(this.getObesrvedObjectClassName());
+		this.data.setObserver(this);
+	}
+	/*
 	 * Событие возникает тогда, когда значение переменной было изменено
 	 * @param {string} var_name - название переменной
 	 * @param {var} newValue - новое значение
 	 */
-    onChange(var_name, newValue){
-    }
+	onChange(var_name, newValue){
+	}
 }

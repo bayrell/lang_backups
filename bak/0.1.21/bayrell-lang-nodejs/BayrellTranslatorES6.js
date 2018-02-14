@@ -148,18 +148,11 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		}
 		s = s + rtl.toString(this.out(name + "(" + rtl.toString(this.run(args, level)) + "){", level));
 		if (name == "constructor") {
-			if (this._class_extend_name != "" && rtl.exists(this._class_extend_name)) {
-				s = s + rtl.toString(this.out("super();", level + 1));
+			/*
+			if (this._class_extend_name != "" and rtl::exists(this._class_extend_name)){
+				s = s ~ this.out("super();", level+1);
 			}
-			for (var i = 0; i < rtl.count(this._constructor_declare_vars); i++) {
-				var code = this._constructor_declare_vars[i];
-				if (rtl.exists(code.value)) {
-					s = s + rtl.toString(this.out("this." + rtl.toString(code["str_name"]) + " = " + rtl.toString(this.run(code.value, level + 1)) + rtl.toString(this._semicolon), level + 1));
-				}
-				else {
-					s = s + rtl.toString(this.out("this." + rtl.toString(code["str_name"]) + " = null" + rtl.toString(this._semicolon), level + 1));
-				}
-			}
+			*/
 		}
 		var i = 0;
 		var sz = rtl.count(this._is_func_args_default_values);
@@ -206,6 +199,24 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		}
 		else {
 			s = s + rtl.toString(this.out("class " + rtl.toString(name) + " extends " + rtl.toString(extend_name) + " {", level));
+		}
+		if (this._namespace != "BayrellRtl" || this._class_name != "CoreObject") {
+			if (rtl.count(this._constructor_declare_vars) > 0) {
+				s = s + rtl.toString(this.out("_init(){", level + 1));
+				if (rtl.exists(this._class_extend_name)) {
+					s = s + rtl.toString(this.out("super._init();", level + 2));
+				}
+				for (var i = 0; i < rtl.count(this._constructor_declare_vars); i++) {
+					var code = this._constructor_declare_vars[i];
+					if (rtl.exists(code.value)) {
+						s = s + rtl.toString(this.out("this." + rtl.toString(code["str_name"]) + " = " + rtl.toString(this.run(code.value, level + 2)) + rtl.toString(this._semicolon), level + 2));
+					}
+					else {
+						s = s + rtl.toString(this.out("this." + rtl.toString(code["str_name"]) + " = null" + rtl.toString(this._semicolon), level + 2));
+					}
+				}
+				s = s + rtl.toString(this.out("}", level + 1));
+			}
 		}
 		s = s + rtl.toString(this.run(childs, level + 1));
 		s = s + rtl.toString(this.out("}", level));
@@ -301,6 +312,16 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 	}
 	op_continue(code_tree, level){
 		return this.out("continue" + rtl.toString(this._semicolon), level);
+	}
+	op_try_catch(code_tree, level){
+		var s = "";
+		s = s + rtl.toString(this.out("try{", level));
+		s = s + rtl.toString(this.run(code_tree["try"], level + 1));
+		s = s + rtl.toString(this.out("}", level));
+		s = s + rtl.toString(this.out("catch (" + rtl.toString(code_tree.name) + "){", level));
+		s = s + rtl.toString(this.run(code_tree["catch"], level + 1));
+		s = s + rtl.toString(this.out("}", level));
+		return s;
 	}
 	/* Операции */
 	op_calc(code_tree, level){
@@ -457,9 +478,17 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 					str_name = this._class_name;
 				}
 			}
+			if (str_name == "constructor" && this._func_name == "constructor") {
+				continue;
+			}
 			if (code["op"] == BayrellCode.OP_LOAD) {
-				if (str_name == "parent" && this._func_name != "constructor") {
-					str_name = "rtl.bind(" + rtl.toString(this._class_extend_name) + ".prototype." + rtl.toString(this._func_name) + ", this)";
+				if (str_name == "parent") {
+					if (this._func_name == "constructor") {
+						str_name = "super";
+					}
+					else {
+						str_name = "rtl.bind(" + rtl.toString(this._class_extend_name) + ".prototype." + rtl.toString(this._func_name) + ", this)";
+					}
 				}
 				else {
 					str_name = this.getName(str_name);

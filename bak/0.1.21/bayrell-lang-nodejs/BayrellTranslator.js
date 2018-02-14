@@ -255,6 +255,9 @@ class BayrellTranslator extends BayrellObject {
 	op_concat(code_tree, level){
 		return "";
 	}
+	op_try_catch(code_tree, level){
+		return "";
+	}
 	op_directive_ifcode(code_tree, level){
 		var runtime = this.createInterpreter();
 		var expr = code_tree["expr"];
@@ -435,6 +438,9 @@ class BayrellTranslator extends BayrellObject {
 		}
 		else if (is_json && op == BayrellCode.OP_BREAK) {
 			_res = this.op_break(code_tree, level);
+		}
+		else if (is_json && op == BayrellCode.OP_TRY_CATCH) {
+			_res = this.op_try_catch(code_tree, level);
 		}
 		else if (is_json && op == BayrellCode.OP_CONTINUE) {
 			_res = this.op_continue(code_tree, level);
