@@ -149,11 +149,9 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		}
 		s = s + rtl.toString(this.out(name + "(" + rtl.toString(this.run(args, level)) + "){", level));
 		if (name == "constructor") {
-			/*
-			if (this._class_extend_name != "" and rtl::exists(this._class_extend_name)){
-				s = s ~ this.out("super();", level+1);
+			if (this._class_extend_name != "" && rtl.exists(this._class_extend_name)) {
+				s = s + rtl.toString(this.out("super();", level + 1));
 			}
-			*/
 		}
 		var i = 0;
 		var sz = rtl.count(this._is_func_args_default_values);
