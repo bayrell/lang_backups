@@ -621,6 +621,7 @@ class BayrellParserBay extends BayrellCommonParser {
 		var is_link = false;
 		var is_new = false;
 		var is_clone = false;
+		var is_await = false;
 		if (this.isLookToken("&")) {
 			this.match("&");
 			is_link = true;
@@ -640,6 +641,10 @@ class BayrellParserBay extends BayrellCommonParser {
 		if (this.isLookToken("link")) {
 			this.match("link");
 			is_link = true;
+		}
+		if (this.isLookToken("await")) {
+			this.match("await");
+			is_await = true;
 		}
 		code_tree = this.matchTernaryOperator();
 		if (is_clone) {

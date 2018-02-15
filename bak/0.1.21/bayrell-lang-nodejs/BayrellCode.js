@@ -868,7 +868,7 @@ BayrellCode.OP_DIRECTIVE_IFCODE = "ifcode";
 BayrellCode.ReservedWords = ["for", "if", "while", "foreach", "class", "dict", "int", "int64", "int32", "float", "bool", "boolean", "func", "def", "function", "void", "export", "ifdef", "define", "use", "as", "import", "from", "async", "await", "call", "module", "namespace", "using", "try", "catch", "declare", "forward", "list", "array", "json", "var", "include", "require", "str", "static", "const", "default", "result"];
 BayrellCode.PHP_RTL_FUNC = ["var_dump", "ord", "trim", "strlen", "str_repeat", "strpos", "strfind", "strtoupper", "substr", "base64_encode", "base64_decode", "json_decode_ex", "json_encode", "explode", "implode", "preg_replace", "preg_match", "time", "microtime", "array_reverse", "array_sort", "array_pop", "array_push", "array_merge", "count", "is_array", "is_string", "is_json", "is_numeric", "gettype", "isset", "in_array", "rand", "mt_rand", "dirname", "file_get_contents", "file_put_contents", "file_exists", "filemtime", "mkdir", "strtolower", "key_exists"];
 BayrellCode.TYPES = ["int32", "uint32", "int64", "uint64", "double", "int", "string", "array", "var", "json", "pointer"];
-BayrellCode.FLAGS = ["export", "static", "const", "public", "private", "declare", "protected", "pointer"];
+BayrellCode.FLAGS = ["export", "static", "const", "public", "private", "declare", "protected", "pointer", "async"];
 BayrellCode.FLAGS_OBJ = {
 	"export": false,
 	"static": false,
@@ -878,6 +878,7 @@ BayrellCode.FLAGS_OBJ = {
 	"protected": false,
 	"declare": false,
 	"pointer": false,
+	"async": false,
 };
 BayrellCode._ident = "  ";
 BayrellCode._crlf = "\n";
