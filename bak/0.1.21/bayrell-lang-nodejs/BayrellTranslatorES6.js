@@ -17,7 +17,9 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 	}
 	constructor(){
 		super();
-		this._modules = {};
+		this._modules = {
+			"rtl": "BayrellRtl.Lib.rtl",
+		};
 		this._declare_class_level = false;
 		this._calc_level = 0;
 		this._is_func_args = 0;
@@ -78,7 +80,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		else {
 			var old_calc_level = this._calc_level;
 			this._calc_level = 0;
-			val = "rtl.toString(" + rtl.toString(this.run(code_tree.value, level)) + ")";
+			val = this.getName("rtl") + ".toString(" + rtl.toString(this.run(code_tree.value, level)) + ")";
 			this._calc_level = old_calc_level;
 		}
 		return this.out(s + " += " + rtl.toString(val) + rtl.toString(this._semicolon), level);
@@ -149,15 +151,17 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		}
 		s = s + rtl.toString(this.out(name + "(" + rtl.toString(this.run(args, level)) + "){", level));
 		if (name == "constructor") {
-			if (this._class_extend_name != "" && rtl.exists(this._class_extend_name)) {
-				s = s + rtl.toString(this.out("super();", level + 1));
+			/*
+			if (this._class_extend_name != "" and rtl::exists(this._class_extend_name)){
+				s = s ~ this.out("super();", level+1);
 			}
+			*/
 		}
 		var i = 0;
 		var sz = rtl.count(this._is_func_args_default_values);
 		while (i < sz) {
 			var obj = this._is_func_args_default_values[i];
-			s = s + rtl.toString(this.out("if (!rtl.exists(" + rtl.toString(obj.name) + ")){" + rtl.toString(obj.name) + " = " + rtl.toString(this.run(obj.value, level)) + ";}", level + 1));
+			s = s + rtl.toString(this.out("if (!" + rtl.toString(this.getName("rtl")) + ".exists(" + rtl.toString(obj.name) + ")){" + rtl.toString(obj.name) + " = " + rtl.toString(this.run(obj.value, level)) + ";}", level + 1));
 			i = i + 1;
 		}
 		this._is_func_args = 0;
@@ -192,6 +196,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		this._declare_class_level = true;
 		this._class_name = name;
 		this._class_extend_name = code_tree["extend_name"];
+		this._modules[this._class_name] = this._namespace + "." + rtl.toString(this._class_name);
 		var jarr = [];
 		var namespace_arr = rtl.explode(".", this._namespace);
 		for (var i = 0; i < rtl.count(namespace_arr); i++) {
@@ -505,7 +510,14 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 						str_name = "super";
 					}
 					else {
-						str_name = "rtl.bind(" + rtl.toString(this._class_extend_name) + ".prototype." + rtl.toString(this._func_name) + ", this)";
+						str_name = "super";
+						/*
+						str_name = "rtl.bind(" ~ 
+							this._class_extend_name ~ 
+							".prototype." ~ 
+							this._func_name ~ 
+							", this)"
+						;*/
 					}
 				}
 				else {
@@ -539,7 +551,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		return _res;
 	}
 	op_clone(code_tree, level){
-		return "rtl.clone(" + rtl.toString(this.run(code_tree["value"], level)) + ")";
+		return this.getName("rtl") + ".clone(" + rtl.toString(this.run(code_tree["value"], level)) + ")";
 	}
 	op_link(code_tree, level){
 		return this.run(code_tree["value"], level);
@@ -551,7 +563,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		var s = "";
 		this._calc_level = 1;
 		var name = this.run(code_tree["value"], level);
-		s += rtl.toString(this.out("if (" + rtl.toString(name) + " instanceof BayrellObject) {" + rtl.toString(name) + "._del();}", level));
+		s += rtl.toString(this.out("if (" + rtl.toString(name) + " instanceof " + rtl.toString(this.getName("CoreObject")) + ") {" + rtl.toString(name) + "._del();}", level));
 		this._calc_level = 0;
 		/*s ~= this.out("delete " ~ this.run(code_tree['value'], level) ~ ";", level);*/
 		return s;
@@ -571,7 +583,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		}
 		var old_calc_level = this._calc_level;
 		this._calc_level = 0;
-		var res = " + rtl.toString(" + rtl.toString(this.run(code_tree["value"], level)) + ")";
+		var res = " + " + rtl.toString(this.getName("rtl")) + ".toString(" + rtl.toString(this.run(code_tree["value"], level)) + ")";
 		this._calc_level = old_calc_level;
 		return res;
 	}
