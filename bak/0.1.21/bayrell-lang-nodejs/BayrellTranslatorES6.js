@@ -17,6 +17,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 	}
 	constructor(){
 		super();
+		this._modules = {};
 		this._declare_class_level = false;
 		this._calc_level = 0;
 		this._is_func_args = 0;
@@ -173,6 +174,14 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		this._func_name = old_func_name;
 		return s;
 	}
+	op_use(code_tree, level){
+		var lib_name = code_tree["str_name"];
+		var arr = rtl.explode(".", lib_name);
+		var sz_arr = rtl.count(arr);
+		var class_name = arr[sz_arr - 1];
+		this._modules[class_name] = lib_name;
+		return "";
+	}
 	op_declare_class(code_tree, level){
 		var s = "";
 		var name = code_tree["str_name"];
@@ -206,7 +215,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 			s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + " = class {", level));
 		}
 		else {
-			s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + " = class extends " + rtl.toString(extend_name) + "{", level));
+			s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + " = class extends " + rtl.toString(this.getName(extend_name)) + "{", level));
 		}
 		if (this._namespace != "BayrellRtl" || this._class_name != "CoreObject") {
 			if (rtl.count(this._constructor_declare_vars) > 0) {
@@ -463,6 +472,9 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		}
 		else if (name == "__CLASS_FULL_NAME__") {
 			return "eval(this.constructor.name).getClassName()";
+		}
+		else if (rtl.exists(this._modules[name])) {
+			return this._modules[name];
 		}
 		return name;
 	}

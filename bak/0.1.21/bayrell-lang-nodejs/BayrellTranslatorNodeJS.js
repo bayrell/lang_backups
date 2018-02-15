@@ -16,6 +16,16 @@ class BayrellTranslatorNodeJS extends BayrellTranslatorES6 {
 	getClassName(){
 		return "bayrell_lang.BayrellTranslatorNodeJS";
 	}
+	getName(name, escape){
+		if (!rtl.exists(escape)){escape = true;}
+		if (name == "__CLASS_NAME__") {
+			return "this.constructor.name";
+		}
+		else if (name == "__CLASS_FULL_NAME__") {
+			return "eval(this.constructor.name).getClassName()";
+		}
+		return name;
+	}
 	createInterpreter(){
 		var runtime = BayrellTranslatorES6.prototype.createInterpreter.call(this);
 		runtime.addData(
