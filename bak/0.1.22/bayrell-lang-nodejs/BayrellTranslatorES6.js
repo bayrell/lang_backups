@@ -240,7 +240,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 				s = s + rtl.toString(this.out("this.__implements__ = []" + rtl.toString(this._semicolon), level + 2));
 				for (var i = 0; i < rtl.count(implements_arr); i++) {
 					var implements_name = implements_arr[i];
-					s = s + rtl.toString(this.out("this.__implements__.push('" + rtl.toString(this.getName(implements_name)) + "')" + rtl.toString(this._semicolon), level + 2));
+					s = s + rtl.toString(this.out("this.__implements__.push(" + rtl.toString(this.getName(implements_name)) + ")" + rtl.toString(this._semicolon), level + 2));
 				}
 				s = s + rtl.toString(this.out("}", level + 1));
 			}
@@ -645,7 +645,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 			str_name = code_tree["right"]["str_name"];
 			str_name = this.getName(str_name);
 		}
-		return this.getName("rtl") + ".implements(" + rtl.toString(this.run(code_tree["left"], level)) + ", '" + rtl.toString(str_name) + "')";
+		return this.getName("rtl") + ".implements(" + rtl.toString(this.run(code_tree["left"], level)) + ", " + rtl.toString(str_name) + ")";
 	}
 }
 module.exports.BayrellTranslatorES6 = BayrellTranslatorES6;
