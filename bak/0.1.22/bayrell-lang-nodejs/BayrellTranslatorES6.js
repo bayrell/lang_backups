@@ -517,14 +517,12 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 						str_name = "super";
 					}
 					else {
-						str_name = "super";
-						/*
-						str_name = "rtl.bind(" ~ 
-							this._class_extend_name ~ 
-							".prototype." ~ 
-							this._func_name ~ 
-							", this)"
-						;*/
+						if (sz == 2 && arr[1]["op"] == "call") {
+							str_name = "super." + rtl.toString(this._func_name);
+						}
+						else {
+							str_name = "super";
+						}
 					}
 				}
 				else {
