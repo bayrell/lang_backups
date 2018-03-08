@@ -184,6 +184,45 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		this._modules[class_name] = lib_name;
 		return "";
 	}
+	op_declare_class_header(code_tree, level){
+		var name = code_tree["str_name"];
+		var extend_name = code_tree["extend_name"];
+		var s = "";
+		var jarr = [];
+		var namespace_arr = rtl.explode(".", this._namespace);
+		for (var i = 0; i < rtl.count(namespace_arr); i++) {
+			var jname = namespace_arr[i];
+			rtl.array_push(jarr, jname);
+			var jstr = rtl.implode(".", jarr);
+			s = s + rtl.toString(this.out("if (typeof " + rtl.toString(jstr) + " == 'undefined') " + rtl.toString(jstr) + " = {};", level));
+		}
+		if (!rtl.exists(extend_name)) {
+			s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + " = class {", level));
+		}
+		else {
+			s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + " = class extends " + rtl.toString(this.getName(extend_name)) + "{", level));
+		}
+		return s;
+	}
+	op_declare_class_footer(code_tree, level){
+		var name = code_tree["str_name"];
+		var s = "";
+		var i = 0;
+		var sz = rtl.count(code_tree["childs"]);
+		while (i < sz) {
+			var code = code_tree["childs"][i];
+			if (code != null && code["op"] == BayrellCode.OP_DECLARE_VAR && code.flags.static) {
+				if (rtl.exists(code.value)) {
+					s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + "." + rtl.toString(code["str_name"]) + " = " + rtl.toString(this.run(code.value, level)) + rtl.toString(this._semicolon), level));
+				}
+				else {
+					s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + "." + rtl.toString(code["str_name"]) + " = null" + rtl.toString(this._semicolon), level));
+				}
+			}
+			i = i + 1;
+		}
+		return s;
+	}
 	op_declare_class(code_tree, level){
 		var s = "";
 		var implements_arr = code_tree["implements_arr"];
@@ -198,14 +237,6 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		this._class_name = name;
 		this._class_extend_name = code_tree["extend_name"];
 		this._modules[this._class_name] = this._namespace + "." + rtl.toString(this._class_name);
-		var jarr = [];
-		var namespace_arr = rtl.explode(".", this._namespace);
-		for (var i = 0; i < rtl.count(namespace_arr); i++) {
-			var jname = namespace_arr[i];
-			rtl.array_push(jarr, jname);
-			var jstr = rtl.implode(".", jarr);
-			s = s + rtl.toString(this.out("if (typeof " + rtl.toString(jstr) + " == 'undefined') " + rtl.toString(jstr) + " = {};", level));
-		}
 		/* Считаем переменные которые должны быть объявлены в конструкторе */
 		this._constructor_declare_vars = [];
 		for (var i = 0; i < rtl.count(code_tree["childs"]); i++) {
@@ -214,13 +245,8 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 				rtl.array_push(this._constructor_declare_vars, code);
 			}
 		}
-		var extend_name = code_tree["extend_name"];
-		if (!rtl.exists(extend_name)) {
-			s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + " = class {", level));
-		}
-		else {
-			s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + " = class extends " + rtl.toString(this.getName(extend_name)) + "{", level));
-		}
+		s = s + rtl.toString(this.op_declare_class_header(code_tree, level));
+		/* Init function */
 		if (this._namespace != "BayrellRtl" || this._class_name != "CoreObject") {
 			if (rtl.count(this._constructor_declare_vars) > 0 || rtl.count(implements_arr) > 0) {
 				s = s + rtl.toString(this.out("_init(){", level + 1));
@@ -237,7 +263,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 					}
 				}
 				/* Добавляем интерфейсы */
-				s = s + rtl.toString(this.out("this.__implements__ = []" + rtl.toString(this._semicolon), level + 2));
+				s = s + rtl.toString(this.out("if (this.__implements__ == undefined){this.__implements__ = [];}", level + 2));
 				for (var i = 0; i < rtl.count(implements_arr); i++) {
 					var implements_name = implements_arr[i];
 					s = s + rtl.toString(this.out("this.__implements__.push(" + rtl.toString(this.getName(implements_name)) + ")" + rtl.toString(this._semicolon), level + 2));
@@ -249,20 +275,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		s = s + rtl.toString(this.out("}", level));
 		this._declare_class_level = old_declare_class_level;
 		/* Считаем статические переменные которые должны быть объявлены после класса */
-		var i = 0;
-		var sz = rtl.count(code_tree["childs"]);
-		while (i < sz) {
-			var code = code_tree["childs"][i];
-			if (code != null && code["op"] == BayrellCode.OP_DECLARE_VAR && code.flags.static) {
-				if (rtl.exists(code.value)) {
-					s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + "." + rtl.toString(code["str_name"]) + " = " + rtl.toString(this.run(code.value, level)) + rtl.toString(this._semicolon), level));
-				}
-				else {
-					s = s + rtl.toString(this.out(this._namespace + "." + rtl.toString(name) + "." + rtl.toString(code["str_name"]) + " = null" + rtl.toString(this._semicolon), level));
-				}
-			}
-			i = i + 1;
-		}
+		s = s + rtl.toString(this.op_declare_class_footer(code_tree, level));
 		this._class_name = old_class_name;
 		this._class_extend_name = old_class_extend_name;
 		this._constructor_declare_vars = old_constructor_declare_vars;

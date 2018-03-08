@@ -89,59 +89,35 @@ class BayrellTranslatorNodeJS extends BayrellTranslatorES6 {
 			_res = this.out("var " + rtl.toString(class_name) + " = require('" + rtl.toString(module_name) + "')." + rtl.toString(module_path) + ";", level);
 		}
 		return _res;
-		var m_bayrell_rtl = require("bayrell_rtl");
-		var lib_name = name;
-		var lib_path = lib_name;
-		var module_name = "";
-		/* Если используемый модуль находится в том же модуле, что и namespace */
-		if (lib_name[0] == ".") {
-			/* Получаем название модуля */
-			var arr = rtl.explode(".", this._namespace);
-			var module_name = rtl.attr(arr, 0, "");
-			var arr3 = [];
-			var arr2 = rtl.explode(".", lib_name);
-			arr2[0] = module_name;
-			/* Находим общее начало у массивов arr и arr2 */
-			var i = 0;
-			var j = 0;
-			var arr_sz = rtl.count(arr);
-			var arr2_sz = rtl.count(arr2);
-			while (i < arr_sz && j < arr2_sz && arr[i] == arr2[j]) {
-				i++;
-				j++;
-			}
-			/* Добавляем относительный путь */
-			if (i == arr_sz) {
-				rtl.array_push(arr3, ".");
-			}
-			else {
-				while (i < arr_sz) {
-					rtl.array_push(arr3, "..");
-					i++;
-				}
-			}
-			while (j < arr2_sz) {
-				rtl.array_push(arr3, arr2[j]);
-				j++;
-			}
-			lib_path = rtl.implode("/", arr3) + ".js";
+	}
+	op_declare_class_header(code_tree, level){
+		var name = code_tree["str_name"];
+		var extend_name = code_tree["extend_name"];
+		if (!rtl.exists(extend_name)) {
+			return this.out("class " + rtl.toString(name) + " {", level);
 		}
 		else {
-			/* Получаем название модуля */
-			var arr = rtl.explode(".", lib_name);
-			var module_name = rtl.attr(arr, 0, "");
-			lib_path = module_name;
+			return this.out("class " + rtl.toString(name) + " extends " + rtl.toString(this.getName(extend_name)) + " {", level);
 		}
-		_res = _res + rtl.toString(this.out("var " + rtl.toString(var_name) + " = require('" + rtl.toString(lib_path) + "');", level));
-		/* Добавляем загрузку модулей */
-		var sz = rtl.count(code_tree["arr"]);
-		if (sz > 0) {
-			for (var i = 0; i < sz; i++) {
-				var obj = code_tree.arr[i];
-				_res = _res + rtl.toString(this.out("var " + rtl.toString(obj) + " = " + rtl.toString(var_name) + "." + rtl.toString(obj) + ";", level));
+	}
+	op_declare_class_footer(code_tree, level){
+		var s = "";
+		var name = code_tree["str_name"];
+		var i = 0;
+		var sz = rtl.count(code_tree["childs"]);
+		while (i < sz) {
+			var code = code_tree["childs"][i];
+			if (code != null && code["op"] == BayrellCode.OP_DECLARE_VAR && code.flags.static) {
+				if (rtl.exists(code.value)) {
+					s = s + rtl.toString(this.out(name + "." + rtl.toString(code["str_name"]) + " = " + rtl.toString(this.run(code.value, level)) + rtl.toString(this._semicolon), level));
+				}
+				else {
+					s = s + rtl.toString(this.out(name + "." + rtl.toString(code["str_name"]) + " = null" + rtl.toString(this._semicolon), level));
+				}
 			}
+			i = i + 1;
 		}
-		return _res;
+		return s;
 	}
 	op_declare_class(code_tree, level){
 		var is_export = code_tree.flags.export;
@@ -163,7 +139,7 @@ class BayrellTranslatorNodeJS extends BayrellTranslatorES6 {
 		
 		rtl::array_push(obj_name, str_name);
 		*/
-		s = s + this.out("module.exports = " + rtl.toString(full_name) + ";", level);
+		s = s + this.out("module.exports = " + rtl.toString(str_name) + ";", level);
 		/* s = s + this.out("module.exports." + name + " = " + name + ";", level); */
 		return s;
 	}
