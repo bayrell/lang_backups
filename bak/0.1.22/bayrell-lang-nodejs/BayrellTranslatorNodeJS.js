@@ -21,6 +21,9 @@ class BayrellTranslatorNodeJS extends BayrellTranslatorES6 {
 		if (name == "__CLASS_NAME__") {
 			return "this.constructor.name";
 		}
+		else if (name == "self") {
+			return this._class_name;
+		}
 		else if (name == "__CLASS_FULL_NAME__") {
 			return "eval(this.constructor.name).getClassName()";
 		}
@@ -136,11 +139,10 @@ class BayrellTranslatorNodeJS extends BayrellTranslatorES6 {
 			
 			s = s + this.out("module.exports." ~ rtl::implode(".", obj_name) ~ " = {};", level);
 		}
-		
-		rtl::array_push(obj_name, str_name);
 		*/
+		/*rtl::array_push(obj_name, str_name);*/
 		s = s + this.out("module.exports = " + rtl.toString(str_name) + ";", level);
-		/* s = s + this.out("module.exports." + name + " = " + name + ";", level); */
+		/*s = s ~ this.out("module.exports = " ~ full_name ~ ";", level);*/
 		return s;
 	}
 }

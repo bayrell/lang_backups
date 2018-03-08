@@ -161,7 +161,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		var sz = rtl.count(this._is_func_args_default_values);
 		while (i < sz) {
 			var obj = this._is_func_args_default_values[i];
-			s = s + rtl.toString(this.out("if (!" + rtl.toString(this.getName("rtl")) + ".exists(" + rtl.toString(obj.name) + ")){" + rtl.toString(obj.name) + " = " + rtl.toString(this.run(obj.value, level)) + ";}", level + 1));
+			s = s + rtl.toString(this.out("if (" + rtl.toString(obj.name) + " == null || " + rtl.toString(obj.name) + " == undefined){" + rtl.toString(obj.name) + " = " + rtl.toString(this.run(obj.value, level)) + ";}", level + 1));
 			i = i + 1;
 		}
 		this._is_func_args = 0;
@@ -496,6 +496,9 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		else if (name == "__CLASS_FULL_NAME__") {
 			return "eval(this.constructor.name).getClassName()";
 		}
+		else if (name == "self") {
+			return this._namespace + "." + rtl.toString(this._class_name);
+		}
 		else if (rtl.exists(this._modules[name])) {
 			return this._modules[name];
 		}
@@ -518,7 +521,7 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 			if (rtl.key_exists(code, "str_name")) {
 				str_name = code["str_name"];
 				if (str_name == "self") {
-					str_name = this._namespace + "." + rtl.toString(this._class_name);
+					str_name = this.getName(str_name);
 				}
 			}
 			if (str_name == "constructor" && this._func_name == "constructor") {
@@ -601,7 +604,10 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		var s = "";
 		this._calc_level = 1;
 		var name = this.run(code_tree["value"], level);
-		s += rtl.toString(this.out("if (" + rtl.toString(name) + " instanceof " + rtl.toString(this.getName("CoreObject")) + ") {" + rtl.toString(name) + "._del();}", level));
+		s += rtl.toString(this.out("if (" + rtl.toString(name) + " != null && " + rtl.toString(name) + " != undefined && " + rtl.toString(name) + "._del != null && " + rtl.toString(name) + "._del != undefined) {" + rtl.toString(name) + "._del();}", level));
+		/*
+		s ~= this.out("if (" ~ name ~ " instanceof "~this.getName("CoreObject")~") {" ~ name ~ "._del();}", level);
+		*/
 		this._calc_level = 0;
 		/*s ~= this.out("delete " ~ this.run(code_tree['value'], level) ~ ";", level);*/
 		return s;
