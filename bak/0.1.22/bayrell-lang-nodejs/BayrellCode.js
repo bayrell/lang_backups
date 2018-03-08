@@ -95,6 +95,12 @@ class BayrellCode{
 			"str_name": str_name,
 		};
 	}
+	static op_dynamic_expression(arr){
+		return {
+			"op": BayrellCode.OP_DYNAMIC_EXPRESSION,
+			"arr": arr,
+		};
+	}
 	static op_clone(value){
 		return {
 			"op": BayrellCode.OP_CLONE,
@@ -849,6 +855,7 @@ BayrellCode.OP_INC = "inc";
 BayrellCode.OP_DEC = "dec";
 BayrellCode.OP_CONCAT = "concat";
 BayrellCode.OP_TRY_CATCH = "try_catch";
+BayrellCode.OP_DYNAMIC_EXPRESSION = "dynamic_expression";
 BayrellCode.OP_CALL = "call";
 BayrellCode.OP_CALC = "calc";
 BayrellCode.OP_RET = "ret";

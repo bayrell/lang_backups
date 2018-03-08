@@ -64,7 +64,7 @@ class BayrellTranslator extends BayrellObject {
 			var code_tree = childs[i];
 			if (rtl.in_array(
 				code_tree["op"],
-				[BayrellCode.OP_ARRAY, BayrellCode.OP_JSON]
+				[BayrellCode.OP_ARRAY, BayrellCode.OP_JSON, BayrellCode.OP_NEW, BayrellCode.OP_DYNAMIC_EXPRESSION]
 			)) {
 				return true;
 			}
@@ -259,6 +259,9 @@ class BayrellTranslator extends BayrellObject {
 		return "";
 	}
 	op_try_catch(code_tree, level){
+		return "";
+	}
+	op_dynamic_expression(code_tree, level){
 		return "";
 	}
 	op_directive_ifcode(code_tree, level){
@@ -459,6 +462,9 @@ class BayrellTranslator extends BayrellObject {
 		}
 		else if (is_json && op == BayrellCode.OP_DIRECTIVE_IFCODE) {
 			_res = this.op_directive_ifcode(code_tree, level);
+		}
+		else if (is_json && op == BayrellCode.OP_DYNAMIC_EXPRESSION) {
+			_res = this.op_dynamic_expression(code_tree, level);
 		}
 		else if (rtl.is_array(code_tree)) {
 			var i = 0;

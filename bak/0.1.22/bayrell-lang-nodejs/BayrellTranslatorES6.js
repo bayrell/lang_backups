@@ -555,6 +555,23 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		this._calc_level = this._calc_level - 1;
 		return _res;
 	}
+	op_dynamic_expression(code_tree, level){
+		this._calc_level = this._calc_level + 1;
+		var _res = [];
+		var arr = code_tree["arr"];
+		var sz = rtl.count(arr);
+		for (var i = 0; i < sz; i++) {
+			var code = arr[i];
+			if (i == 0) {
+				rtl.array_push(_res, this.run(code, level));
+			}
+			else {
+				rtl.array_push(_res, rtl.str_repeat(this._indent, level) + "." + rtl.toString(this.run(code, level)));
+			}
+		}
+		this._calc_level = this._calc_level - 1;
+		return rtl.implode(this._clr, _res);
+	}
 	op_clone(code_tree, level){
 		return this.getName("rtl") + ".clone(" + rtl.toString(this.run(code_tree["value"], level)) + ")";
 	}
@@ -562,6 +579,9 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		return this.run(code_tree["value"], level);
 	}
 	op_new(code_tree, level){
+		if (this._calc_level > 0) {
+			return "(new " + rtl.toString(this.run(code_tree["value"], level)) + ")";
+		}
 		return "new " + rtl.toString(this.run(code_tree["value"], level));
 	}
 	op_del(code_tree, level){

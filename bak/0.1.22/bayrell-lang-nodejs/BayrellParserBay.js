@@ -141,7 +141,7 @@ class BayrellParserBay extends BayrellCommonParser {
 			else if (res == -1) {
 				break;
 			}
-			rtl.array_push(childs, this.matchExpression());
+			rtl.array_push(childs, this.matchDynamicExpession());
 			match_comma = true;
 		}
 		return childs;
@@ -387,7 +387,7 @@ class BayrellParserBay extends BayrellCommonParser {
 	matchOpName(){
 		if (this.isLookToken("(")) {
 			this.match("(");
-			var result = this.matchTernaryOperator();
+			var result = this.matchExpression();
 			this.match(")");
 			return result;
 		}
@@ -662,6 +662,24 @@ class BayrellParserBay extends BayrellCommonParser {
 		return code_tree;
 	}
 	/*
+	 * Сканирует динамическое выражение
+	 */
+	matchDynamicExpession(){
+		var code_tree = this.matchExpression();
+		if (!this.isLookToken(".")) {
+			return code_tree;
+		}
+		var arr = [];
+		rtl.array_push(arr, code_tree);
+		while (this.isLookToken(".")) {
+			this.match(".");
+			code_tree = this.matchExpression();
+			rtl.array_push(arr, code_tree);
+		}
+		var res = BayrellCode.op_dynamic_expression(arr);
+		return res;
+	}
+	/*
 	 * Сканирует ifcode директиву
 	 */
 	matchPreprocessorIfCode(){
@@ -751,7 +769,7 @@ class BayrellParserBay extends BayrellCommonParser {
 			this.match("return");
 			var value = null;
 			if (!this.isLookToken(";")) {
-				value = this.matchExpression();
+				value = this.matchDynamicExpession();
 			}
 			return BayrellCode.op_ret(value);
 		}
@@ -836,7 +854,7 @@ class BayrellParserBay extends BayrellCommonParser {
 		else if (this.isLookToken("if")) {
 			this.match("if");
 			this.match("(");
-			var expr = this.matchExpression();
+			var expr = this.matchDynamicExpession();
 			this.match(")");
 			var code_true = this.matchOperatorsBlock();
 			var code_false = null;
@@ -879,7 +897,7 @@ class BayrellParserBay extends BayrellCommonParser {
 		else if (this.isLookToken("while")) {
 			this.match("while");
 			this.match("(");
-			var expr = this.matchExpression();
+			var expr = this.matchDynamicExpession();
 			this.match(")");
 			var code_loop = this.matchOperatorsBlock();
 			this._mathSemicolon = false;
@@ -895,7 +913,7 @@ class BayrellParserBay extends BayrellCommonParser {
 			if (this.isLookTokenIdentifier()) {
 				var second_name = this.matchIdentifier();
 				this.match("=");
-				var code_tree = this.matchExpression();
+				var code_tree = this.matchDynamicExpession();
 				loop_init = BayrellCode.op_declare_var(
 					second_name,
 					loop_name,
@@ -905,7 +923,7 @@ class BayrellParserBay extends BayrellCommonParser {
 			}
 			else if (this.isLookToken("=")) {
 				this.match("=");
-				var code_tree = this.matchExpression();
+				var code_tree = this.matchDynamicExpession();
 				loop_init = BayrellCode.op_assign(loop_name, code_tree);
 			}
 			else {
@@ -917,7 +935,7 @@ class BayrellParserBay extends BayrellCommonParser {
 				);
 			}
 			this.match(";");
-			var loop_expression = this.matchExpression();
+			var loop_expression = this.matchDynamicExpession();
 			this.match(";");
 			var loop_inc = this.matchOperator();
 			this.match(")");
@@ -952,7 +970,7 @@ class BayrellParserBay extends BayrellCommonParser {
 		}
 		else if (this.isLookToken("throw")) {
 			this.match("throw");
-			var expr = this.matchExpression();
+			var expr = this.matchDynamicExpession();
 			return BayrellCode.op_throw(expr);
 		}
 		else if (this.isLookToken("break")) {
@@ -994,7 +1012,7 @@ class BayrellParserBay extends BayrellCommonParser {
 		/* Match SubOperator */
 		if (this.isLookToken("=")) {
 			this.match("=");
-			var code_tree = this.matchExpression();
+			var code_tree = this.matchDynamicExpession();
 			return BayrellCode.op_assign(first_name, code_tree);
 		}
 		else if (this.isLookToken("++")) {
@@ -1007,17 +1025,17 @@ class BayrellParserBay extends BayrellCommonParser {
 		}
 		else if (this.isLookToken("+=")) {
 			this.match("+=");
-			var code_tree = this.matchExpression();
+			var code_tree = this.matchDynamicExpession();
 			return BayrellCode.op_assign_inc(first_name, code_tree);
 		}
 		else if (this.isLookToken("~=")) {
 			this.match("~=");
-			var code_tree = this.matchExpression();
+			var code_tree = this.matchDynamicExpession();
 			return BayrellCode.op_assign_concat(first_name, code_tree);
 		}
 		else if (this.isLookToken("-=")) {
 			this.match("-=");
-			var code_tree = this.matchExpression();
+			var code_tree = this.matchDynamicExpession();
 			return BayrellCode.op_assign_dec(first_name, code_tree);
 		}
 		else if (this.isLookToken(";")) {
@@ -1057,7 +1075,7 @@ class BayrellParserBay extends BayrellCommonParser {
 				}
 				else if (this.isLookToken("[")) {
 					this.match("[");
-					pos = this.matchExpression();
+					pos = this.matchDynamicExpession();
 					this.match("]");
 					rtl.array_push(arr, BayrellCode.op_load_arr(pos));
 				}
@@ -1082,7 +1100,7 @@ class BayrellParserBay extends BayrellCommonParser {
 			var code_tree = null;
 			if (this.isLookToken("=")) {
 				this.match("=");
-				code_tree = this.matchExpression();
+				code_tree = this.matchDynamicExpession();
 				rtl.array_push(arr, BayrellCode.op_declare_var(name, first_name, code_tree, flags));
 			}
 			else if (this.isLookToken("(")) {
@@ -1174,7 +1192,7 @@ class BayrellParserBay extends BayrellCommonParser {
 	parseExpression(content){
 		this.setContent(content);
 		this.reset();
-		this._code_tree = this.matchExpression();
+		this._code_tree = this.matchDynamicExpession();
 		return this._code_tree;
 	}
 }
