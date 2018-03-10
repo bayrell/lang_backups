@@ -389,11 +389,13 @@ class BayrellParserBay extends BayrellCommonParser {
 			this.match("(");
 			var result = this.matchExpression();
 			this.match(")");
-			return result;
+			return BayrellCode.op_calc(
+				[result]
+			);
 		}
-		else if (this.isLookToken("!")) {
-			this.match("!");
-			return BayrellCode.op_not(this.matchArithmetic());
+		else if (this.isLookToken("not")) {
+			this.match("not");
+			return BayrellCode.op_not(this.matchExpression());
 		}
 		else if (this.isLookToken("-")) {
 			this.match("-");

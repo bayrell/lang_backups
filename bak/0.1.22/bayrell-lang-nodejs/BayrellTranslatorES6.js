@@ -641,7 +641,10 @@ class BayrellTranslatorES6 extends BayrellTranslator {
 		return " % " + rtl.toString(this.run(code_tree["value"], level));
 	}
 	op_not(code_tree, level){
-		return "!" + rtl.toString(this.run(code_tree["value"], level));
+		this._calc_level++;
+		var s = this.run(code_tree["value"], level);
+		this._calc_level--;
+		return "!" + rtl.toString(s);
 	}
 	op_and(code_tree, level){
 		return " && " + rtl.toString(this.run(code_tree["value"], level));
