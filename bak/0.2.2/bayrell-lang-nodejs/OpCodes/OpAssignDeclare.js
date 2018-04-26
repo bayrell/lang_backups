@@ -34,10 +34,10 @@ class OpAssignDeclare extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpAssignDeclare){
-			this.tp = rtl.clone(obj.tp);
-			this.name = rtl.clone(obj.name);
-			this.value = rtl.clone(obj.value);
-			this.flags = rtl.clone(obj.flags);
+			this.tp = rtl._clone(obj.tp);
+			this.name = rtl._clone(obj.name);
+			this.value = rtl._clone(obj.value);
+			this.flags = rtl._clone(obj.flags);
 		}
 		super.assign(obj);
 	}

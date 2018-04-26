@@ -31,9 +31,9 @@ class ProviderDescription extends CoreObject{
 	 */
 	assign(obj){
 		if (obj instanceof Context){
-			this._provider_name = rtl.clone(obj._provider_name);
-			this._factory_name = rtl.clone(obj._factory_name);
-			this._type = rtl.clone(obj._type);
+			this._provider_name = rtl._clone(obj._provider_name);
+			this._factory_name = rtl._clone(obj._factory_name);
+			this._type = rtl._clone(obj._type);
 		}
 		super.assign(obj);
 	}

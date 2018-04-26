@@ -100,9 +100,9 @@ class OpIfElse extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpIf){
-			this.condition = rtl.clone(obj.condition);
-			this.expr = rtl.clone(obj.expr);
-			this.if_true = rtl.clone(obj.if_true);
+			this.condition = rtl._clone(obj.condition);
+			this.expr = rtl._clone(obj.expr);
+			this.if_true = rtl._clone(obj.if_true);
 		}
 		super.assign(obj);
 	}

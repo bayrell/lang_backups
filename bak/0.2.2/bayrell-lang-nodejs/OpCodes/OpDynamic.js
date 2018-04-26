@@ -94,7 +94,7 @@ class OpDynamic extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpDynamic){
-			this.value = rtl.clone(obj.value);
+			this.value = rtl._clone(obj.value);
 			this.name = obj.name;
 		}
 		super.assign(obj);

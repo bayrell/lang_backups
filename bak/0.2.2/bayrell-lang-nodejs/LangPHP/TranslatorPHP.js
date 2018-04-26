@@ -89,7 +89,7 @@ class TranslatorPHP extends CommonTranslator{
 	 */
 	assign(obj){
 		if (obj instanceof TranslatorES6){
-			this.modules = rtl.clone(obj.modules);
+			this.modules = rtl._clone(obj.modules);
 			this.current_namespace = obj.current_namespace;
 			this.current_class_name = obj.current_class_name;
 			this.current_function_name = obj.current_function_name;
@@ -246,7 +246,7 @@ class TranslatorPHP extends CommonTranslator{
 		else {
 			res += rtl.toString(this.getName("rtl"))+"::toString("+rtl.toString(this.s(this.translateRun(op_code.value1)))+")";
 		}
-		res += this.s("+");
+		res += this.s(" . ");
 		if (op_code.value2 instanceof OpConcat || op_code.value2 instanceof OpString){
 			res += this.o(this.s(this.translateRun(op_code.value2)), 13);
 		}
@@ -425,7 +425,11 @@ class TranslatorPHP extends CommonTranslator{
 	 */
 	OpCompare(op_code){
 		this.current_opcode_level = 10;
-		return this.op(op_code, op_code.condition, 10);
+		var condition = op_code.condition;
+		if (condition == "implements"){
+			condition = "instanceof";
+		}
+		return this.op(op_code, condition, 10);
 	}
 	/**
 	 * Operator call function
@@ -474,14 +478,18 @@ class TranslatorPHP extends CommonTranslator{
 	OpAssignDeclare(op_code){
 		var res = "";
 		var old_is_operation = this.beginOperation();
+		var ch_var = "$";
+		if (op_code.isFlag("const")){
+			ch_var = "";
+		}
 		if (op_code.value == null){
 			this.pushOneLine(true);
-			res = "$"+rtl.toString(op_code.name);
+			res = rtl.toString(ch_var)+rtl.toString(op_code.name);
 			this.popOneLine();
 		}
 		else {
 			this.pushOneLine(true);
-			res = "$"+rtl.toString(op_code.name)+" = ";
+			res = rtl.toString(ch_var)+rtl.toString(op_code.name)+" = ";
 			this.popOneLine();
 			this.current_opcode_level = 0;
 			this.levelInc();
@@ -506,7 +514,7 @@ class TranslatorPHP extends CommonTranslator{
 	OpClone(op_code){
 		var old_is_operation = this.beginOperation();
 		/* result */
-		var s = rtl.toString(this.getName("rtl"))+".clone(";
+		var s = "rtl::_clone(";
 		this.current_opcode_level = 0;
 		s += this.s(this.translateRun(op_code.value));
 		s += this.s(")");
@@ -727,7 +735,7 @@ class TranslatorPHP extends CommonTranslator{
 		if (op_code.name == "constructor"){
 			res += "__construct";
 		}
-		else if (op_code.name == "constructor"){
+		else if (op_code.name == "destructor"){
 			res += "__destruct";
 		}
 		else {
@@ -804,19 +812,21 @@ class TranslatorPHP extends CommonTranslator{
 			if (variable.flags != null){
 				this.beginOperation();
 				var s = "";
-				if (variable.isFlag("protected")){
-					s += "protected ";
+				if (variable.isFlag("const")){
+					s += "const ";
 				}
 				else {
-					s += "public ";
+					if (variable.isFlag("static")){
+						s += "static ";
+					}
+					if (variable.isFlag("protected")){
+						s += "protected ";
+					}
+					else {
+						s += "public ";
+					}
 				}
-				if (variable.isFlag("static")){
-					s += "static ";
-				}
-				s += "$"+rtl.toString(variable.name);
-				if (variable.value != null){
-					s += " = "+rtl.toString(this.translateRun(variable.value));
-				}
+				s += this.OpAssignDeclare(variable);
 				s += ";";
 				this.endOperation();
 				res += this.s(s);

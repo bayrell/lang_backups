@@ -94,7 +94,7 @@ class OpPreprocessorCase extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpValue2){
-			this.condition = rtl.clone(obj.condition);
+			this.condition = rtl._clone(obj.condition);
 			this.comment = obj.comment;
 		}
 		super.assign(obj);

@@ -28,13 +28,11 @@ class ContextInterface{
 	}
 	/**
 	 * Register module
+	 * @param string provider_name
+	 * @param string factory_name
+	 * @param int type
 	 */
-	registerProvider(name, class_name){
-	}
-	/**
-	 * Register module
-	 */
-	registerProviderFactory(name, class_name){
+	registerProvider(provider_name, factory_name, type){
 	}
 	/**
 	 * Returns global provider

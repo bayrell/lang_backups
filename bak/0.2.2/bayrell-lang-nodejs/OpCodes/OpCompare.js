@@ -104,9 +104,9 @@ class OpCompare extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpCompare){
-			this.condition = rtl.clone(obj.condition);
-			this.value1 = rtl.clone(obj.value1);
-			this.value2 = rtl.clone(obj.value2);
+			this.condition = rtl._clone(obj.condition);
+			this.value1 = rtl._clone(obj.value1);
+			this.value2 = rtl._clone(obj.value2);
 		}
 		super.assign(obj);
 	}

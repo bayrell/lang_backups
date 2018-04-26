@@ -31,14 +31,14 @@ class ModuleDescription{
 	 * @return string
 	 */
 	static getModuleName(){
-		return "BayrellLang";
+		return "BayrellParser";
 	}
 	/**
 	 * Returns module name
 	 * @return string
 	 */
 	static getModuleVersion(){
-		return "0.2.2";
+		return "0.1.0";
 	}
 	/**
 	 * Init context
@@ -57,14 +57,16 @@ class ModuleDescription{
 	 * @return Vector<string>
 	 */
 	static getInterfaces(){
-		return (new Vector()).push("BayrellRtl.Interfaces.ModuleDescriptionInterface");
+		var res = new Vector();
+		res.push("BayrellRtl.Interfaces.ModuleDescriptionInterface");
+		return res;
 	}
 	/**
 	 * Returns required modules
 	 * @return Map<string, string>
 	 */
 	static getRequiredModules(){
-		return (new Map()).set("BayrellRtl", ">=0.2 <1.0").set("BayrellParser", ">=0.1 <1.0");
+		return (new Map()).set("BayrellRtl", ">=0.2 <1.0");
 	}
 	/**
 	 * Returns required modules

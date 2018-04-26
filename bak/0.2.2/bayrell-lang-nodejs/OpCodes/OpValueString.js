@@ -84,7 +84,7 @@ class OpValueString extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpValue){
-			this.value = rtl.clone(obj.value);
+			this.value = rtl._clone(obj.value);
 		}
 		super.assign(obj);
 	}

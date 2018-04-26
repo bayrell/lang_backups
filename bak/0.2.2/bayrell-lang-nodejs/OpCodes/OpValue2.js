@@ -94,8 +94,8 @@ class OpValue2 extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpValue2){
-			this.value1 = rtl.clone(obj.value1);
-			this.value2 = rtl.clone(obj.value2);
+			this.value1 = rtl._clone(obj.value1);
+			this.value2 = rtl._clone(obj.value2);
 		}
 		super.assign(obj);
 	}

@@ -95,8 +95,8 @@ class OpTemplateIdentifier extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpTypeIdentifier){
-			this.t = rtl.clone(obj.t);
-			this.childs = rtl.clone(obj.childs);
+			this.t = rtl._clone(obj.t);
+			this.childs = rtl._clone(obj.childs);
 		}
 		super.assign(obj);
 	}

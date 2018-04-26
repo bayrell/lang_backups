@@ -43,10 +43,10 @@ class Context extends CoreObject{
 	 */
 	assign(obj){
 		if (obj instanceof Context){
-			this._modules = rtl.clone(obj._modules);
-			this._providers_classes_names = rtl.clone(obj._providers_classes_names);
-			this._providers_factory_classes_names = rtl.clone(obj._providers_factory_classes_names);
-			this._current_providers = rtl.clone(obj._current_providers);
+			this._modules = rtl._clone(obj._modules);
+			this._providers_classes_names = rtl._clone(obj._providers_classes_names);
+			this._providers_factory_classes_names = rtl._clone(obj._providers_factory_classes_names);
+			this._current_providers = rtl._clone(obj._current_providers);
 			this._locale = obj._locale;
 		}
 		super.assign(obj);
@@ -72,7 +72,7 @@ class Context extends CoreObject{
 	 * @return Vector<string>
 	 */
 	getModules(){
-		return rtl.clone(this._modules);
+		return rtl._clone(this._modules);
 	}
 	/**
 	 * Register module

@@ -89,7 +89,7 @@ class TranslatorES6 extends CommonTranslator{
 	 */
 	assign(obj){
 		if (obj instanceof TranslatorES6){
-			this.modules = rtl.clone(obj.modules);
+			this.modules = rtl._clone(obj.modules);
 			this.current_namespace = obj.current_namespace;
 			this.current_class_name = obj.current_class_name;
 			this.current_function_name = obj.current_function_name;
@@ -495,7 +495,7 @@ class TranslatorES6 extends CommonTranslator{
 	OpClone(op_code){
 		var old_is_operation = this.beginOperation();
 		/* result */
-		var s = rtl.toString(this.getName("rtl"))+".clone(";
+		var s = rtl.toString(this.getName("rtl"))+"._clone(";
 		this.current_opcode_level = 0;
 		s += this.s(this.translateRun(op_code.value));
 		s += this.s(")");

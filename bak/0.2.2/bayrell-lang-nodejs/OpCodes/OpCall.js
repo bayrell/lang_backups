@@ -95,8 +95,8 @@ class OpCall extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpChilds){
-			this.value = rtl.clone(obj.value);
-			this.args = rtl.clone(obj.args);
+			this.value = rtl._clone(obj.value);
+			this.args = rtl._clone(obj.args);
 		}
 		super.assign(obj);
 	}

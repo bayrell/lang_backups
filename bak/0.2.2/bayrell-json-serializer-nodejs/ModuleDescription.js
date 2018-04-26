@@ -21,6 +21,7 @@ var Map = require('BayrellRtl').Types.Map;
 var Vector = require('BayrellRtl').Types.Vector;
 var ContextInterface = require('BayrellRtl').Interfaces.ContextInterface;
 var ModuleDescriptionInterface = require('BayrellRtl').Interfaces.ModuleDescriptionInterface;
+var RuntimeConstant = require('BayrellRtl').RuntimeConstant;
 class ModuleDescription{
 	_init(){
 		if (this.__implements__ == undefined){this.__implements__ = [];}
@@ -31,14 +32,14 @@ class ModuleDescription{
 	 * @return string
 	 */
 	static getModuleName(){
-		return "BayrellLang";
+		return "BayrellJsonSerializer";
 	}
 	/**
 	 * Returns module name
 	 * @return string
 	 */
 	static getModuleVersion(){
-		return "0.2.2";
+		return "0.1";
 	}
 	/**
 	 * Init context
@@ -51,20 +52,24 @@ class ModuleDescription{
 	 * @param ContextInterface context
 	 */
 	static onRegister(context){
+		context.registerProvider("default.json", "BayrellJsonSerializer.JsonProviderFactory", RuntimeConstant.PROVIDER_TEMPORARY);
+		context.registerProvider("default.json.min", "BayrellJsonSerializer.JsonProviderMinFactory", RuntimeConstant.PROVIDER_TEMPORARY);
 	}
 	/**
 	 * Returns description interfaces of the current module
 	 * @return Vector<string>
 	 */
 	static getInterfaces(){
-		return (new Vector()).push("BayrellRtl.Interfaces.ModuleDescriptionInterface");
+		var res = new Vector();
+		res.push("BayrellRtl.Interfaces.ModuleDescriptionInterface");
+		return res;
 	}
 	/**
 	 * Returns required modules
 	 * @return Map<string, string>
 	 */
 	static getRequiredModules(){
-		return (new Map()).set("BayrellRtl", ">=0.2 <1.0").set("BayrellParser", ">=0.1 <1.0");
+		return (new Map()).set("BayrellRtl", ">=0.2 <1.0");
 	}
 	/**
 	 * Returns required modules

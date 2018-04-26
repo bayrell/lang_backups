@@ -95,7 +95,7 @@ class CommonTranslator extends ContextObject{
 	 */
 	assign(obj){
 		if (obj instanceof CommonTranslator){
-			this.one_lines = rtl.clone(obj.one_lines);
+			this.one_lines = rtl._clone(obj.one_lines);
 			this.is_operation = obj.is_operation;
 			this.current_opcode_level = obj.current_opcode_level;
 			this.indent_level = obj.indent_level;

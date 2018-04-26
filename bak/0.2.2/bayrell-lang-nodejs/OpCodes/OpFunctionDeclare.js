@@ -38,9 +38,9 @@ class OpFunctionDeclare extends BaseOpCode{
 		if (obj instanceof OpFunctionDeclare){
 			this.name = obj.name;
 			this.result_type = obj.result_type;
-			this.args = rtl.clone(obj.args);
-			this.childs = rtl.clone(obj.childs);
-			this.flags = rtl.clone(obj.flags);
+			this.args = rtl._clone(obj.args);
+			this.childs = rtl._clone(obj.childs);
+			this.flags = rtl._clone(obj.flags);
 		}
 		super.assign(obj);
 	}

@@ -16,6 +16,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
+var isBrowser=function(){return typeof window !== "undefined" && this === window;}
 class rtl{
 	_init(){
 	}
@@ -24,6 +26,8 @@ class rtl{
 	 * @return ContextInterface
 	 */
 	static globalContext(){
+		
+		if (isBrowser()) return BayrellRtl.Lib.rtl._global_context;
 		return rtl._global_context;
 	}
 	/**
@@ -31,7 +35,9 @@ class rtl{
 	 * @param ContextInterface context
 	 */
 	static setGlobalContext(context){
-		rtl._global_context = context;
+		
+		if (isBrowser()) BayrellRtl.Lib.rtl._global_context = context;
+		else rtl._global_context = context;
 		return context;
 	}
 	
@@ -121,6 +127,10 @@ class rtl{
 	 */
 	
 	static clone(val, context){
+		if (isBrowser()) return BayrellRtl.Lib.rtl._clone(val, context);
+		else return rtl._clone(val, context);
+	}
+	static _clone(val, context){
 		if (context == undefined)
 			context = null;
 		
@@ -152,15 +162,15 @@ class rtl{
 			if (val.nodeType && typeof val.cloneNode == "function"){
 				return val.cloneNode(true);
 			}
-			else if (typeof val.clone == "function"){
-				return val.clone( context );
+			else if (typeof val._clone == "function"){
+				return val._clone( context );
 			}
 			else if (val.prototype){
 				res = new item.constructor();
 			}
 			
 			for (var i in val){
-				res[i] = this.clone(val[i]);
+				res[i] = this._clone(val[i]);
 			}
 			
 			return res;

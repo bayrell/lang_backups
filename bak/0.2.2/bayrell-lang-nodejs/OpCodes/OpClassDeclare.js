@@ -39,12 +39,12 @@ class OpClassDeclare extends BaseOpCode{
 	assign(obj){
 		if (obj instanceof OpClassDeclare){
 			this.class_name = obj.class_name;
-			this.class_extends = rtl.clone(obj.class_extends);
-			this.class_implements = rtl.clone(obj.class_implements);
-			this.class_variables = rtl.clone(obj.class_variables);
-			this.class_functions = rtl.clone(obj.class_functions);
-			this.class_template = rtl.clone(obj.class_template);
-			this.flags = rtl.clone(obj.flags);
+			this.class_extends = rtl._clone(obj.class_extends);
+			this.class_implements = rtl._clone(obj.class_implements);
+			this.class_variables = rtl._clone(obj.class_variables);
+			this.class_functions = rtl._clone(obj.class_functions);
+			this.class_template = rtl._clone(obj.class_template);
+			this.flags = rtl._clone(obj.flags);
 		}
 		super.assign(obj);
 	}

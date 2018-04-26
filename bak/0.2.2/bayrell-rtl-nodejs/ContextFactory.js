@@ -34,7 +34,7 @@ class ContextFactory extends CoreObject{
 	 */
 	assign(obj){
 		if (obj instanceof ContextFactory){
-			this._modules = rtl.clone(obj._modules);
+			this._modules = rtl._clone(obj._modules);
 		}
 		super.assign(obj);
 	}

@@ -111,10 +111,10 @@ class OpTernary extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpTernary){
-			this.condition = rtl.clone(obj.condition);
-			this.expr = rtl.clone(obj.expr);
-			this.if_true = rtl.clone(obj.if_true);
-			this.if_false = rtl.clone(obj.if_false);
+			this.condition = rtl._clone(obj.condition);
+			this.expr = rtl._clone(obj.expr);
+			this.if_true = rtl._clone(obj.if_true);
+			this.if_false = rtl._clone(obj.if_false);
 		}
 		super.assign(obj);
 	}

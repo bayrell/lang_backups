@@ -58,12 +58,6 @@ class ModuleDescription{
 		return (new Vector()).push("BayrellRtl.Interfaces.ModuleDescriptionInterface");
 	}
 	/**
-	 * Called then module registed in context
-	 * @param ContextInterface context
-	 */
-	static onRegister(context){
-	}
-	/**
 	 * Returns required modules
 	 * @return Map<string, string>
 	 */

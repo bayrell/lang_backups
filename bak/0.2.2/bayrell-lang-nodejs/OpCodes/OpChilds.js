@@ -85,7 +85,7 @@ class OpChilds extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpChilds){
-			this.childs = rtl.clone(obj.childs);
+			this.childs = rtl._clone(obj.childs);
 		}
 		super.assign(obj);
 	}

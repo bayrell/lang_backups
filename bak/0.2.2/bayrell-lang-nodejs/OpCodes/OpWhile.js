@@ -94,8 +94,8 @@ class OpWhile extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpWhile){
-			this.condition = rtl.clone(obj.condition);
-			this.childs = rtl.clone(obj.childs);
+			this.condition = rtl._clone(obj.condition);
+			this.childs = rtl._clone(obj.childs);
 		}
 		super.assign(obj);
 	}

@@ -41,22 +41,14 @@ class CoreObject{
 	_init(){
 		this.__implements__ = new Array();
 	}
-	/**
-	 * Destructor
-	 */
-	destructor(){
-		this._is_destroyed = true;
-	}
 	
 	_del(){
-		if (!this._is_destroyed)
-			this.destructor();
 	}
 	/**
 	 * Clone current object
 	 * @return CoreObject
 	 */
-	clone(){
+	_clone(){
 		var res = rtl.newInstanceByObject(this);
 		/* Assign all values */
 		res.assign(this);

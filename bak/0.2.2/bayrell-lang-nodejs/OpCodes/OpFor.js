@@ -114,10 +114,10 @@ class OpFor extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpFor){
-			this.loop_condition = rtl.clone(obj.loop_condition);
-			this.loop_init = rtl.clone(obj.loop_init);
-			this.loop_inc = rtl.clone(obj.loop_inc);
-			this.childs = rtl.clone(obj.childs);
+			this.loop_condition = rtl._clone(obj.loop_condition);
+			this.loop_init = rtl._clone(obj.loop_init);
+			this.loop_inc = rtl._clone(obj.loop_inc);
+			this.childs = rtl._clone(obj.childs);
 		}
 		super.assign(obj);
 	}

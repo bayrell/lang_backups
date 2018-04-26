@@ -94,7 +94,7 @@ class OpStatic extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpStatic){
-			this.value = rtl.clone(obj.value);
+			this.value = rtl._clone(obj.value);
 			this.name = obj.name;
 		}
 		super.assign(obj);

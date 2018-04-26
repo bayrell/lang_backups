@@ -95,8 +95,8 @@ class OpTryCatch extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpTryCatch){
-			this.op_try = rtl.clone(obj.op_try);
-			this.childs = rtl.clone(obj.childs);
+			this.op_try = rtl._clone(obj.op_try);
+			this.childs = rtl._clone(obj.childs);
 		}
 		super.assign(obj);
 	}

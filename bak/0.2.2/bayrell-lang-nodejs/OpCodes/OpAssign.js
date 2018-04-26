@@ -104,8 +104,8 @@ class OpAssign extends BaseOpCode{
 	 */
 	assign(obj){
 		if (obj instanceof OpAssign){
-			this.ident = rtl.clone(obj.ident);
-			this.value = rtl.clone(obj.value);
+			this.ident = rtl._clone(obj.ident);
+			this.value = rtl._clone(obj.value);
 			this.op_name = obj.op_name;
 		}
 		super.assign(obj);
