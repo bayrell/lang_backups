@@ -1,0 +1,10 @@
+{
+  "description": "Bayrell Unit Testing",
+  "files": [
+    "Providers/*.js",
+    "*.js"
+  ],
+  "main": "index.js",
+  "name": "BayrellUnitTesting",
+  "version": "0.2.0"
+}
