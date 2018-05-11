@@ -17,8 +17,8 @@
  *  limitations under the License.
  */
 var rtl = require('BayrellRtl').Lib.rtl;
-var Vector = require('BayrellRtl').Types.Vector;
 var Map = require('BayrellRtl').Types.Map;
+var Vector = require('BayrellRtl').Types.Vector;
 var BaseOpCode = require('./BaseOpCode.js');
 var OpValue2 = require('./OpValue2.js');
 class OpArray extends OpValue2{

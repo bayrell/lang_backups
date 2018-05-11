@@ -17,10 +17,9 @@
  *  limitations under the License.
  */
 var rtl = require('BayrellRtl').Lib.rtl;
+var Map = require('BayrellRtl').Types.Map;
 var Vector = require('BayrellRtl').Types.Vector;
-var Map = require('BayrellRtl').Types.Map;
 var rs = require('BayrellRtl').Lib.rs;
-var Map = require('BayrellRtl').Types.Map;
 var CommonTranslator = require('../CommonTranslator.js');
 var BaseOpCode = require('../OpCodes/BaseOpCode.js');
 var OpAdd = require('../OpCodes/OpAdd.js');
@@ -697,6 +696,11 @@ class TranslatorPHP extends CommonTranslator{
 		var res = "namespace "+rtl.toString(rs.implode("\\", arr))+";";
 		if (this.current_namespace != "BayrellRtl"){
 			res += this.s("use BayrellRtl\\Lib\\rtl;");
+			res += this.s("use BayrellRtl\\Types\\Map;");
+			res += this.s("use BayrellRtl\\Types\\Vector;");
+			this.modules.set("rtl", "BayrellRtl.Lib.rtl");
+			this.modules.set("Map", "BayrellRtl.Types.Map");
+			this.modules.set("Vector", "BayrellRtl.Types.Vector");
 		}
 		return res;
 	}

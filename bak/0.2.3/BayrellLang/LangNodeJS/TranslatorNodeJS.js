@@ -17,8 +17,8 @@
  *  limitations under the License.
  */
 var rtl = require('BayrellRtl').Lib.rtl;
-var Vector = require('BayrellRtl').Types.Vector;
 var Map = require('BayrellRtl').Types.Map;
+var Vector = require('BayrellRtl').Types.Vector;
 var rs = require('BayrellRtl').Lib.rs;
 var re = require('BayrellRtl').Lib.re;
 var OpIdentifier = require('../OpCodes/OpIdentifier.js');
@@ -50,7 +50,7 @@ class TranslatorNodeJS extends TranslatorES6{
 		this.current_module_name = arr.item(0);
 		this.modules.clear();
 		if (this.current_module_name != "BayrellRtl"){
-			return "var rtl = require('BayrellRtl').Lib.rtl;"+rtl.toString(this.s("var Vector = require('BayrellRtl').Types.Vector;"))+rtl.toString(this.s("var Map = require('BayrellRtl').Types.Map;"));
+			return "var rtl = require('BayrellRtl').Lib.rtl;"+rtl.toString(this.s("var Map = require('BayrellRtl').Types.Map;"))+rtl.toString(this.s("var Vector = require('BayrellRtl').Types.Vector;"));
 		}
 		return "";
 	}

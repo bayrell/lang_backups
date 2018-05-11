@@ -17,9 +17,8 @@
  *  limitations under the License.
  */
 var rtl = require('BayrellRtl').Lib.rtl;
+var Map = require('BayrellRtl').Types.Map;
 var Vector = require('BayrellRtl').Types.Vector;
-var Map = require('BayrellRtl').Types.Map;
-var Map = require('BayrellRtl').Types.Map;
 var BaseOpCode = require('./BaseOpCode.js');
 class OpMap extends BaseOpCode{
 	_init(){

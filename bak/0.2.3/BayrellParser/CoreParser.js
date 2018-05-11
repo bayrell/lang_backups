@@ -17,8 +17,8 @@
  *  limitations under the License.
  */
 var rtl = require('BayrellRtl').Lib.rtl;
-var Vector = require('BayrellRtl').Types.Vector;
 var Map = require('BayrellRtl').Types.Map;
+var Vector = require('BayrellRtl').Types.Vector;
 var fs = require('BayrellRtl').Lib.fs;
 var re = require('BayrellRtl').Lib.re;
 var rs = require('BayrellRtl').Lib.rs;

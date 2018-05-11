@@ -17,8 +17,8 @@
  *  limitations under the License.
  */
 var rtl = require('BayrellRtl').Lib.rtl;
-var Vector = require('BayrellRtl').Types.Vector;
 var Map = require('BayrellRtl').Types.Map;
+var Vector = require('BayrellRtl').Types.Vector;
 var ParserError = require('./ParserError.js');
 var ParserConstant = require('../ParserConstant.js');
 class ParserExpected extends ParserError{

@@ -17,11 +17,10 @@
  *  limitations under the License.
  */
 var rtl = require('BayrellRtl').Lib.rtl;
-var Vector = require('BayrellRtl').Types.Vector;
 var Map = require('BayrellRtl').Types.Map;
+var Vector = require('BayrellRtl').Types.Vector;
 var ContextObject = require('BayrellRtl').ContextObject;
 var rs = require('BayrellRtl').Lib.rs;
-var Vector = require('BayrellRtl').Types.Vector;
 var BaseOpCode = require('./OpCodes/BaseOpCode.js');
 var OpAdd = require('./OpCodes/OpAdd.js');
 var OpAnd = require('./OpCodes/OpAnd.js');

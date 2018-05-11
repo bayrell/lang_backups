@@ -17,8 +17,8 @@
  *  limitations under the License.
  */
 var rtl = require('BayrellRtl').Lib.rtl;
-var Vector = require('BayrellRtl').Types.Vector;
 var Map = require('BayrellRtl').Types.Map;
+var Vector = require('BayrellRtl').Types.Vector;
 var AssertError = require('BayrellRtl').Exceptions.AssertError;
 var AssertInterface = require('BayrellRtl').Providers.AssertInterface;
 var ContextObject = require('BayrellRtl').ContextObject;
