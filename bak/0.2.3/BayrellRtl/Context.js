@@ -96,6 +96,7 @@ class Context extends CoreObject{
 				this.registerModule(module_name);
 			}
 		}
+		return this;
 	}
 	/**
 	 * Register module
@@ -108,6 +109,7 @@ class Context extends CoreObject{
 			var description = new ProviderDescription(provider_name, factory_name, type);
 			this._providers_names.set(provider_name, description);
 		}
+		return this;
 	}
 	/**
 	 * Init context

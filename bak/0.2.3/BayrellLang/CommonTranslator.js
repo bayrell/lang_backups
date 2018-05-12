@@ -80,7 +80,6 @@ var OpTryCatch = require('./OpCodes/OpTryCatch.js');
 var OpUse = require('./OpCodes/OpUse.js');
 var OpVector = require('./OpCodes/OpVector.js');
 var OpWhile = require('./OpCodes/OpWhile.js');
-var OutputContainer = require('./OutputContainer.js');
 class CommonTranslator extends ContextObject{
 	_init(){
 		super._init();

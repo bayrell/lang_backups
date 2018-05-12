@@ -43,9 +43,14 @@ class rs{
 	 */
 	
 	static substr(s, start, length){
-		if (isBrowser())
-			return BayrellRtl.Lib.rtl.toString(s).substring(start, start + length);
-		return rtl.toString(s).substring(start, start + length);
+		var _rtl = null; if (isBrowser()) _rtl = BayrellRtl.Lib.rtl; else _rtl = rtl;
+		var _rs = null; if (isBrowser()) _rs = BayrellRtl.Lib.rs; else _rs = rs;
+		var end = start + length;
+		if (length < 0){
+			var sz = _rs.strlen(s);
+			end = sz + length;
+		}
+		return _rtl.toString(s).substring(start, end);
 	}
 	/**
 	 * Returns char from string at the position

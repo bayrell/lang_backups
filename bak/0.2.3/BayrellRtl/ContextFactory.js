@@ -69,6 +69,7 @@ class ContextFactory extends CoreObject{
 	 */
 	registerModule(module_name){
 		this._modules.push(module_name);
+		return this;
 	}
 }
 module.exports = ContextFactory;

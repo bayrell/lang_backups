@@ -702,7 +702,7 @@ class TranslatorES6 extends CommonTranslator{
 		var arr = rs.explode(".", this.current_namespace);
 		this.current_module_name = arr.item(0);
 		this.modules.clear();
-		if (this.current_namespace != "BayrellRtl"){
+		if (this.current_module_name != "BayrellRtl"){
 			this.modules.set("rtl", "BayrellRtl.Lib.rtl");
 			this.modules.set("Map", "BayrellRtl.Types.Map");
 			this.modules.set("Vector", "BayrellRtl.Types.Vector");

@@ -319,6 +319,9 @@ class TranslatorPHP extends CommonTranslator{
 		var semicolon = (this.is_operation) ? ("") : (";");
 		var res = rtl.toString(this.o(this.translateRun(op_code.value), 17))+"--";
 		this.current_opcode_level = 17;
+		if (!this.is_operation){
+			res += ";";
+		}
 		return res;
 	}
 	/**
@@ -328,6 +331,9 @@ class TranslatorPHP extends CommonTranslator{
 		var semicolon = (this.is_operation) ? ("") : (";");
 		var res = rtl.toString(this.o(this.translateRun(op_code.value), 17))+"++";
 		this.current_opcode_level = 17;
+		if (!this.is_operation){
+			res += ";";
+		}
 		return res;
 	}
 	/**
@@ -343,6 +349,9 @@ class TranslatorPHP extends CommonTranslator{
 		var semicolon = (this.is_operation) ? ("") : (";");
 		var res = "--"+rtl.toString(this.o(this.translateRun(op_code.value), 16));
 		this.current_opcode_level = 16;
+		if (!this.is_operation){
+			res += ";";
+		}
 		return res;
 	}
 	/**
@@ -352,6 +361,9 @@ class TranslatorPHP extends CommonTranslator{
 		var semicolon = (this.is_operation) ? ("") : (";");
 		var res = "++"+rtl.toString(this.o(this.translateRun(op_code.value), 16));
 		this.current_opcode_level = 16;
+		if (!this.is_operation){
+			res += ";";
+		}
 		return res;
 	}
 	/**
@@ -694,7 +706,7 @@ class TranslatorPHP extends CommonTranslator{
 		this.current_module_name = arr.item(0);
 		this.modules.clear();
 		var res = "namespace "+rtl.toString(rs.implode("\\", arr))+";";
-		if (this.current_namespace != "BayrellRtl"){
+		if (this.current_module_name != "BayrellRtl"){
 			res += this.s("use BayrellRtl\\Lib\\rtl;");
 			res += this.s("use BayrellRtl\\Types\\Map;");
 			res += this.s("use BayrellRtl\\Types\\Vector;");

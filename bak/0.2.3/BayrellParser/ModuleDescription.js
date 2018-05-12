@@ -19,8 +19,6 @@
 var rtl = require('BayrellRtl').Lib.rtl;
 var Map = require('BayrellRtl').Types.Map;
 var Vector = require('BayrellRtl').Types.Vector;
-var Map = require('BayrellRtl').Types.Map;
-var Vector = require('BayrellRtl').Types.Vector;
 var ContextInterface = require('BayrellRtl').Interfaces.ContextInterface;
 var ModuleDescriptionInterface = require('BayrellRtl').Interfaces.ModuleDescriptionInterface;
 class ModuleDescription{

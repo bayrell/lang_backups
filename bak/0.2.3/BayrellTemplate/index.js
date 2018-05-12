@@ -36,8 +36,12 @@ module.exports = {
 	'ModuleDescription': require("./ModuleDescription.js"),
 	'TemplateParser': require("./TemplateParser.js"),
 	'TranslatorES6': require("./TranslatorES6.js"),
+	'TranslatorES6Factory': require("./TranslatorES6Factory.js"),
 	'TranslatorNodeJS': require("./TranslatorNodeJS.js"),
+	'TranslatorNodeJSFactory': require("./TranslatorNodeJSFactory.js"),
 	'TranslatorPHP': require("./TranslatorPHP.js"),
+	'TranslatorPHPFactory': require("./TranslatorPHPFactory.js"),
+	'Utils': require("./Utils.js"),
 };
 
 
