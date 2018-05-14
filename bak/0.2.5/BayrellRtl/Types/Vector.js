@@ -223,5 +223,16 @@ BayrellRtl.Types.Vector = class extends Array{
 			return default_value;
 		return this[this.length - 1];
 	}
+	
+	
+	
+	/**
+	 * Remove value
+	 */
+	removeValue(value){
+		var index = this.indexOf(value);
+		if (index != -1)
+			this.remove(index, 1);
+	}
 }
 module.exports = BayrellRtl.Types.Vector;

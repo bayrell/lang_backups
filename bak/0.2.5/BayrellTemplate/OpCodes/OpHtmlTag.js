@@ -29,18 +29,7 @@ class OpHtmlTag extends BaseOpCode{
 		this.tag_name = "";
 		this.attributes = null;
 		this.childs = null;
-	}
-	/**
-	 * Assign all data from other object
-	 * @param CoreObject obj
-	 */
-	assign(obj){
-		if (obj instanceof OpHtmlDeclare){
-			this.tag_name = obj.tag_name;
-			this.attributes = rtl._clone(obj.attributes);
-			this.childs = rtl._clone(obj.childs);
-		}
-		super.assign(obj);
+		this.is_plain = false;
 	}
 	/**
 	 * Returns classname of the object
@@ -71,6 +60,7 @@ class OpHtmlTag extends BaseOpCode{
 		names.push("tag_name");
 		names.push("attributes");
 		names.push("childs");
+		names.push("is_plain");
 	}
 	/**
 	 * Returns instance of the value by variable name
@@ -88,6 +78,9 @@ class OpHtmlTag extends BaseOpCode{
 		else if (variable_name == "childs"){
 			return this.childs;
 		}
+		else if (variable_name == "is_plain"){
+			return this.is_plain;
+		}
 		return super.takeValue(variable_name, default_value);
 	}
 	/**
@@ -104,6 +97,9 @@ class OpHtmlTag extends BaseOpCode{
 		}
 		else if (variable_name == "childs"){
 			this.childs = value;
+		}
+		else if (variable_name == "is_plain"){
+			this.is_plain = value;
 		}
 		else {
 			super.assignValue(variable_name, value);

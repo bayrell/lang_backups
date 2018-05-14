@@ -36,13 +36,19 @@ class HtmlToken extends ParserToken{
 		return new HtmlToken(this.context(), this.parser);
 	}
 	/**
+	 * Returns special tokens
+	 */
+	static getSpecialTokens(){
+		return (new Vector()).push("@component").push("@declare").push("@render").push("@while").push("@call").push("@for").push("@if").push("@else").push("@elseif").push("@set").push("@{").push("<!--").push("-->").push("<!").push("</").push("/>");
+	}
+	/**
 	 * Constructor
 	 */
 	constructor(context, parser){
 		if (context == undefined) context=null;
 		if (parser == undefined) parser=null;
 		super(context, parser);
-		this._special_tokens = (new Vector()).push("@component").push("@render").push("@while").push("@call").push("@for").push("@if").push("@else").push("@elseif").push("@set").push("@var").push("@{").push("<!--").push("-->").push("<!").push("</").push("/>");
+		this._special_tokens = HtmlToken.getSpecialTokens();
 	}
 	/**
 	 * Return true if char is token char
@@ -50,7 +56,7 @@ class HtmlToken extends ParserToken{
 	 * @return {boolean}
 	 */
 	isTokenChar(ch){
-		return rs.strpos("qazwsxedcrfvtgbyhnujmikolp0123456789_", rs.strtolower(ch)) !== -1;
+		return rs.strpos("qazwsxedcrfvtgbyhnujmikolp0123456789_-", rs.strtolower(ch)) !== -1;
 	}
 	/**
 	 * Get next token without move cursor pos. Throws error if EOF.

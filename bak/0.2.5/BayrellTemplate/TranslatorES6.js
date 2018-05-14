@@ -165,16 +165,25 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 	 * Html tag
 	 */
 	OpHtmlTag(op_code){
+		var s = "";
 		var res = "";
+		if (op_code.is_plain){
+			res += "this.container.pushOneLine();";
+			res += this.s("this.container.setOneLine(true);");
+		}
 		var old_is_operation = this.beginOperation();
 		var attrs = this.OpHtmlTagAttributes(op_code);
 		if (this.isDoubleToken(op_code.tag_name)){
-			res += rtl.toString(this.getCurrentVariable())+" += this.out(\"<"+rtl.toString(op_code.tag_name)+rtl.toString(attrs)+">\");";
+			s = rtl.toString(this.getCurrentVariable())+" += this.out(\"<"+rtl.toString(op_code.tag_name)+rtl.toString(attrs)+">\");";
 		}
 		else {
-			res += rtl.toString(this.getCurrentVariable())+" += this.out(\"<"+rtl.toString(op_code.tag_name)+rtl.toString(attrs)+"/>\");";
+			s = rtl.toString(this.getCurrentVariable())+" += this.out(\"<"+rtl.toString(op_code.tag_name)+rtl.toString(attrs)+"/>\");";
 		}
 		this.endOperation(old_is_operation);
+		if (op_code.is_plain){
+			res += this.s(rtl.toString(this.getCurrentVariable())+" += this.container.outIndent('', true);");
+		}
+		res += this.s(s);
 		if (this.isDoubleToken(op_code.tag_name)){
 			res += this.s("this.levelInc();");
 			if (op_code.childs != null){
@@ -184,6 +193,10 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 			}
 			res += this.s("this.levelDec();");
 			res += this.s(rtl.toString(this.getCurrentVariable())+" += this.out(\"</"+rtl.toString(op_code.tag_name)+">\");");
+		}
+		if (op_code.is_plain){
+			res += this.s(rtl.toString(this.getCurrentVariable())+" += this.container.newLine('', true);");
+			res += this.s("this.container.popOneLine();");
 		}
 		return res;
 	}
@@ -204,7 +217,12 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 			if (s == ""){
 				continue;
 			}
-			v.push(s);
+			if (item instanceof OpString){
+				v.push(s);
+			}
+			else {
+				v.push(rtl.toString(this.getName("rtl"))+".toString("+rtl.toString(s)+")");
+			}
 		}
 		return rs.implode("+", v);
 	}
@@ -224,22 +242,47 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 				var item = op_code.value.childs.item(i);
 				var s = "";
 				if (item instanceof OpHtmlComment){
-					s = "<!-- "+rtl.toString(rs.trim(item.value))+" -->";
+					s = item.value;
+					if (!op_code.is_plain){
+						s = rs.trim(s);
+					}
+					if (s == ""){
+						continue;
+					}
+					s = "<!-- "+rtl.toString(s)+" -->";
 					s = this.escapeString(s);
+					if (!op_code.is_plain){
+						s = "this.out("+rtl.toString(s)+")";
+					}
 				}
 				else if (item instanceof OpString){
-					s = this.escapeString(rs.trim(item.value));
+					s = item.value;
+					if (!op_code.is_plain){
+						s = rs.trim(s);
+					}
+					if (s == ""){
+						continue;
+					}
+					s = this.escapeString(s);
+					if (!op_code.is_plain){
+						s = "this.out("+rtl.toString(s)+")";
+					}
 				}
 				else {
 					var old_is_operation = this.beginOperation();
 					s = this.translateRun(item);
-					s = "this.htmlEscape(rs::trim("+rtl.toString(s)+"))";
+					if (!op_code.is_plain){
+						s = "this.shiftLines(this.htmlEscape("+rtl.toString(this.getName("rtl"))+".toString("+rtl.toString(s)+")))";
+					}
+					else {
+						s = "this.htmlEscape("+rtl.toString(this.getName("rtl"))+".toString("+rtl.toString(s)+"))";
+					}
 					this.endOperation(old_is_operation);
 				}
 				if (s == ""){
 					continue;
 				}
-				s = rtl.toString(this.getCurrentVariable())+" += this.out("+rtl.toString(s)+");";
+				s = rtl.toString(this.getCurrentVariable())+" += "+rtl.toString(s)+";";
 				if (res == ""){
 					res = s;
 				}
@@ -274,12 +317,15 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 		var res = "";
 		op_code.variable = "html_view_"+rtl.toString(this.html_view);
 		this.html_view++
-		res = "var "+rtl.toString(op_code.variable)+"=\"\";";
+		res = "var "+rtl.toString(op_code.variable)+" = \"\";";
+		res += this.s("this.pushLevel();");
+		res += this.s("this.clearLevel();");
 		this.variables.push(op_code.variable);
 		for (var i = 0; i < op_code.childs.count(); i++){
 			var item = op_code.childs.item(i);
 			res += this.s(this.translateRun(item));
 		}
+		res += this.s("this.popLevel();");
 		this.variables.pop(op_code.variable);
 		return res;
 	}
@@ -316,7 +362,7 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 		else if (op_code instanceof OpBitNot || op_code instanceof OpClone || op_code instanceof OpDynamic || op_code instanceof OpNot || op_code instanceof OpStatic){
 			return this.OpRenderRecurse(op_code.value);
 		}
-		else if (op_code instanceof OpCall || op_code instanceof OpNew){
+		else if (op_code instanceof OpCall || op_code instanceof OpHtmlCall || op_code instanceof OpNew){
 			if (op_code.args == null){
 				return "";
 			}
@@ -402,6 +448,20 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 	OpRender(op_code){
 		var res = this.OpRenderRecurse(op_code);
 		var s = rtl.toString(this.getCurrentVariable())+" += "+rtl.toString(this.OpCall(op_code));
+		if (res != ""){
+			res += this.s(s);
+		}
+		else {
+			res += s;
+		}
+		return res;
+	}
+	/**
+	 * Html call
+	 */
+	OpHtmlCall(op_code){
+		var res = this.OpRenderRecurse(op_code);
+		var s = this.OpCall(op_code);
 		if (res != ""){
 			res += this.s(s);
 		}
@@ -621,6 +681,9 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 		}
 		else if (op_code instanceof OpHtmlView){
 			return this.OpHtmlView(op_code);
+		}
+		else if (op_code instanceof OpHtmlCall){
+			return this.OpHtmlCall(op_code);
 		}
 		else if (op_code instanceof OpRender){
 			return this.OpRender(op_code);

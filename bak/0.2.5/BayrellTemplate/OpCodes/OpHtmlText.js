@@ -27,6 +27,7 @@ class OpHtmlText extends OpValue1{
 	_init(){
 		super._init();
 		this.op = "op_html_text";
+		this.is_plain = false;
 	}
 	/**
 	 * Returns classname of the object
@@ -34,6 +35,39 @@ class OpHtmlText extends OpValue1{
 	 */
 	getClassName(){
 		return "BayrellTemplate.OpCodes.OpHtmlText";
+	}
+	/**
+	 * Returns name of variables to serialization
+	 * @return Vector<string>
+	 */
+	getVariablesNames(names){
+		super.getVariablesNames(names);
+		names.push("is_plain");
+	}
+	/**
+	 * Returns instance of the value by variable name
+	 * @param string variable_name
+	 * @return var
+	 */
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value=null;
+		if (variable_name == "is_plain"){
+			return this.is_plain;
+		}
+		return super.takeValue(variable_name, default_value);
+	}
+	/**
+	 * Set new value instance by variable name
+	 * @param string variable_name
+	 * @param var value
+	 */
+	assignValue(variable_name, value){
+		if (variable_name == "is_plain"){
+			this.is_plain = value;
+		}
+		else {
+			super.assignValue(variable_name, value);
+		}
 	}
 }
 module.exports = OpHtmlText;

@@ -115,11 +115,16 @@ class TemplateParser extends ParserBay{
 	/**
 	 * Read Html Expression
 	 */
-	readHtmlExpression(match_str){
+	readHtmlExpression(match_str, parse_special_token, no_trim){
+		if (parse_special_token == undefined) parse_special_token=false;
+		if (no_trim == undefined) no_trim=false;
 		var len_match = rs.strlen(match_str);
 		if (len_match == 0){
 			return null;
 		}
+		var special_tokens = HtmlToken.getSpecialTokens();
+		special_tokens.removeValue("@{");
+		special_tokens.removeValue("<!--");
 		var childs = new Vector();
 		var bracket_level = 0;
 		var s = "";
@@ -127,17 +132,25 @@ class TemplateParser extends ParserBay{
 		var look_str = this.current_token.lookString(len_match);
 		var look2 = this.current_token.lookString(2);
 		var look4 = this.current_token.lookString(4);
-		while (look_str != "" && (look_str != match_str || look_str == "}" && bracket_level > 0) && !this.current_token.isEOF()){
+		var is_next_special_token = parse_special_token && this.current_token.findVector(special_tokens) != -1;
+		while (look_str != "" && (look_str != match_str || look_str == "}" && bracket_level > 0) && !this.current_token.isEOF() && !is_next_special_token){
 			if (look == "\n"){
 				this.current_token.readChar();
-				s = rs.trim(s, "\\t\\r\\n");
+				if (!no_trim){
+					s = rs.trim(s, "\\t\\r\\n");
+				}
+				else {
+					s += "\n";
+				}
 				if (s != ""){
 					childs.push(new OpString(s));
 				}
 				s = "";
 			}
 			else if (look2 == "@{"){
-				s = rs.trim(s, "\\t\\r\\n");
+				if (!no_trim){
+					s = rs.trim(s, "\\t\\r\\n");
+				}
 				if (s != ""){
 					childs.push(new OpString(s));
 				}
@@ -151,7 +164,9 @@ class TemplateParser extends ParserBay{
 				childs.push(res);
 			}
 			else if (look4 == "<!--"){
-				s = rs.trim(s, "\\t\\r\\n");
+				if (!no_trim){
+					s = rs.trim(s, "\\t\\r\\n");
+				}
 				if (s != ""){
 					childs.push(new OpString(s));
 				}
@@ -175,12 +190,18 @@ class TemplateParser extends ParserBay{
 			look_str = this.current_token.lookString(len_match);
 			look2 = this.current_token.lookString(2);
 			look4 = this.current_token.lookString(4);
+			is_next_special_token = parse_special_token && this.current_token.findVector(special_tokens) != -1;
 		}
-		s = rs.trim(s, "\\t\\r\\n");
+		if (!no_trim){
+			s = rs.trim(s, "\\t\\r\\n");
+		}
 		if (s != ""){
 			childs.push(new OpString(s));
 		}
 		this.assignCurrentToken(this.current_token);
+		if (childs.count() == 0){
+			return null;
+		}
 		return new OpHtmlExpression(childs);
 	}
 	/**
@@ -202,6 +223,7 @@ class TemplateParser extends ParserBay{
 					this.matchNextToken(match_str);
 				}
 				else if (this.findNextToken("@{")){
+					this.matchNextToken("@{");
 					this.pushToken(new ParserBayToken(this.context(), this));
 					attr.value = this.readExpression();
 					this.popRestoreToken();
@@ -455,7 +477,17 @@ class TemplateParser extends ParserBay{
 			else {
 				this.matchNextToken("/>");
 			}
-			if (this.isDoubleToken(res.tag_name)){
+			if (res.tag_name == "script" || res.tag_name == "pre" || res.tag_name == "textarea"){
+				var close_tag = "</"+rtl.toString(res.tag_name)+">";
+				var val = new OpHtmlText(this.readHtmlExpression("</"+rtl.toString(res.tag_name)+">", false, true));
+				val.is_plain = true;
+				res.is_plain = true;
+				res.childs = (new Vector()).push(val);
+				this.matchNextToken("</");
+				this.matchNextToken(res.tag_name);
+				this.matchNextToken(">");
+			}
+			else if (this.isDoubleToken(res.tag_name)){
 				var close_tag = "</"+rtl.toString(res.tag_name)+">";
 				res.childs = this.readHtmlBlock("</");
 				this.matchNextToken("</");
@@ -484,13 +516,13 @@ class TemplateParser extends ParserBay{
 		else if (this.findNextToken("@for")){
 			return this.readHtmlFor();
 		}
-		else if (this.findNextToken("@set") || this.findNextToken("@var")){
+		else if (this.findNextToken("@set") || this.findNextToken("@declare")){
 			var is_declare = false;
 			if (this.findNextToken("@set")){
 				this.matchNextToken("@set");
 			}
 			else {
-				this.matchNextToken("@var");
+				this.matchNextToken("@declare");
 				is_declare = true;
 			}
 			this.pushToken(new ParserBayToken(this.context(), this));
@@ -502,7 +534,7 @@ class TemplateParser extends ParserBay{
 				throw this.parserError("Assign variable must use @set");
 			}
 			else if (!is_declare && res instanceof OpAssignDeclare){
-				throw this.parserError("Declare variable must use @var");
+				throw this.parserError("Declare variable must use @declare");
 			}
 			this.popRestoreToken();
 			return res;
@@ -513,7 +545,7 @@ class TemplateParser extends ParserBay{
 		else if (this.findNextToken("<!--")){
 			return this.readHtmlComment();
 		}
-		var res = this.readHtmlExpression(match_str, false);
+		var res = this.readHtmlExpression(match_str, true);
 		if (res != null){
 			res = new OpHtmlText(res);
 		}

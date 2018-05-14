@@ -237,8 +237,12 @@ class rtl{
 	 */
 	
 	static toString(value){
+		var _StringInterface = null;
+		if (isBrowser()) _StringInterface = BayrellRtl.Interfaces.StringInterface; 
+		else _StringInterface = StringInterface;
 		if (typeof value == 'string') return value;
 		if (value instanceof String) return value;
+		if (this.implements(value, _StringInterface)) return value.toString();
 		return new String(value);
 	}
 	/**
