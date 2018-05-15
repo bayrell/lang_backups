@@ -974,6 +974,7 @@ class ParserBay extends CommonParser{
 	 * @return BaseOpCode
 	 */
 	readOperator(){
+		var res = null;
 		if (this.findNextToken(";")){
 			this.matchNextToken(";");
 			return null;
@@ -1015,22 +1016,24 @@ class ParserBay extends CommonParser{
 		else if (this.findNextTokenPreprocessor()){
 			return this.readPreprocessor();
 		}
-		var res = this.readOperatorPrefix();
+		res = this.readOperatorPrefix();
 		if (res){
 			this.matchNextToken(";");
 			return res;
 		}
-		var res = this.readOperatorPostfix();
+		res = this.readOperatorPostfix();
 		if (res){
 			this.matchNextToken(";");
 			return res;
 		}
-		var res = this.readOperatorAssign();
+		res = this.readOperatorAssign();
 		if (res){
 			this.matchNextToken(";");
 			return res;
 		}
-		return this.readExpressionElement();
+		res = this.readExpressionElement();
+		this.matchNextToken(";");
+		return res;
 		/*return this.readCallDynamic(true, true, true, true);*/
 	}
 	/**

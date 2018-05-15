@@ -27,6 +27,7 @@ module.exports = {
 		'OpHtmlExpression': require("./OpCodes/OpHtmlExpression.js"),
 		'OpHtmlTag': require("./OpCodes/OpHtmlTag.js"),
 		'OpHtmlText': require("./OpCodes/OpHtmlText.js"),
+		'OpHtmlValue': require("./OpCodes/OpHtmlValue.js"),
 		'OpHtmlView': require("./OpCodes/OpHtmlView.js"),
 		'OpRender': require("./OpCodes/OpRender.js"),
 		'OpTemplateDeclare': require("./OpCodes/OpTemplateDeclare.js"),

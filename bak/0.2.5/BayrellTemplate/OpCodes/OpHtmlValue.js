@@ -21,19 +21,19 @@ var Map = require('BayrellRtl').Types.Map;
 var Vector = require('BayrellRtl').Types.Vector;
 var Vector = require('BayrellRtl').Types.Vector;
 var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
-var OpValueString = require('BayrellLang').OpCodes.OpValueString;
+var OpValue1 = require('BayrellLang').OpCodes.OpValue1;
 var OpHtmlAttribute = require('./OpHtmlAttribute.js');
-class OpHtmlText extends OpValueString{
+class OpHtmlValue extends OpValue1{
 	_init(){
 		super._init();
-		this.op = "op_html_text";
+		this.op = "op_html_value";
 	}
 	/**
 	 * Returns classname of the object
 	 * @return string
 	 */
 	getClassName(){
-		return "BayrellTemplate.OpCodes.OpHtmlText";
+		return "BayrellTemplate.OpCodes.OpHtmlValue";
 	}
 }
-module.exports = OpHtmlText;
+module.exports = OpHtmlValue;

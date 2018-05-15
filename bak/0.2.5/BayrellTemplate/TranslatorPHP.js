@@ -89,6 +89,7 @@ var OpHtmlComment = require('./OpCodes/OpHtmlComment.js');
 var OpHtmlExpression = require('./OpCodes/OpHtmlExpression.js');
 var OpHtmlTag = require('./OpCodes/OpHtmlTag.js');
 var OpHtmlText = require('./OpCodes/OpHtmlText.js');
+var OpHtmlValue = require('./OpCodes/OpHtmlValue.js');
 var OpHtmlView = require('./OpCodes/OpHtmlView.js');
 var OpRender = require('./OpCodes/OpRender.js');
 var OpTemplateDeclare = require('./OpCodes/OpTemplateDeclare.js');
@@ -96,6 +97,7 @@ var OpViewDeclare = require('./OpCodes/OpViewDeclare.js');
 class TranslatorPHP extends BayrellLangTranslatorPHP{
 	_init(){
 		super._init();
+		this.is_plain = false;
 		this.html_view = 0;
 		this.html_component = 0;
 		this.variables = null;
@@ -168,7 +170,15 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 			if (item.key == "" || item.value == null){
 				continue;
 			}
-			res.push("\" "+rtl.toString(item.key)+"\".'=\"'."+rtl.toString(this.translateRun(item.value))+".'\"'");
+			var s = "";
+			if (item.value instanceof OpHtmlExpression){
+				s = this.translateRun(item.value);
+			}
+			else {
+				s = this.translateRun(item.value);
+				s = "$this->htmlEscape(rtl::toString("+rtl.toString(s)+"))";
+			}
+			res.push("\" "+rtl.toString(item.key)+"\".'=\"'."+rtl.toString(s)+".'\"'");
 		}
 		if (res.count() == 0){
 			return "";
@@ -182,10 +192,8 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 	OpHtmlTag(op_code){
 		var s = "";
 		var res = "";
-		if (op_code.is_plain){
-			res += "$this->container->pushOneLine();";
-			res += this.s("$this->container->setOneLine(true);");
-		}
+		var old_is_plain = this.is_plain;
+		this.is_plain = old_is_plain || op_code.is_plain;
 		var old_is_operation = this.beginOperation();
 		var attrs = this.OpHtmlTagAttributes(op_code);
 		if (this.isDoubleToken(op_code.tag_name)){
@@ -196,9 +204,14 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 		}
 		this.endOperation(old_is_operation);
 		if (op_code.is_plain){
+			res += "$this->container->pushOneLine();";
+			res += this.s("$this->container->setOneLine(true);");
 			res += this.s(rtl.toString(this.getCurrentVariable())+" .= $this->container->outIndent(\"\", true);");
+			res += this.s(s);
 		}
-		res += this.s(s);
+		else {
+			res = s;
+		}
 		if (this.isDoubleToken(op_code.tag_name)){
 			res += this.s("$this->levelInc();");
 			if (op_code.childs != null){
@@ -213,6 +226,7 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 			res += this.s(rtl.toString(this.getCurrentVariable())+" .= $this->container->newLine(\"\", true);");
 			res += this.s("$this->container->popOneLine();");
 		}
+		this.is_plain = old_is_plain;
 		return res;
 	}
 	/**
@@ -236,7 +250,7 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 				v.push(s);
 			}
 			else {
-				v.push("rtl::toString("+rtl.toString(s)+")");
+				v.push("$this->htmlEscape(rtl::toString("+rtl.toString(s)+"))");
 			}
 		}
 		return rs.implode(".", v);
@@ -245,70 +259,30 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 	 * Html text
 	 */
 	OpHtmlText(op_code){
-		if (op_code.value instanceof OpHtmlExpression){
-			if (op_code.value.childs == null){
-				return "";
-			}
-			if (op_code.value.childs.count() == 0){
-				return "";
-			}
-			var res = "";
-			for (var i = 0; i < op_code.value.childs.count(); i++){
-				var item = op_code.value.childs.item(i);
-				var s = "";
-				if (item instanceof OpHtmlComment){
-					s = item.value;
-					if (!op_code.is_plain){
-						s = rs.trim(s);
-					}
-					if (s == ""){
-						continue;
-					}
-					s = "<!-- "+rtl.toString(s)+" -->";
-					s = this.escapeString(s);
-					if (!op_code.is_plain){
-						s = "$this->out("+rtl.toString(s)+")";
-					}
-				}
-				else if (item instanceof OpString){
-					s = item.value;
-					if (!op_code.is_plain){
-						s = rs.trim(s);
-					}
-					if (s == ""){
-						continue;
-					}
-					s = this.escapeString(s);
-					if (!op_code.is_plain){
-						s = "$this->out("+rtl.toString(s)+")";
-					}
-				}
-				else {
-					var old_is_operation = this.beginOperation();
-					s = this.translateRun(item);
-					if (!op_code.is_plain){
-						s = "$this->shiftLines($this->htmlEscape(rtl::toString("+rtl.toString(s)+")))";
-					}
-					else {
-						s = "$this->htmlEscape(rtl::toString("+rtl.toString(s)+"))";
-					}
-					this.endOperation(old_is_operation);
-				}
-				if (s == ""){
-					continue;
-				}
-				s = rtl.toString(this.getCurrentVariable())+" .= "+rtl.toString(s)+";";
-				if (res == ""){
-					res = s;
-				}
-				else {
-					res += this.s(s);
-				}
-			}
-			return res;
+		var s = op_code.value;
+		if (!this.is_plain){
+			s = rs.trim(s);
 		}
+		if (s == ""){
+			return "";
+		}
+		s = this.escapeString(s);
+		s = rtl.toString(this.getCurrentVariable())+" .= $this->out("+rtl.toString(s)+");";
+		return s;
+	}
+	/**
+	 * Html Value
+	 */
+	OpHtmlValue(op_code){
 		var old_is_operation = this.beginOperation();
-		var s = rtl.toString(this.getCurrentVariable())+" .= $this->out(rs::trim("+rtl.toString(this.translateRun(op_code.value))+"));";
+		var s = this.translateRun(op_code.value);
+		if (!this.is_plain){
+			s = "$this->shiftLines($this->htmlEscape(rtl::toString("+rtl.toString(s)+")))";
+		}
+		else {
+			s = "$this->htmlEscape(rtl::toString("+rtl.toString(s)+"))";
+		}
+		s = rtl.toString(this.getCurrentVariable())+" .= "+rtl.toString(s)+";";
 		this.endOperation(old_is_operation);
 		return s;
 	}
@@ -679,6 +653,9 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 		}
 		else if (op_code instanceof OpHtmlText){
 			return this.OpHtmlText(op_code);
+		}
+		else if (op_code instanceof OpHtmlValue){
+			return this.OpHtmlValue(op_code);
 		}
 		else if (op_code instanceof OpHtmlView){
 			return this.OpHtmlView(op_code);

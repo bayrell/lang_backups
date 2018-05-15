@@ -42,6 +42,7 @@ var OpHtmlComment = require('./OpCodes/OpHtmlComment.js');
 var OpHtmlExpression = require('./OpCodes/OpHtmlExpression.js');
 var OpHtmlTag = require('./OpCodes/OpHtmlTag.js');
 var OpHtmlText = require('./OpCodes/OpHtmlText.js');
+var OpHtmlValue = require('./OpCodes/OpHtmlValue.js');
 var OpHtmlView = require('./OpCodes/OpHtmlView.js');
 var OpRender = require('./OpCodes/OpRender.js');
 var OpTemplateDeclare = require('./OpCodes/OpTemplateDeclare.js');
@@ -89,8 +90,7 @@ class TemplateParser extends ParserBay{
 	readHtmlDOCTYPE(){
 		var s = this.current_token.readUntilString(">", false);
 		this.assignCurrentToken(this.current_token);
-		var res = new OpHtmlText();
-		res.value = new OpString("<!"+rtl.toString(rs.trim(s))+">");
+		var res = new OpHtmlText("<!"+rtl.toString(rs.trim(s))+">");
 		this.matchNextToken(">");
 		return res;
 	}
@@ -113,98 +113,6 @@ class TemplateParser extends ParserBay{
 		return super.readExpression();
 	}
 	/**
-	 * Read Html Expression
-	 */
-	readHtmlExpression(match_str, parse_special_token, no_trim){
-		if (parse_special_token == undefined) parse_special_token=false;
-		if (no_trim == undefined) no_trim=false;
-		var len_match = rs.strlen(match_str);
-		if (len_match == 0){
-			return null;
-		}
-		var special_tokens = HtmlToken.getSpecialTokens();
-		special_tokens.removeValue("@{");
-		special_tokens.removeValue("<!--");
-		var childs = new Vector();
-		var bracket_level = 0;
-		var s = "";
-		var look = this.current_token.lookString(1);
-		var look_str = this.current_token.lookString(len_match);
-		var look2 = this.current_token.lookString(2);
-		var look4 = this.current_token.lookString(4);
-		var is_next_special_token = parse_special_token && this.current_token.findVector(special_tokens) != -1;
-		while (look_str != "" && (look_str != match_str || look_str == "}" && bracket_level > 0) && !this.current_token.isEOF() && !is_next_special_token){
-			if (look == "\n"){
-				this.current_token.readChar();
-				if (!no_trim){
-					s = rs.trim(s, "\\t\\r\\n");
-				}
-				else {
-					s += "\n";
-				}
-				if (s != ""){
-					childs.push(new OpString(s));
-				}
-				s = "";
-			}
-			else if (look2 == "@{"){
-				if (!no_trim){
-					s = rs.trim(s, "\\t\\r\\n");
-				}
-				if (s != ""){
-					childs.push(new OpString(s));
-				}
-				s = "";
-				this.current_token.match("@{");
-				this.assignCurrentToken(this.current_token);
-				this.pushToken(new ParserBayToken(this.context(), this));
-				var res = this.readExpression();
-				this.popRestoreToken();
-				this.matchNextToken("}");
-				childs.push(res);
-			}
-			else if (look4 == "<!--"){
-				if (!no_trim){
-					s = rs.trim(s, "\\t\\r\\n");
-				}
-				if (s != ""){
-					childs.push(new OpString(s));
-				}
-				s = "";
-				this.current_token.match("<!--");
-				var res_str = this.current_token.readUntilString("-->", false);
-				this.current_token.match("-->");
-				childs.push(new OpHtmlComment(res_str));
-			}
-			else {
-				look = this.current_token.readChar();
-				s = rtl.toString(s)+rtl.toString(look);
-				if (look == "{"){
-					bracket_level++
-				}
-				else if (look == "}"){
-					bracket_level--
-				}
-			}
-			look = this.current_token.lookString(1);
-			look_str = this.current_token.lookString(len_match);
-			look2 = this.current_token.lookString(2);
-			look4 = this.current_token.lookString(4);
-			is_next_special_token = parse_special_token && this.current_token.findVector(special_tokens) != -1;
-		}
-		if (!no_trim){
-			s = rs.trim(s, "\\t\\r\\n");
-		}
-		if (s != ""){
-			childs.push(new OpString(s));
-		}
-		this.assignCurrentToken(this.current_token);
-		if (childs.count() == 0){
-			return null;
-		}
-		return new OpHtmlExpression(childs);
-	}
-	/**
 	 * Read Html Attributes
 	 */
 	readHtmlAttributes(){
@@ -219,7 +127,7 @@ class TemplateParser extends ParserBay{
 				this.matchNextToken("=");
 				if (this.findNextToken("'") || this.findNextToken("\"")){
 					var match_str = this.readNextToken().token;
-					attr.value = this.readHtmlExpression(match_str);
+					attr.value = new OpHtmlExpression(this.readHtmlBlock(match_str, false, false, true));
 					this.matchNextToken(match_str);
 				}
 				else if (this.findNextToken("@{")){
@@ -456,10 +364,7 @@ class TemplateParser extends ParserBay{
 	 * Read operator block
 	 * @return BaseOpCode
 	 */
-	readHtmlTag(match_str){
-		if (this.findNextString(match_str)){
-			return null;
-		}
+	readHtmlTag(){
 		if (this.findNextToken("<!")){
 			this.matchNextToken("<!");
 			if (this.findNextString("DOCTYPE")){
@@ -479,10 +384,8 @@ class TemplateParser extends ParserBay{
 			}
 			if (res.tag_name == "script" || res.tag_name == "pre" || res.tag_name == "textarea"){
 				var close_tag = "</"+rtl.toString(res.tag_name)+">";
-				var val = new OpHtmlText(this.readHtmlExpression("</"+rtl.toString(res.tag_name)+">", false, true));
-				val.is_plain = true;
 				res.is_plain = true;
-				res.childs = (new Vector()).push(val);
+				res.childs = this.readHtmlBlock("</"+rtl.toString(res.tag_name)+">", false, true);
 				this.matchNextToken("</");
 				this.matchNextToken(res.tag_name);
 				this.matchNextToken(">");
@@ -545,26 +448,98 @@ class TemplateParser extends ParserBay{
 		else if (this.findNextToken("<!--")){
 			return this.readHtmlComment();
 		}
-		var res = this.readHtmlExpression(match_str, true);
-		if (res != null){
-			res = new OpHtmlText(res);
-		}
-		return res;
+		return null;
 	}
 	/**
-	 * Read operator block
-	 * @return BaseOpCode
+	 * Read Html Expression
 	 */
-	readHtmlBlock(match_str){
-		var res = new Vector();
-		var op_code = null;
-		while (!this.findNextString(match_str) && !this.isEOF()){
-			op_code = this.readHtmlTag(match_str);
-			if (op_code != null){
-				res.push(op_code);
+	readHtmlBlock(match_str, parse_html_tokens, is_plain, is_html_expression){
+		if (parse_html_tokens == undefined) parse_html_tokens=true;
+		if (is_plain == undefined) is_plain=false;
+		if (is_html_expression == undefined) is_html_expression=false;
+		var len_match = rs.strlen(match_str);
+		if (len_match == 0){
+			return null;
+		}
+		var look_str = this.current_token.lookString(len_match);
+		var childs = new Vector();
+		var special_tokens = HtmlToken.getSpecialTokens();
+		special_tokens.removeValue("@{");
+		special_tokens.removeValue("<!--");
+		var bracket_level = 0;
+		var s = "";
+		/* Main loop */
+		while (look_str != "" && !this.current_token.isEOF() && (look_str != match_str || look_str == "}" && bracket_level > 0)){
+			var res = null;
+			var is_next_html_token = this.current_token.findString("<");
+			var is_next_special_token = this.current_token.findVector(special_tokens) != -1;
+			if (parse_html_tokens && (is_next_special_token || is_next_html_token)){
+				if (!is_plain){
+					s = rs.trim(s, "\\t\\r\\n");
+				}
+				if (s != ""){
+					if (is_html_expression){
+						childs.push(new OpString(s));
+					}
+					else {
+						childs.push(new OpHtmlText(s));
+					}
+				}
+				s = "";
+				this.assignCurrentToken(this.current_token);
+				res = this.readHtmlTag();
+			}
+			else if (this.current_token.findString("@{")){
+				if (!is_plain){
+					s = rs.trim(s, "\\t\\r\\n");
+				}
+				if (s != ""){
+					if (is_html_expression){
+						childs.push(new OpString(s));
+					}
+					else {
+						childs.push(new OpHtmlText(s));
+					}
+				}
+				s = "";
+				this.current_token.match("@{");
+				this.assignCurrentToken(this.current_token);
+				this.pushToken(new ParserBayToken(this.context(), this));
+				res = this.readExpression();
+				if (!is_html_expression){
+					res = new OpHtmlValue(res);
+				}
+				this.popRestoreToken();
+				this.matchNextToken("}");
+			}
+			if (res != null){
+				childs.push(res);
+			}
+			else {
+				var look = this.current_token.readChar();
+				s = rtl.toString(s)+rtl.toString(look);
+				if (look == "{"){
+					bracket_level++
+				}
+				else if (look == "}"){
+					bracket_level--
+				}
+			}
+			look_str = this.current_token.lookString(len_match);
+		}
+		if (!is_plain){
+			s = rs.trim(s, "\\t\\r\\n");
+		}
+		if (s != ""){
+			if (is_html_expression){
+				childs.push(new OpString(s));
+			}
+			else {
+				childs.push(new OpHtmlText(s));
 			}
 		}
-		return res;
+		this.assignCurrentToken(this.current_token);
+		return childs;
 	}
 	/**
 	 * Read operator block
