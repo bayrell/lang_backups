@@ -127,12 +127,14 @@ class TemplateParser extends ParserBay{
 				this.matchNextToken("=");
 				if (this.findNextToken("'") || this.findNextToken("\"")){
 					var match_str = this.readNextToken().token;
+					attr.bracket = match_str;
 					attr.value = new OpHtmlExpression(this.readHtmlBlock(match_str, false, false, true));
 					this.matchNextToken(match_str);
 				}
 				else if (this.findNextToken("@{")){
 					this.matchNextToken("@{");
 					this.pushToken(new ParserBayToken(this.context(), this));
+					attr.bracket = "\"";
 					attr.value = this.readExpression();
 					this.popRestoreToken();
 					this.matchNextToken("}");
@@ -142,6 +144,7 @@ class TemplateParser extends ParserBay{
 				}
 			}
 			else {
+				attr.bracket = "\"";
 				attr.value = attr.key;
 			}
 			res.push(attr);

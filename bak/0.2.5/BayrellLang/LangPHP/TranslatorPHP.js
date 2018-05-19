@@ -19,6 +19,7 @@
 var rtl = require('BayrellRtl').Lib.rtl;
 var Map = require('BayrellRtl').Types.Map;
 var Vector = require('BayrellRtl').Types.Vector;
+var re = require('BayrellRtl').Lib.re;
 var rs = require('BayrellRtl').Lib.rs;
 var CommonTranslator = require('../CommonTranslator.js');
 var BaseOpCode = require('../OpCodes/BaseOpCode.js');
@@ -117,7 +118,19 @@ class TranslatorPHP extends CommonTranslator{
 	 * Escape string
 	 */
 	escapeString(s){
-		return rs.json_encode(s);
+		s = re.replace("\\\\", "\\\\", s);
+		s = re.replace("\"", "\\\"", s);
+		s = re.replace("\\$", "\\$", s);
+		s = re.replace("\n", "\\n", s);
+		s = re.replace("\r", "\\r", s);
+		s = re.replace("\t", "\\t", s);
+		return s;
+	}
+	/**
+	 * Escape string
+	 */
+	convertString(s){
+		return "\""+rtl.toString(this.escapeString(s))+"\"";
 	}
 	/**
 	 * Comment
@@ -152,7 +165,7 @@ class TranslatorPHP extends CommonTranslator{
 	 */
 	OpString(op_code){
 		this.current_opcode_level = this.max_opcode_level;
-		return this.escapeString(op_code.value);
+		return this.convertString(op_code.value);
 	}
 	/** ======================== Dynamic or static ======================== */
 	/**

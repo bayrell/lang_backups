@@ -26,17 +26,6 @@ class OpHtmlAttribute extends BaseOpCode{
 		super._init();
 	}
 	/**
-	 * Assign all data from other object
-	 * @param CoreObject obj
-	 */
-	assign(obj){
-		if (obj instanceof OpHtmlAttribute){
-			this.key = obj.key;
-			this.value = rtl._clone(obj.value);
-		}
-		super.assign(obj);
-	}
-	/**
 	 * Returns classname of the object
 	 * @return string
 	 */
@@ -63,6 +52,7 @@ class OpHtmlAttribute extends BaseOpCode{
 		super.getVariablesNames(names);
 		names.push("key");
 		names.push("value");
+		names.push("bracket");
 	}
 	/**
 	 * Returns instance of the value by variable name
@@ -77,6 +67,9 @@ class OpHtmlAttribute extends BaseOpCode{
 		else if (variable_name == "value"){
 			return this.value;
 		}
+		else if (variable_name == "bracket"){
+			return this.bracket;
+		}
 		return super.takeValue(variable_name, default_value);
 	}
 	/**
@@ -90,6 +83,9 @@ class OpHtmlAttribute extends BaseOpCode{
 		}
 		else if (variable_name == "value"){
 			this.value = value;
+		}
+		else if (variable_name == "bracket"){
+			this.bracket = value;
 		}
 		else {
 			super.assignValue(variable_name, value);

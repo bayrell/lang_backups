@@ -143,7 +143,7 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 	 * Html attributes
 	 */
 	OpHtmlTagAttributes(op_code){
-		var res = new Vector();
+		var res = "";
 		if (op_code.attributes == null){
 			return "";
 		}
@@ -156,20 +156,19 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 				continue;
 			}
 			var s = "";
+			var old_is_operation = this.beginOperation();
 			if (item.value instanceof OpHtmlExpression){
 				s = this.translateRun(item.value);
 			}
 			else {
 				s = this.translateRun(item.value);
-				s = "this.htmlEscape("+rtl.toString(this.getName("rtl"))+".toString("+rtl.toString(s)+"))";
+				s = "this.htmlEscape(rtl::toString("+rtl.toString(s)+"))";
 			}
-			res.push("\" "+rtl.toString(item.key)+"\"+'=\"'+"+rtl.toString(s)+"+'\"'");
+			this.endOperation(old_is_operation);
+			var bracket = this.escapeString(item.bracket);
+			res += this.s("attrs += \" "+rtl.toString(item.key)+"="+rtl.toString(bracket)+"\" + "+rtl.toString(s)+" + \""+rtl.toString(bracket)+"\";");
 		}
-		if (res.count() == 0){
-			return "";
-		}
-		var s = rs.implode("+", res);
-		return "\"+"+rtl.toString(s)+"+\"";
+		return res;
 	}
 	/**
 	 * Html tag
@@ -179,15 +178,10 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 		var res = "";
 		var old_is_plain = this.is_plain;
 		this.is_plain = old_is_plain || op_code.is_plain;
-		var old_is_operation = this.beginOperation();
-		var attrs = this.OpHtmlTagAttributes(op_code);
-		if (this.isDoubleToken(op_code.tag_name)){
-			s = rtl.toString(this.getCurrentVariable())+" += this.out(\"<"+rtl.toString(op_code.tag_name)+rtl.toString(attrs)+">\");";
-		}
-		else {
-			s = rtl.toString(this.getCurrentVariable())+" += this.out(\"<"+rtl.toString(op_code.tag_name)+rtl.toString(attrs)+"/>\");";
-		}
-		this.endOperation(old_is_operation);
+		var s = "";
+		s += "var attrs = \"\";";
+		s += this.OpHtmlTagAttributes(op_code);
+		s += this.s(rtl.toString(this.getCurrentVariable())+" += this.out(\"<"+rtl.toString(op_code.tag_name)+"\" + attrs + \""+rtl.toString((this.isDoubleToken(op_code.tag_name)) ? (">") : ("/>"))+"\");");
 		if (op_code.is_plain){
 			res += "this.container.pushOneLine();";
 			res += this.s("this.container.setOneLine(true);");
@@ -251,7 +245,7 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 		if (s == ""){
 			return "";
 		}
-		s = this.escapeString(s);
+		s = this.convertString(s);
 		s = rtl.toString(this.getCurrentVariable())+" += this.out(\""+rtl.toString(s)+"\");";
 		return s;
 	}
@@ -276,7 +270,7 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 	 */
 	OpHtmlComment(op_code){
 		var s = "<!-- "+rtl.toString(rs.trim(op_code.value))+" -->";
-		return rtl.toString(this.getCurrentVariable())+" += this.out("+rtl.toString(this.escapeString(s))+");";
+		return rtl.toString(this.getCurrentVariable())+" += this.out("+rtl.toString(this.convertString(s))+");";
 	}
 	/**
 	 * Html View
@@ -462,7 +456,7 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 		for (var i = 0; i < keys.count(); i++){
 			var key = keys.item(i);
 			var item = op_code.args.item(key);
-			var s = rtl.toString(component_name)+".assignValue("+rtl.toString(this.escapeString(key))+", "+rtl.toString(this.translateRun(item))+");";
+			var s = rtl.toString(component_name)+".assignValue("+rtl.toString(this.convertString(key))+", "+rtl.toString(this.translateRun(item))+");";
 			if (s2 == ""){
 				s2 = s;
 			}
