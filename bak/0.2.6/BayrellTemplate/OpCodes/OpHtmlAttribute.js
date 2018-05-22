@@ -1,6 +1,6 @@
 "use strict;"
 /*!
- *  Bayrell Runtime Library
+ *  Bayrell Template Engine
  *
  *  (c) Copyright 2016-2018 "Ildar Bikmamatov" <support@bayrell.org>
  *
@@ -16,39 +16,43 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-var rtl = require('./Lib/rtl.js');
-class CoreObject{
-	/**
-	 * Get module name
-	 */
-	getModuleName(){
-		return "BayrellRtl";
+var rtl = require('BayrellRtl').Lib.rtl;
+var Map = require('BayrellRtl').Types.Map;
+var Vector = require('BayrellRtl').Types.Vector;
+var Vector = require('BayrellRtl').Types.Vector;
+var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
+class OpHtmlAttribute extends BaseOpCode{
+	_init(){
+		super._init();
 	}
 	/**
-	 * Get class name
+	 * Returns classname of the object
+	 * @return string
 	 */
 	getClassName(){
-		return "BayrellRtl.CoreObject";
+		return "BayrellTemplate.OpCodes.OpHtmlAttribute";
 	}
-	/** 
+	/**
 	 * Constructor
 	 */
 	constructor(){
-		
-		this._init();
+		super();
 	}
-	
-	_init(){
-		this.__implements__ = new Array();
-	}
-	
-	_del(){
+	/**
+	 * Destructor
+	 */
+	destructor(){
+		super.destructor();
 	}
 	/**
 	 * Returns name of variables to serialization
 	 * @return Vector<string>
 	 */
 	getVariablesNames(names){
+		super.getVariablesNames(names);
+		names.push("key");
+		names.push("value");
+		names.push("bracket");
 	}
 	/**
 	 * Returns instance of the value by variable name
@@ -57,6 +61,16 @@ class CoreObject{
 	 */
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value=null;
+		if (variable_name == "key"){
+			return this.key;
+		}
+		else if (variable_name == "value"){
+			return this.value;
+		}
+		else if (variable_name == "bracket"){
+			return this.bracket;
+		}
+		return super.takeValue(variable_name, default_value);
 	}
 	/**
 	 * Set new value instance by variable name
@@ -64,6 +78,18 @@ class CoreObject{
 	 * @param var value
 	 */
 	assignValue(variable_name, value){
+		if (variable_name == "key"){
+			this.key = value;
+		}
+		else if (variable_name == "value"){
+			this.value = value;
+		}
+		else if (variable_name == "bracket"){
+			this.bracket = value;
+		}
+		else {
+			super.assignValue(variable_name, value);
+		}
 	}
 }
-module.exports = CoreObject;
+module.exports = OpHtmlAttribute;
