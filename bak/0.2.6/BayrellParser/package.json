@@ -1,0 +1,11 @@
+{
+  "description": "Bayrell Parser",
+  "files": [
+	"Exceptions/*.js",
+	"Interfaces/*.js",
+    "*.js"
+  ],
+  "main": "index.js",
+  "name": "BayrellParser",
+  "version": "0.1.0"
+}
