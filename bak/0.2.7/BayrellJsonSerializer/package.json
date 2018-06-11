@@ -1,0 +1,9 @@
+{
+  "description": "Bayrell Json Serializer",
+  "files": [
+    "*.js"
+  ],
+  "main": "index.js",
+  "name": "BayrellJsonSerializer",
+  "version": "0.2.0"
+}
