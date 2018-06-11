@@ -76,22 +76,19 @@ class ContextInterface{
 	 * @params string attr_name - Attribute name
 	 * @params var value - value
 	 */
-	setValue(attr_name, value){
-	}
+	/*void setValue(string attr_name, var value);*/
 	/**
 	 * Get attribute value
 	 * @params string attr_name - Attribute name
 	 * @params var default_value - Default value if not exists
 	 * @return var value
 	 */
-	getValue(attr_name, default_value){
-	}
+	/*var getValue(string attr_name, var default_value);*/
 	/**
 	 * Return true if attr is exists
 	 * @params string attr_name - Attribute name
 	 * @return boolean
 	 */
-	hasValue(attr_name){
-	}
+	/*boolean hasValue(string attr_name);*/
 }
 module.exports = ContextInterface;

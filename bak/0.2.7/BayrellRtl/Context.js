@@ -27,6 +27,7 @@ var ModuleDescriptionInterface = require('./Interfaces/ModuleDescriptionInterfac
 var ContextObject = require('./ContextObject.js');
 var ProviderDescription = require('./ProviderDescription.js');
 class Context extends CoreObject{
+	/*protected Map<string, var> _values = null;*/
 	/**
 	 * Constructor
 	 */
@@ -35,7 +36,7 @@ class Context extends CoreObject{
 		this._modules = new Vector();
 		this._providers_names = new Map();
 		this._current_providers = new Map();
-		this._values = new Map();
+		/*this._values = new Map<string, var>();*/
 	}
 	/**
 	 * Destructor
@@ -184,25 +185,25 @@ class Context extends CoreObject{
 	 * @params string attr_name - Attribute name
 	 * @params var value - value
 	 */
-	setValue(attr_name, value){
+	/*void setValue(string attr_name, var value){
 		this._values.set(attr_name, value);
-	}
+	}*/
 	/**
 	 * Get attribute value
 	 * @params string attr_name - Attribute name
 	 * @params var default_value - Default value if not exists
 	 * @return var value
 	 */
-	getValue(attr_name, default_value){
+	/*var getValue(string attr_name, var default_value){
 		return this._values.get(attr_name, default_value);
-	}
+	}*/
 	/**
 	 * Return true if attr is exists
 	 * @params string attr_name - Attribute name
 	 * @return boolean
 	 */
-	hasValue(attr_name){
+	/*boolean hasValue(string attr_name){
 		return this._values.contains(attr_name);
-	}
+	}*/
 }
 module.exports = Context;

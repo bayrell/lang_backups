@@ -18,7 +18,7 @@
 
 
 module.exports = {
-	VERSION: '0.1.0',
+	VERSION: '0.1.1',
 	'OpCodes': {
 		'OpComponent': require("./OpCodes/OpComponent.js"),
 		'OpHtmlAttribute': require("./OpCodes/OpHtmlAttribute.js"),
