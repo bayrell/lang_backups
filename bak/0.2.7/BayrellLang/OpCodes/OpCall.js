@@ -26,6 +26,7 @@ class OpCall extends BaseOpCode{
 		this.op = "op_call";
 		this.value = null;
 		this.args = null;
+		this.is_await = false;
 	}
 	/**
 	 * Returns classname of the object

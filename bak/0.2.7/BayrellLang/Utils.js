@@ -36,8 +36,8 @@ class Utils extends ContextObject{
 	 * @string string source
 	 * @return string
 	 */
-	static getAST(parser_factory, source){
-		var parser = parser_factory.newInstance();
+	static getAST(context, parser_factory, source){
+		var parser = parser_factory.newInstance(context);
 		parser.parseString(source);
 		var code_tree = parser.getAST();
 		return code_tree;
@@ -49,8 +49,8 @@ class Utils extends ContextObject{
 	 * @string string source
 	 * @return string
 	 */
-	static translateAST(translator_factory, code_tree){
-		var translator = translator_factory.newInstance();
+	static translateAST(context, translator_factory, code_tree){
+		var translator = translator_factory.newInstance(context);
 		var res = translator.translate(code_tree);
 		return res;
 	}
@@ -61,9 +61,9 @@ class Utils extends ContextObject{
 	 * @string string source
 	 * @return string
 	 */
-	static translate(parser_factory, translator_factory, source){
-		var parser = parser_factory.newInstance();
-		var translator = translator_factory.newInstance();
+	static translate(context, parser_factory, translator_factory, source){
+		var parser = parser_factory.newInstance(context);
+		var translator = translator_factory.newInstance(context);
 		parser.parseString(source);
 		var code_tree = parser.getAST();
 		var res = translator.translate(code_tree);
@@ -75,9 +75,9 @@ class Utils extends ContextObject{
 	 * @string string source
 	 * @return string
 	 */
-	static translateBay(translator_factory, source){
-		var translator = translator_factory.newInstance();
-		var parser = new ParserBay(translator.context());
+	static translateBay(context, translator_factory, source){
+		var translator = translator_factory.newInstance(context);
+		var parser = new ParserBay(context);
 		parser.parseString(source);
 		var code_tree = parser.getAST();
 		var res = translator.translate(code_tree);
@@ -90,27 +90,30 @@ class Utils extends ContextObject{
 	 * @string string src_file_name
 	 * @string string dest_file_name
 	 */
-	static translateFile(parser_factory, translator_factory, src_file_name, dest_file_name){
-		
+	static translateFile(context, parser_factory, translator_factory, src_file_name, dest_file_name){
+		/*
+		#switch
+		#case ifcode NODEJS then
 		var fsModule = require('fs');
 		var shellModule = require('shelljs');
 		var content = fsModule.readFileSync(src_file_name, {encoding : 'utf8'}).toString();
-		/*
-		ContextObject context = parser_factory.context();
-		FileSystemInterface file_system = context.getProvider("default:fs");
-		string content = file_system.loadFile(src_file_name);
+		#endswitch
 		*/
-		var res = Utils.translate(parser_factory, translator_factory, content);
+		var file_system = context.createProvider("default:fs");
+		var content = file_system.loadFile(src_file_name);
+		var res = Utils.translate(context, parser_factory, translator_factory, content);
 		var dir = RtlUtils.dirname(dest_file_name);
-		/*
 		file_system.makeDir(dir);
 		file_system.saveFile(dest_file_name, res);
-		*/
-		
+		/*
+		#switch
+		#case ifcode NODEJS then
 		if (!fsModule.existsSync(dir)){
 			shellModule.mkdir('-p', dirpath);
 		}
 		fsModule.writeFileSync(dest_file_name, res, {encoding : 'utf8'});
+		#endswitch
+		*/
 	}
 }
 module.exports = Utils;

@@ -21,6 +21,7 @@ var Map = require('BayrellRtl').Types.Map;
 var Vector = require('BayrellRtl').Types.Vector;
 var CoreObject = require('BayrellRtl').CoreObject;
 var ContextObject = require('BayrellRtl').ContextObject;
+var ContextInterface = require('BayrellRtl').Interfaces.ContextInterface;
 var FactoryInterface = require('BayrellRtl').Interfaces.FactoryInterface;
 var TranslatorES6 = require('./TranslatorES6.js');
 class TranslatorES6Factory extends ContextObject{
@@ -32,8 +33,8 @@ class TranslatorES6Factory extends ContextObject{
 	/**
 	 * Returns new Instance
 	 */
-	newInstance(){
-		return new TranslatorES6(this.context());
+	newInstance(context){
+		return new TranslatorES6(context);
 	}
 }
 module.exports = TranslatorES6Factory;

@@ -17,11 +17,12 @@
  *  limitations under the License.
  */
 var CoreObject = require('../CoreObject.js');
+var ContextInterface = require('./ContextInterface.js');
 class FactoryInterface{
 	/**
 	 * Returns new Instance
 	 */
-	newInstance(){
+	newInstance(context){
 	}
 }
 module.exports = FactoryInterface;

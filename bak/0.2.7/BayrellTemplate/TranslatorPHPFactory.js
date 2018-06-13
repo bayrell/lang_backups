@@ -32,8 +32,8 @@ class TranslatorPHPFactory extends ContextObject{
 	/**
 	 * Returns new Instance
 	 */
-	newInstance(){
-		return new TranslatorPHP(this.context());
+	newInstance(context){
+		return new TranslatorPHP(context);
 	}
 }
 module.exports = TranslatorPHPFactory;

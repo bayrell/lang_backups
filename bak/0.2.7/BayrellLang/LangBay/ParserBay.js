@@ -259,9 +259,11 @@ class ParserBay extends CommonParser{
 	 */
 	readCallAwait(){
 		this.matchNextToken("await");
-		var ident = this.readCallDynamic(true, true, true, true);
+		var obj = this.readCallDynamic(true, true, true, false);
 		var v = this.readCallBody();
-		return new OpCallAwait(ident, v);
+		obj = new OpCall(obj, v);
+		obj.is_await = true;
+		return obj;
 	}
 	/**
 	 * Read clone
@@ -978,6 +980,11 @@ class ParserBay extends CommonParser{
 		}
 		else if (this.lookNextTokenType() == ParserBayToken.TOKEN_COMMENT){
 			return new OpComment(this.readAnyNextToken().token);
+		}
+		else if (this.findNextToken("await")){
+			res = this.readCallAwait();
+			this.matchNextToken(";");
+			return res;
 		}
 		else if (this.findNextToken("if")){
 			return this.readOperatorIf();

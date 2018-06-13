@@ -17,7 +17,7 @@
  *  limitations under the License.
  */
 var MapInterface = require('./MapInterface.js');
-var ContextObject = require('../ContextObject.js');
+var CoreObject = require('../CoreObject.js');
 class ContextInterface{
 	/**
 	 * Register module
@@ -31,14 +31,6 @@ class ContextInterface{
 	 * @param int type
 	 */
 	registerProvider(provider_name, factory_name, type){
-	}
-	/**
-	 * Returns global provider
-	 *
-	 * @params string provider_name
-	 * @return CoreObject
-	 */
-	getProvider(provider_name){
 	}
 	/**
 	 * Returns global provider
@@ -71,24 +63,5 @@ class ContextInterface{
 		if (params == undefined) params=null;
 		if (locale == undefined) locale="";
 	}
-	/**
-	 * Set attribute value
-	 * @params string attr_name - Attribute name
-	 * @params var value - value
-	 */
-	/*void setValue(string attr_name, var value);*/
-	/**
-	 * Get attribute value
-	 * @params string attr_name - Attribute name
-	 * @params var default_value - Default value if not exists
-	 * @return var value
-	 */
-	/*var getValue(string attr_name, var default_value);*/
-	/**
-	 * Return true if attr is exists
-	 * @params string attr_name - Attribute name
-	 * @return boolean
-	 */
-	/*boolean hasValue(string attr_name);*/
 }
 module.exports = ContextInterface;

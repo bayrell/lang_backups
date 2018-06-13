@@ -21,6 +21,7 @@ var Map = require('BayrellRtl').Types.Map;
 var Vector = require('BayrellRtl').Types.Vector;
 var CoreObject = require('BayrellRtl').CoreObject;
 var ContextObject = require('BayrellRtl').ContextObject;
+var ContextInterface = require('BayrellRtl').Interfaces.ContextInterface;
 var FactoryInterface = require('BayrellRtl').Interfaces.FactoryInterface;
 var TranslatorPHP = require('./TranslatorPHP.js');
 class TranslatorPHPFactory extends ContextObject{
@@ -32,8 +33,8 @@ class TranslatorPHPFactory extends ContextObject{
 	/**
 	 * Returns new Instance
 	 */
-	newInstance(){
-		return new TranslatorPHP(this.context());
+	newInstance(context){
+		return new TranslatorPHP(context);
 	}
 }
 module.exports = TranslatorPHPFactory;

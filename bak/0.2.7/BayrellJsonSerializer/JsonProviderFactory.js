@@ -21,6 +21,7 @@ var Map = require('BayrellRtl').Types.Map;
 var Vector = require('BayrellRtl').Types.Vector;
 var CoreObject = require('BayrellRtl').CoreObject;
 var ContextObject = require('BayrellRtl').ContextObject;
+var ContextInterface = require('BayrellRtl').Interfaces.ContextInterface;
 var FactoryInterface = require('BayrellRtl').Interfaces.FactoryInterface;
 var JsonProvider = require('./JsonProvider.js');
 class JsonProviderFactory extends ContextObject{
@@ -54,8 +55,8 @@ class JsonProviderFactory extends ContextObject{
 	/**
 	 * Returns new Instance
 	 */
-	newInstance(){
-		var obj = new JsonProvider(this.context());
+	newInstance(context){
+		var obj = new JsonProvider(context);
 		obj.setDisplayClassName(this.display_class_name);
 		obj.setIndent(this.indent);
 		obj.setSpace(this.space);

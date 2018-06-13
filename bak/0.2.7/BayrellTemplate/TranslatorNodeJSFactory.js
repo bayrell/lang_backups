@@ -32,8 +32,8 @@ class TranslatorNodeJSFactory extends ContextObject{
 	/**
 	 * Returns new Instance
 	 */
-	newInstance(){
-		return new TranslatorNodeJS(this.context());
+	newInstance(context){
+		return new TranslatorNodeJS(context);
 	}
 }
 module.exports = TranslatorNodeJSFactory;

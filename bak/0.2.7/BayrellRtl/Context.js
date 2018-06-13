@@ -27,7 +27,6 @@ var ModuleDescriptionInterface = require('./Interfaces/ModuleDescriptionInterfac
 var ContextObject = require('./ContextObject.js');
 var ProviderDescription = require('./ProviderDescription.js');
 class Context extends CoreObject{
-	/*protected Map<string, var> _values = null;*/
 	/**
 	 * Constructor
 	 */
@@ -35,8 +34,6 @@ class Context extends CoreObject{
 		super();
 		this._modules = new Vector();
 		this._providers_names = new Map();
-		this._current_providers = new Map();
-		/*this._values = new Map<string, var>();*/
 	}
 	/**
 	 * Destructor
@@ -112,35 +109,10 @@ class Context extends CoreObject{
 		return this._providers_names.item(provider_name);
 	}
 	/**
-	 * Returns standart provider
-	 *
-	 * @params string provider_name
-	 * @return ContextObject
-	 */
-	getProvider(provider_name){
-		if (this._providers_names.has(provider_name)){
-			var description = this._providers_names.item(provider_name);
-			if (description.getType() == ProviderDescription.PROVIDER_REGULAR){
-				if (this._current_providers.has(provider_name)){
-					return this._current_providers.item(provider_name);
-				}
-			}
-			var obj = this.createProvider(provider_name);
-			if (obj == null){
-				return null;
-			}
-			if (description.getType() == ProviderDescription.PROVIDER_REGULAR){
-				this._current_providers.set(provider_name, obj);
-			}
-			return obj;
-		}
-		return null;
-	}
-	/**
 	 * Returns temporary provider
 	 *
 	 * @params string provider_name
-	 * @return ContextObject
+	 * @return CoreObject
 	 */
 	createProvider(provider_name){
 		if (!this._providers_names.has(provider_name)){
@@ -151,7 +123,7 @@ class Context extends CoreObject{
 			return null;
 		}
 		var factory_obj = description.getFactory();
-		var obj = factory_obj.newInstance();
+		var obj = factory_obj.newInstance(this);
 		return obj;
 	}
 	/**
@@ -180,30 +152,5 @@ class Context extends CoreObject{
 		if (locale == undefined) locale="";
 		return message;
 	}
-	/**
-	 * Set attribute value
-	 * @params string attr_name - Attribute name
-	 * @params var value - value
-	 */
-	/*void setValue(string attr_name, var value){
-		this._values.set(attr_name, value);
-	}*/
-	/**
-	 * Get attribute value
-	 * @params string attr_name - Attribute name
-	 * @params var default_value - Default value if not exists
-	 * @return var value
-	 */
-	/*var getValue(string attr_name, var default_value){
-		return this._values.get(attr_name, default_value);
-	}*/
-	/**
-	 * Return true if attr is exists
-	 * @params string attr_name - Attribute name
-	 * @return boolean
-	 */
-	/*boolean hasValue(string attr_name){
-		return this._values.contains(attr_name);
-	}*/
 }
 module.exports = Context;
