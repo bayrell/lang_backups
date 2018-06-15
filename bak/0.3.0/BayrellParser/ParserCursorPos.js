@@ -29,6 +29,9 @@ class ParserCursorPos extends ContextObject{
 	_init(){
 		super._init();
 		this.parser = null;
+		this.pos = 0;
+		this.line = 1;
+		this.col = 1;
 		if (this.__implements__ == undefined){this.__implements__ = [];}
 		this.__implements__.push(CloneableInterface);
 	}

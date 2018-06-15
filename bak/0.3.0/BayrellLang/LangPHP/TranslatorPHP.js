@@ -85,6 +85,14 @@ var OpWhile = require('../OpCodes/OpWhile.js');
 class TranslatorPHP extends CommonTranslator{
 	_init(){
 		super._init();
+		this.modules = null;
+		this.current_namespace = "";
+		this.current_class_name = "";
+		this.current_function_name = null;
+		this.current_function_is_static = false;
+		this.current_module_name = "";
+		this.is_static = false;
+		this.is_interface = false;
 	}
 	/**
 	 * Get name
@@ -887,19 +895,37 @@ class TranslatorPHP extends CommonTranslator{
 			ch = ", ";
 		}
 		res += ")";
+		var flag_use = false;
+		if (this.current_function_name.count() == 2 && !this.current_function_is_static){
+			if (use_vars == null){
+				var use_vars = new Vector();
+			}
+			use_vars.prepend("$this");
+		}
 		if (use_vars != null){
+			flag_use = true;
+		}
+		if (op_code.use_variables != null){
+			if (op_code.use_variables.count() > 0){
+				flag_use = true;
+			}
+		}
+		if (flag_use){
 			ch = "";
 			res += " use (";
-			for (var i = 0; i < use_vars.count(); i++){
-				res += rtl.toString(ch)+rtl.toString(use_vars.item(i));
-				ch = ", ";
+			if (use_vars != null){
+				for (var i = 0; i < use_vars.count(); i++){
+					res += rtl.toString(ch)+rtl.toString(use_vars.item(i));
+					ch = ", ";
+				}
+			}
+			if (op_code.use_variables != null){
+				for (var i = 0; i < op_code.use_variables.count(); i++){
+					res += rtl.toString(ch)+"$"+rtl.toString(op_code.use_variables.item(i));
+					ch = ", ";
+				}
 			}
 			res += ")";
-		}
-		else {
-			if (this.current_function_name.count() == 2 && !this.current_function_is_static){
-				res += " use ($this)";
-			}
 		}
 		this.popOneLine();
 		if (this.is_interface){

@@ -26,6 +26,12 @@ var ParserReader = require('./ParserReader.js');
 class ParserToken extends ParserReader{
 	_init(){
 		super._init();
+		this.token = "";
+		this.tp = "";
+		this.start_pos = 0;
+		this.start_line = 1;
+		this.start_col = 1;
+		this.success = false;
 	}
 	/**
 	 * Token content

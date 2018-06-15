@@ -92,6 +92,7 @@ var ParserError = require('BayrellParser').Exceptions.ParserError;
 class ParserBay extends CommonParser{
 	_init(){
 		super._init();
+		this.is_interface = false;
 	}
 	/**
 	 * Tokens Fabric
@@ -1214,7 +1215,22 @@ class ParserBay extends CommonParser{
 		this.popToken();
 		/* Read functions arguments */
 		res.args = this.readFunctionsArguments();
-		/* Read body of the function */
+		/* Read use variables*/
+		if (this.lookNextToken() == "use"){
+			this.matchNextToken("use");
+			this.matchNextToken("(");
+			while (this.lookNextToken() != ")" && !this.isEOF()){
+				var name = this.readIdentifierName();
+				res.use_variables.push(name);
+				if (this.lookNextToken() == ","){
+					this.matchNextToken(",");
+				}
+				else {
+					break;
+				}
+			}
+			this.matchNextToken(")");
+		}
 		if (is_declare_function){
 			this.matchNextToken(";");
 		}

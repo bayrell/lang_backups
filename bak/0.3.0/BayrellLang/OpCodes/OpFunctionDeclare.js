@@ -29,6 +29,7 @@ class OpFunctionDeclare extends BaseOpCode{
 		this.result_type = null;
 		this.args = null;
 		this.childs = null;
+		this.use_variables = null;
 		this.flags = null;
 	}
 	/**
@@ -56,6 +57,7 @@ class OpFunctionDeclare extends BaseOpCode{
 	constructor(){
 		super();
 		this.args = new Vector();
+		this.use_variables = new Vector();
 	}
 	/**
 	 * Destructor

@@ -194,7 +194,7 @@ BayrellRtl.Types.Vector = class extends Array{
 	
 	
 	/**
-	 * Append value to the end of array
+	 * Append value to the end of the vector
 	 * @param T value
 	 */
 	append(value){
@@ -205,12 +205,34 @@ BayrellRtl.Types.Vector = class extends Array{
 	
 	
 	/**
-	 * Insert first value size_to array
+	 * Insert first value to the begin of the vector
 	 * @return T value
 	 */
 	prepend(value){
 		this.unshift(value);
 		return this;
+	}
+	
+	
+	
+	/**
+	 * Append vector to the end of the vector
+	 * @param Vector<T> arr
+	 */
+	appendVector(arr){
+		function f(item){ this.push(item); };
+		arr.forEach(f.bind(this));
+	}
+	
+	
+	
+	/**
+	 * Prepend vector to the begin of the vector
+	 * @param Vector<T> arr
+	 */
+	prependVector(arr){
+		function f(item){ this.prepend(item); };
+		arr.forEach(f.bind(this));
 	}
 	
 	
@@ -279,5 +301,15 @@ BayrellRtl.Types.Vector = class extends Array{
 		super.forEach(f);
 	}
 	
+	
+	
+	/**
+	 * Returns Vector
+	 * @param Vector<T> arr
+	 * @return Vector<T>
+	 */
+	concat(arr){
+		return super.concat(arr);
+	}
 }
 module.exports = BayrellRtl.Types.Vector;

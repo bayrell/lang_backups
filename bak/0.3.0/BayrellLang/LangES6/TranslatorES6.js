@@ -87,6 +87,11 @@ var OpWhile = require('../OpCodes/OpWhile.js');
 class TranslatorES6 extends CommonTranslator{
 	_init(){
 		super._init();
+		this.modules = null;
+		this.current_namespace = "";
+		this.current_class_name = "";
+		this.current_function_name = null;
+		this.current_module_name = "";
 	}
 	/**
 	 * Get name
@@ -904,7 +909,7 @@ class TranslatorES6 extends CommonTranslator{
 				if (class_variables != null){
 					for (var i = 0; i < class_variables.count(); i++){
 						var variable = class_variables.item(i);
-						if (variable.flags != null && variable.flags.p_static == false){
+						if (!variable.isFlag("static")){
 							this.beginOperation();
 							s = "this."+rtl.toString(variable.name)+" = "+rtl.toString(this.translateRun(variable.value))+";";
 							this.endOperation();
