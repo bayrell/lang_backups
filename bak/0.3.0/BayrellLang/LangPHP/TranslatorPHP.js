@@ -815,7 +815,6 @@ class TranslatorPHP extends CommonTranslator{
 			}
 		}
 		this.current_function_name.push(op_code.name);
-		var old_is_operation = this.beginOperation();
 		res += op_code.name;
 		res += "(";
 		for (var i = 0; i < op_code.args.count(); i++){
@@ -831,12 +830,14 @@ class TranslatorPHP extends CommonTranslator{
 		}
 		res += ")";
 		res += "{";
+		this.setOperation(false);
+		this.pushOneLine(false);
 		this.levelInc();
 		res += this.s("return ");
 		res += this.OpFunctionDeclare(op_code.return_function, true, use_vars);
 		this.levelDec();
 		res += this.s("}");
-		this.endOperation(old_is_operation);
+		this.popOneLine();
 		this.current_function_name.pop();
 		return res;
 	}
@@ -865,7 +866,6 @@ class TranslatorPHP extends CommonTranslator{
 				this.current_function_is_static = false;
 			}
 		}
-		var old_is_operation = this.beginOperation();
 		if (op_code.name == "constructor"){
 			res += "__construct";
 		}
@@ -876,15 +876,14 @@ class TranslatorPHP extends CommonTranslator{
 			res += op_code.name;
 		}
 		this.current_function_name.push(op_code.name);
+		this.pushOneLine(true);
 		res += "(";
 		for (var i = 0; i < op_code.args.count(); i++){
 			var variable = op_code.args.item(i);
-			this.pushOneLine(true);
 			res += rtl.toString(ch)+"$"+rtl.toString(variable.name);
 			if (variable.value != null){
 				res += " = "+rtl.toString(this.translateRun(variable.value));
 			}
-			this.popOneLine();
 			ch = ", ";
 		}
 		res += ")";
@@ -902,13 +901,14 @@ class TranslatorPHP extends CommonTranslator{
 				res += " use ($this)";
 			}
 		}
+		this.popOneLine();
 		if (this.is_interface){
 			res += ";";
-			this.endOperation(old_is_operation);
 		}
 		else {
 			res += "{";
-			this.endOperation(old_is_operation);
+			this.setOperation(false);
+			this.pushOneLine(false);
 			this.levelInc();
 			if (op_code.childs != null){
 				for (var i = 0; i < op_code.childs.count(); i++){
@@ -917,6 +917,7 @@ class TranslatorPHP extends CommonTranslator{
 			}
 			this.levelDec();
 			res += this.s("}"+rtl.toString((end_semicolon) ? (";") : ("")));
+			this.popOneLine();
 		}
 		this.current_function_name.pop();
 		return res;
@@ -1075,6 +1076,7 @@ class TranslatorPHP extends CommonTranslator{
 		/* Set current class name */
 		this.current_class_name = op_code.class_name;
 		this.modules.set(this.current_class_name, rtl.toString(this.current_namespace)+"."+rtl.toString(this.current_class_name));
+		this.is_interface = false;
 		/* Skip if declare class */
 		if (op_code.isFlag("declare")){
 			return "";

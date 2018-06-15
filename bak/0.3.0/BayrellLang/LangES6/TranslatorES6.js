@@ -776,8 +776,10 @@ class TranslatorES6 extends CommonTranslator{
 		res += "{";
 		this.endOperation();
 		this.levelInc();
+		this.pushOneLine(false);
 		res += this.s("return ");
 		res += this.OpFunctionDeclare(op_code.return_function);
+		this.popOneLine(false);
 		this.levelDec();
 		res += this.s("}");
 		this.current_function_name.pop();
@@ -794,10 +796,10 @@ class TranslatorES6 extends CommonTranslator{
 			return "";
 		}
 		this.current_function_name.push(op_code.name);
-		this.beginOperation();
 		res += this.OpFunctionDeclareHeader(op_code);
 		res += "{";
-		this.endOperation();
+		this.setOperation(false);
+		this.pushOneLine(false);
 		this.levelInc();
 		/* Default variables */
 		for (var i = 0; i < op_code.args.count(); i++){
@@ -818,6 +820,7 @@ class TranslatorES6 extends CommonTranslator{
 		}
 		this.levelDec();
 		res += this.s("}");
+		this.popOneLine();
 		this.current_function_name.pop();
 		return res;
 	}

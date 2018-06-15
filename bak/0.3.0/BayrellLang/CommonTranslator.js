@@ -155,6 +155,13 @@ class CommonTranslator extends ContextObject{
 		this.is_operation = old_is_operation;
 	}
 	/**
+	 * Set operation
+	 */
+	setOperation(is_operation){
+		if (is_operation == undefined) is_operation=false;
+		this.is_operation = is_operation;
+	}
+	/**
 	 * Output operation
 	 */
 	op(op_code, op, opcode_level){

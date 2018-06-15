@@ -269,5 +269,15 @@ BayrellRtl.Types.Vector = class extends Array{
 		return super.reduce(f, init_value);
 	}
 	
+	
+	
+	/**
+	 * Call function for each item
+	 * @param func f
+	 */
+	each(f){
+		super.forEach(f);
+	}
+	
 }
 module.exports = BayrellRtl.Types.Vector;
