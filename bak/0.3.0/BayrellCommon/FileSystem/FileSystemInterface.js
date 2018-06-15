@@ -23,25 +23,25 @@ class FileSystemInterface{
 	/**
 	 * Returns files and folders from directory
 	 * @param string basedir
-	 * @param Vector<string> res - Result
+	 * @return Vector<string> - Result
 	 */
-	getDirectoryListing(basedir, res){
+	getDirectoryListing(basedir){
 		if (basedir == undefined) basedir="";
 	}
 	/**
 	 * Returns recursive files and folders from directory
 	 * @param string basedir
-	 * @param Vector<string> res - Result
+	 * @return Vector<string> - Result
 	 */
-	readDirectoryRecursive(basedir, res){
+	readDirectoryRecursive(basedir){
 		if (basedir == undefined) basedir="";
 	}
 	/**
 	 * Returns recursive only files from directory
 	 * @param string basedir
-	 * @param Vector<string> res - Result
+	 * @return Vector<string> - Result
 	 */
-	getFilesRecursive(basedir, res){
+	getFilesRecursive(basedir){
 		if (basedir == undefined) basedir="";
 	}
 	/**
@@ -83,6 +83,13 @@ class FileSystemInterface{
 	makeDir(dirpath, create_parent){
 		if (dirpath == undefined) dirpath="";
 		if (create_parent == undefined) create_parent=false;
+	}
+	/**
+	 * Return true if path is folder
+	 * @param string path
+	 * @param boolean 
+	 */
+	isDir(path){
 	}
 }
 module.exports = FileSystemInterface;

@@ -35,26 +35,51 @@ class FileSystemProvider extends ContextObject{
 	/**
 	 * Returns files and folders from directory
 	 * @param string basedir
-	 * @param Vector<string> res - Result
+	 * @return Vector<string> res - Result
 	 */
-	getDirectoryListing(basedir, res){
+	getDirectoryListing(basedir){
 		if (basedir == undefined) basedir="";
+		
+		var arr = fsModule.readdirSync(basedir);
+		arr = arr.sort();
+		var res = new Vector(arr);
+		return res;
 	}
 	/**
 	 * Returns recursive files and folders from directory
 	 * @param string basedir
 	 * @param Vector<string> res - Result
 	 */
-	readDirectoryRecursive(basedir, res){
+	readDirectoryRecursive(basedir){
 		if (basedir == undefined) basedir="";
+		var res = new Vector();
+		var arr = this.getDirectoryListing(basedir);
+		arr.each(function (path){
+			res.push(path);
+			if (this.isDir(path)){
+				res.pushVector(this.getDirectoryListing(path));
+			}
+		});
+		return res;
 	}
 	/**
 	 * Returns recursive only files from directory
 	 * @param string basedir
 	 * @param Vector<string> res - Result
 	 */
-	getFilesRecursive(basedir, res){
+	getFilesRecursive(basedir){
 		if (basedir == undefined) basedir="";
+		var res = new Vector();
+		var arr = this.getDirectoryListing(basedir);
+		arr.each(function (path){
+			if (this.isDir(path)){
+				res.pushVector(this.getFilesRecursive(path));
+			}
+			else {
+				res.push(path);
+			}
+		});
+		return res;
 	}
 	/**
 	 * Returns files content
@@ -91,6 +116,36 @@ class FileSystemProvider extends ContextObject{
 	openFile(filepath, mode){
 		if (filepath == undefined) filepath="";
 		if (mode == undefined) mode="";
+	}
+	/**
+	 * Make dir
+	 * @param string dirpath
+	 * @param boolean create_parent. Default is true
+	 */
+	makeDir(dirpath, create_parent){
+		if (dirpath == undefined) dirpath="";
+		if (create_parent == undefined) create_parent=false;
+		
+		if (fsModule.existsSync(dirpath))
+			return true;
+		shellModule.mkdir('-p', dirpath);
+	}
+	/**
+	 * Return true if path is folder
+	 * @param string path
+	 * @param boolean 
+	 */
+	isDir(path){
+		
+		return fsModule.lstatSync(path).isDirectory();
+	}
+	/**
+	 * Return true if path is file
+	 * @param string path
+	 * @param boolean 
+	 */
+	isFile(path){
+		return !this.isDir(path);
 	}
 	/**
 	 * Make dir
