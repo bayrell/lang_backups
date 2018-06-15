@@ -1,0 +1,9 @@
+{
+  "description": "Bayrell File System Provider",
+  "files": [
+	"*.js"
+  ],
+  "main": "index.js",
+  "name": "BayrellFileSystem",
+  "version": "0.1.0"
+}
