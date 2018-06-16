@@ -39,6 +39,13 @@ class rtl{
 		else rtl._global_context = context;
 		return context;
 	}
+	/**
+	 * Returns global context
+	 * @param ContextInterface context
+	 */
+	static getGlobalContext(){
+		return rtl.globalContext();
+	}
 	
 	static implements(obj, interface_name){
 		if (obj == undefined) return false;

@@ -18,6 +18,7 @@
  */
 var Context = require('./Context.js');
 var CoreObject = require('./CoreObject.js');
+var rtl = require('./Lib/rtl.js');
 var Vector = require('./Types/Vector.js');
 var ContextInterface = require('./Interfaces/ContextInterface.js');
 var FactoryInterface = require('./Interfaces/FactoryInterface.js');
@@ -54,6 +55,29 @@ class ContextFactory extends CoreObject{
 	registerModule(module_name){
 		this._modules.push(module_name);
 		return this;
+	}
+	/**
+	 * Register global interface
+	 * @params Vector<string> modules
+	 * @return ContextInterface
+	 */
+	static createContext(modules){
+		var factory = new ContextFactory();
+		modules.each((module) => {
+			factory.registerModule(module);
+		});
+		var context = factory.newInstance();
+		return context;
+	}
+	/**
+	 * Register global interface
+	 * @params Vector<string> modules
+	 * @return ContextInterface
+	 */
+	static registerGlobalContext(modules){
+		var context = ContextFactory.createContext(modules);
+		rtl.setGlobalContext(context);
+		return context;
 	}
 }
 module.exports = ContextFactory;
