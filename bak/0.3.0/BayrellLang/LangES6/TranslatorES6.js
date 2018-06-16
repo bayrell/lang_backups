@@ -751,9 +751,6 @@ class TranslatorES6 extends CommonTranslator{
 		if (op_code.isFlag("static")){
 			res += "static ";
 		}
-		else if (this.current_function_name.count() > 1){
-			res += "function ";
-		}
 		res += op_code.name;
 		res += "(";
 		for (var i = 0; i < op_code.args.count(); i++){
@@ -764,6 +761,9 @@ class TranslatorES6 extends CommonTranslator{
 			ch = ", ";
 		}
 		res += ")";
+		if (this.current_function_name.count() > 1){
+			res += " => ";
+		}
 		return res;
 	}
 	/**

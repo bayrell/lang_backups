@@ -130,6 +130,33 @@ class Utils{
 		return res;
 	}
 	/**
+	 * Returns relative path of the filepath
+	 * @param string filepath
+	 * @param string basepath
+	 * @param string ch - Directory separator
+	 * @return string relative path
+	 */
+	static relativePath(filepath, basepath, ch){
+		if (ch == undefined) ch="/";
+		var source = rs.explode(ch, filepath);
+		var base = rs.explode(ch, basepath);
+		source = source.filter((s) => {
+			return s != "";
+		});
+		base = base.filter((s) => {
+			return s != "";
+		});
+		var i = 0;
+		while (source.count() > 0 && base.count() > 0 && source.item(0) == base.item(0)){
+			source.shift();
+			base.shift();
+		}
+		base.each((s) => {
+			source.unshift("..");
+		});
+		return rs.implode(ch, source);
+	}
+	/**
 	 * Convert bytes to string
 	 * @param Vector<byte> arr - vector of the bytes
 	 * @string charset - charset of the bytes vector. Default utf8

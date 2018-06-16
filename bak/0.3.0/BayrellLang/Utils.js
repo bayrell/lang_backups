@@ -100,7 +100,7 @@ class Utils extends ContextObject{
 		#endswitch
 		*/
 		var file_system = context.createProvider("default:fs");
-		var content = file_system.loadFile(src_file_name);
+		var content = file_system.readFile(src_file_name);
 		var res = Utils.translate(context, parser_factory, translator_factory, content);
 		var dir = RtlUtils.dirname(dest_file_name);
 		file_system.makeDir(dir);

@@ -40,9 +40,12 @@ class FileSystemProvider extends ContextObject{
 	getDirectoryListing(basedir){
 		if (basedir == undefined) basedir="";
 		
+		var res = new Vector();
 		var arr = fsModule.readdirSync(basedir);
 		arr = arr.sort();
-		var res = new Vector(arr);
+		arr.forEach(function(s){
+			res.push( basedir + '/' + s );
+		});
 		return res;
 	}
 	/**
@@ -54,10 +57,10 @@ class FileSystemProvider extends ContextObject{
 		if (basedir == undefined) basedir="";
 		var res = new Vector();
 		var arr = this.getDirectoryListing(basedir);
-		arr.each(function (path){
+		arr.each((path) => {
 			res.push(path);
 			if (this.isDir(path)){
-				res.pushVector(this.getDirectoryListing(path));
+				res.appendVector(this.getDirectoryListing(path));
 			}
 		});
 		return res;
@@ -71,9 +74,9 @@ class FileSystemProvider extends ContextObject{
 		if (basedir == undefined) basedir="";
 		var res = new Vector();
 		var arr = this.getDirectoryListing(basedir);
-		arr.each(function (path){
+		arr.each((path) => {
 			if (this.isDir(path)){
-				res.pushVector(this.getFilesRecursive(path));
+				res.appendVector(this.getFilesRecursive(path));
 			}
 			else {
 				res.push(path);
@@ -82,12 +85,12 @@ class FileSystemProvider extends ContextObject{
 		return res;
 	}
 	/**
-	 * Returns files content
+	 * Returns content of the file
 	 * @param string filepath
 	 * @param string charset
 	 * @return string
 	 */
-	loadFile(filepath, charset){
+	readFile(filepath, charset){
 		if (filepath == undefined) filepath="";
 		if (charset == undefined) charset="utf8";
 		
