@@ -32,6 +32,36 @@ class OpFunctionDeclare extends BaseOpCode{
 		this.use_variables = null;
 		this.flags = null;
 	}
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else if (variable_name == "name") this.name = value;
+		else if (variable_name == "result_type") this.result_type = value;
+		else if (variable_name == "args") this.args = value;
+		else if (variable_name == "childs") this.childs = value;
+		else if (variable_name == "use_variables") this.use_variables = value;
+		else if (variable_name == "flags") this.flags = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		else if (variable_name == "name") return this.name;
+		else if (variable_name == "result_type") return this.result_type;
+		else if (variable_name == "args") return this.args;
+		else if (variable_name == "childs") return this.childs;
+		else if (variable_name == "use_variables") return this.use_variables;
+		else if (variable_name == "flags") return this.flags;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+		names.push("name");
+		names.push("result_type");
+		names.push("args");
+		names.push("childs");
+		names.push("use_variables");
+		names.push("flags");
+	}
 	/**
 	 * Returns classname of the object
 	 * @return string
@@ -64,67 +94,6 @@ class OpFunctionDeclare extends BaseOpCode{
 	 */
 	destructor(){
 		super.destructor();
-	}
-	/**
-	 * Returns name of variables to serialization
-	 * @return Vector<string>
-	 */
-	getVariablesNames(names){
-		super.getVariablesNames(names);
-		names.push("name");
-		names.push("result_type");
-		names.push("args");
-		names.push("childs");
-		names.push("flags");
-	}
-	/**
-	 * Returns instance of the value by variable name
-	 * @param string variable_name
-	 * @return var
-	 */
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value=null;
-		if (variable_name == "name"){
-			return this.name;
-		}
-		else if (variable_name == "result_type"){
-			return this.result_type;
-		}
-		else if (variable_name == "args"){
-			return this.args;
-		}
-		else if (variable_name == "childs"){
-			return this.childs;
-		}
-		else if (variable_name == "flags"){
-			return this.flags;
-		}
-		return super.takeValue(variable_name, default_value);
-	}
-	/**
-	 * Set new value instance by variable name
-	 * @param string variable_name
-	 * @param var value
-	 */
-	assignValue(variable_name, value){
-		if (variable_name == "name"){
-			this.name = value;
-		}
-		else if (variable_name == "result_type"){
-			this.result_type = value;
-		}
-		else if (variable_name == "args"){
-			this.args = value;
-		}
-		else if (variable_name == "childs"){
-			this.childs = value;
-		}
-		else if (variable_name == "flags"){
-			this.flags = value;
-		}
-		else {
-			super.assignValue(variable_name, value);
-		}
 	}
 }
 module.exports = OpFunctionDeclare;

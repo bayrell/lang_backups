@@ -28,6 +28,27 @@ class OpCall extends BaseOpCode{
 		this.args = null;
 		this.is_await = false;
 	}
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else if (variable_name == "value") this.value = value;
+		else if (variable_name == "args") this.args = value;
+		else if (variable_name == "is_await") this.is_await = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		else if (variable_name == "value") return this.value;
+		else if (variable_name == "args") return this.args;
+		else if (variable_name == "is_await") return this.is_await;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+		names.push("value");
+		names.push("args");
+		names.push("is_await");
+	}
 	/**
 	 * Returns classname of the object
 	 * @return string
@@ -50,46 +71,6 @@ class OpCall extends BaseOpCode{
 	 */
 	destructor(){
 		super.destructor();
-	}
-	/**
-	 * Returns name of variables to serialization
-	 * @return Vector<string>
-	 */
-	getVariablesNames(names){
-		super.getVariablesNames(names);
-		names.push("value");
-		names.push("args");
-	}
-	/**
-	 * Returns instance of the value by variable name
-	 * @param string variable_name
-	 * @return var
-	 */
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value=null;
-		if (variable_name == "value"){
-			return this.value;
-		}
-		else if (variable_name == "args"){
-			return this.args;
-		}
-		return super.takeValue(variable_name, default_value);
-	}
-	/**
-	 * Set new value instance by variable name
-	 * @param string variable_name
-	 * @param var value
-	 */
-	assignValue(variable_name, value){
-		if (variable_name == "value"){
-			this.value = value;
-		}
-		else if (variable_name == "args"){
-			this.args = value;
-		}
-		else {
-			super.assignValue(variable_name, value);
-		}
 	}
 }
 module.exports = OpCall;

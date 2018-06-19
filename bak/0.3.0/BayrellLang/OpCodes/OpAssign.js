@@ -28,6 +28,27 @@ class OpAssign extends BaseOpCode{
 		this.value = null;
 		this.op_name = "";
 	}
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else if (variable_name == "ident") this.ident = value;
+		else if (variable_name == "value") this.value = value;
+		else if (variable_name == "op_name") this.op_name = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		else if (variable_name == "ident") return this.ident;
+		else if (variable_name == "value") return this.value;
+		else if (variable_name == "op_name") return this.op_name;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+		names.push("ident");
+		names.push("value");
+		names.push("op_name");
+	}
 	/**
 	 * Returns classname of the object
 	 * @return string
@@ -52,53 +73,6 @@ class OpAssign extends BaseOpCode{
 	 */
 	destructor(){
 		super.destructor();
-	}
-	/**
-	 * Returns name of variables to serialization
-	 * @return Vector<string>
-	 */
-	getVariablesNames(names){
-		super.getVariablesNames(names);
-		names.push("ident");
-		names.push("value");
-		names.push("op_name");
-	}
-	/**
-	 * Returns instance of the value by variable name
-	 * @param string variable_name
-	 * @return var
-	 */
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value=null;
-		if (variable_name == "ident"){
-			return this.ident;
-		}
-		else if (variable_name == "value"){
-			return this.value;
-		}
-		else if (variable_name == "op_name"){
-			return this.op_name;
-		}
-		return super.takeValue(variable_name, default_value);
-	}
-	/**
-	 * Set new value instance by variable name
-	 * @param string variable_name
-	 * @param var value
-	 */
-	assignValue(variable_name, value){
-		if (variable_name == "ident"){
-			this.ident = value;
-		}
-		else if (variable_name == "value"){
-			this.value = value;
-		}
-		else if (variable_name == "op_name"){
-			this.op_name = value;
-		}
-		else {
-			super.assignValue(variable_name, value);
-		}
 	}
 }
 module.exports = OpAssign;

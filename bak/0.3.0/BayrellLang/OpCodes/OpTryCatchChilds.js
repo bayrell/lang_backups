@@ -28,6 +28,27 @@ class OpTryCatchChilds extends BaseOpCode{
 		this.op_ident = null;
 		this.childs = null;
 	}
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else if (variable_name == "op_type") this.op_type = value;
+		else if (variable_name == "op_ident") this.op_ident = value;
+		else if (variable_name == "childs") this.childs = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		else if (variable_name == "op_type") return this.op_type;
+		else if (variable_name == "op_ident") return this.op_ident;
+		else if (variable_name == "childs") return this.childs;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+		names.push("op_type");
+		names.push("op_ident");
+		names.push("childs");
+	}
 	/**
 	 * Returns classname of the object
 	 * @return string
@@ -52,52 +73,6 @@ class OpTryCatchChilds extends BaseOpCode{
 	 */
 	destructor(){
 		super.destructor();
-	}
-	/**
-	 * Returns name of variables to serialization
-	 * @return Vector<string>
-	 */
-	getVariablesNames(names){
-		names.push("op_type");
-		names.push("op_ident");
-		names.push("childs");
-	}
-	/**
-	 * Returns instance of the value by variable name
-	 * @param string variable_name
-	 * @return var
-	 */
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value=null;
-		if (variable_name == "op_type"){
-			return this.op_type;
-		}
-		else if (variable_name == "op_ident"){
-			return this.op_ident;
-		}
-		else if (variable_name == "childs"){
-			return this.childs;
-		}
-		return super.takeValue(variable_name, default_value);
-	}
-	/**
-	 * Set new value instance by variable name
-	 * @param string variable_name
-	 * @param var value
-	 */
-	assignValue(variable_name, value){
-		if (variable_name == "op_type"){
-			this.op_type = value;
-		}
-		if (variable_name == "op_ident"){
-			this.op_ident = value;
-		}
-		if (variable_name == "childs"){
-			this.childs = value;
-		}
-		else {
-			super.assignValue(variable_name, value);
-		}
 	}
 }
 module.exports = OpTryCatchChilds;

@@ -25,6 +25,18 @@ class OpBitOr extends OpValue2{
 		super._init();
 		this.op = "op_bit_or";
 	}
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+	}
 	/**
 	 * Returns classname of the object
 	 * @return string

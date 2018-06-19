@@ -30,6 +30,30 @@ class OpAssignDeclare extends BaseOpCode{
 		this.value = null;
 		this.flags = null;
 	}
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else if (variable_name == "tp") this.tp = value;
+		else if (variable_name == "name") this.name = value;
+		else if (variable_name == "value") this.value = value;
+		else if (variable_name == "flags") this.flags = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		else if (variable_name == "tp") return this.tp;
+		else if (variable_name == "name") return this.name;
+		else if (variable_name == "value") return this.value;
+		else if (variable_name == "flags") return this.flags;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+		names.push("tp");
+		names.push("name");
+		names.push("value");
+		names.push("flags");
+	}
 	/**
 	 * Read is Flag
 	 */
@@ -66,60 +90,6 @@ class OpAssignDeclare extends BaseOpCode{
 	 */
 	destructor(){
 		super.destructor();
-	}
-	/**
-	 * Returns name of variables to serialization
-	 * @return Vector<string>
-	 */
-	getVariablesNames(names){
-		super.getVariablesNames(names);
-		names.push("type");
-		names.push("ident");
-		names.push("value");
-		names.push("flags");
-	}
-	/**
-	 * Returns instance of the value by variable name
-	 * @param string variable_name
-	 * @return var
-	 */
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value=null;
-		if (variable_name == "type"){
-			return this.tp;
-		}
-		else if (variable_name == "ident"){
-			return this.ident;
-		}
-		else if (variable_name == "value"){
-			return this.value;
-		}
-		else if (variable_name == "flags"){
-			return this.flags;
-		}
-		return super.takeValue(variable_name, default_value);
-	}
-	/**
-	 * Set new value instance by variable name
-	 * @param string variable_name
-	 * @param var value
-	 */
-	assignValue(variable_name, value){
-		if (variable_name == "type"){
-			this.tp = value;
-		}
-		else if (variable_name == "ident"){
-			this.ident = value;
-		}
-		else if (variable_name == "value"){
-			this.value = value;
-		}
-		else if (variable_name == "flags"){
-			this.flags = value;
-		}
-		else {
-			super.assignValue(variable_name, value);
-		}
 	}
 }
 module.exports = OpAssignDeclare;

@@ -33,6 +33,7 @@ class Context extends CoreObject{
 	constructor(){
 		super();
 		this._modules = new Vector();
+		this._values = new Map();
 		this._providers_names = new Map();
 	}
 	/**
@@ -125,6 +126,23 @@ class Context extends CoreObject{
 		var factory_obj = description.getFactory();
 		var obj = factory_obj.newInstance(this);
 		return obj;
+	}
+	/**
+	 * Set value
+	 * @param string name
+	 * @param mixed value
+	 */
+	setValue(name, value){
+		this._values.set(name, value);
+	}
+	/**
+	 * Get value
+	 * @param string name
+	 * @param mixed value
+	 */
+	getValue(name, default_value){
+		if (default_value == undefined) default_value=null;
+		return this._values.get(name, default_value);
 	}
 	/**
 	 * Set application locale

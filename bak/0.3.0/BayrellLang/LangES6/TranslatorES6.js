@@ -948,18 +948,21 @@ class TranslatorES6 extends CommonTranslator{
 				res += this.s("}");
 			}
 			if (has_serializable){
+				var class_variables_serializable_count = 0;
 				res += this.s("assignValue(variable_name, value){");
 				this.levelInc();
+				class_variables_serializable_count = 0;
 				for (var i = 0; i < class_variables.count(); i++){
 					var variable = class_variables.item(i);
 					if (variable.isFlag("serializable")){
 						var take_value_s = "if (variable_name == "+rtl.toString(this.convertString(variable.name))+") "+"this."+rtl.toString(variable.name)+" = value;";
-						if (i == 0){
+						if (class_variables_serializable_count == 0){
 							res += this.s(take_value_s);
 						}
 						else {
 							res += this.s("else "+rtl.toString(take_value_s));
 						}
+						class_variables_serializable_count++
 					}
 				}
 				res += this.s("else super.assignValue(variable_name, value);");
@@ -968,16 +971,18 @@ class TranslatorES6 extends CommonTranslator{
 				res += this.s("takeValue(variable_name, default_value){");
 				this.levelInc();
 				res += this.s("if (default_value == undefined) default_value = null;");
+				class_variables_serializable_count = 0;
 				for (var i = 0; i < class_variables.count(); i++){
 					var variable = class_variables.item(i);
 					if (variable.isFlag("serializable")){
 						var take_value_s = "if (variable_name == "+rtl.toString(this.convertString(variable.name))+") "+"return this."+rtl.toString(variable.name)+";";
-						if (i == 0){
+						if (class_variables_serializable_count == 0){
 							res += this.s(take_value_s);
 						}
 						else {
 							res += this.s("else "+rtl.toString(take_value_s));
 						}
+						class_variables_serializable_count++
 					}
 				}
 				res += this.s("return super.takeValue(variable_name, default_value);");

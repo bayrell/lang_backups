@@ -28,12 +28,20 @@ class OpFunctionArrowDeclare extends OpFunctionDeclare{
 		this.op = "op_arrow_function";
 		this.return_function = null;
 	}
-	assign(obj){
-		if (obj instanceof OpFunctionArrowDeclare){
-			this.op = rtl._clone(obj.op);
-			this.return_function = rtl._clone(obj.return_function);
-		}
-		super.assign(obj);
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else if (variable_name == "return_function") this.return_function = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		else if (variable_name == "return_function") return this.return_function;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+		names.push("return_function");
 	}
 	/**
 	 * Returns classname of the object

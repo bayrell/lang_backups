@@ -28,6 +28,27 @@ class OpCompare extends BaseOpCode{
 		this.value1 = null;
 		this.value2 = null;
 	}
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else if (variable_name == "condition") this.condition = value;
+		else if (variable_name == "value1") this.value1 = value;
+		else if (variable_name == "value2") this.value2 = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		else if (variable_name == "condition") return this.condition;
+		else if (variable_name == "value1") return this.value1;
+		else if (variable_name == "value2") return this.value2;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+		names.push("condition");
+		names.push("value1");
+		names.push("value2");
+	}
 	/**
 	 * Returns classname of the object
 	 * @return string
@@ -52,65 +73,6 @@ class OpCompare extends BaseOpCode{
 	 */
 	destructor(){
 		super.destructor();
-	}
-	/**
-	 * Returns name of variables to serialization
-	 * @return Vector<string>
-	 */
-	getVariablesNames(names){
-		super.getVariablesNames(names);
-		names.push("condition");
-		names.push("value1");
-		names.push("value2");
-	}
-	/**
-	 * Returns instance of the value by variable name
-	 * @param string variable_name
-	 * @return var
-	 */
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value=null;
-		if (variable_name == "condition"){
-			return this.condition;
-		}
-		if (variable_name == "value1"){
-			return this.value1;
-		}
-		if (variable_name == "value2"){
-			return this.value2;
-		}
-		return super.takeValue(variable_name, default_value);
-	}
-	/**
-	 * Set new value instance by variable name
-	 * @param string variable_name
-	 * @param var value
-	 */
-	assignValue(variable_name, value){
-		if (variable_name == "condition"){
-			this.condition = value;
-		}
-		else if (variable_name == "value1"){
-			this.value1 = value;
-		}
-		else if (variable_name == "value2"){
-			this.value2 = value;
-		}
-		else {
-			super.assignValue(variable_name, value);
-		}
-	}
-	/**
-	 * Assign all data from other object
-	 * @param CoreObject obj
-	 */
-	assign(obj){
-		if (obj instanceof OpCompare){
-			this.condition = rtl._clone(obj.condition);
-			this.value1 = rtl._clone(obj.value1);
-			this.value2 = rtl._clone(obj.value2);
-		}
-		super.assign(obj);
 	}
 }
 module.exports = OpCompare;

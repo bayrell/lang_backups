@@ -30,6 +30,30 @@ class OpIf extends BaseOpCode{
 		this.if_false = null;
 		this.if_else = null;
 	}
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else if (variable_name == "condition") this.condition = value;
+		else if (variable_name == "if_true") this.if_true = value;
+		else if (variable_name == "if_false") this.if_false = value;
+		else if (variable_name == "if_else") this.if_else = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		else if (variable_name == "condition") return this.condition;
+		else if (variable_name == "if_true") return this.if_true;
+		else if (variable_name == "if_false") return this.if_false;
+		else if (variable_name == "if_else") return this.if_else;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+		names.push("condition");
+		names.push("if_true");
+		names.push("if_false");
+		names.push("if_else");
+	}
 	/**
 	 * Returns classname of the object
 	 * @return string
@@ -55,60 +79,6 @@ class OpIf extends BaseOpCode{
 	 */
 	destructor(){
 		super.destructor();
-	}
-	/**
-	 * Returns name of variables to serialization
-	 * @return Vector<string>
-	 */
-	getVariablesNames(names){
-		super.getVariablesNames(names);
-		names.push("condition");
-		names.push("if_true");
-		names.push("if_false");
-		names.push("if_else");
-	}
-	/**
-	 * Returns instance of the value by variable name
-	 * @param string variable_name
-	 * @return var
-	 */
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value=null;
-		if (variable_name == "condition"){
-			return this.condition;
-		}
-		else if (variable_name == "if_true"){
-			return this.if_true;
-		}
-		else if (variable_name == "if_false"){
-			return this.if_false;
-		}
-		else if (variable_name == "if_else"){
-			return this.if_else;
-		}
-		return super.takeValue(variable_name, default_value);
-	}
-	/**
-	 * Set new value instance by variable name
-	 * @param string variable_name
-	 * @param var value
-	 */
-	assignValue(variable_name, value){
-		if (variable_name == "condition"){
-			this.condition = value;
-		}
-		if (variable_name == "if_true"){
-			this.if_true = value;
-		}
-		if (variable_name == "if_false"){
-			this.if_false = value;
-		}
-		if (variable_name == "if_else"){
-			this.if_else = value;
-		}
-		else {
-			super.assignValue(variable_name, value);
-		}
 	}
 }
 module.exports = OpIf;

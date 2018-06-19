@@ -26,6 +26,21 @@ class OpChilds extends BaseOpCode{
 		this.op = "op_childs";
 		this.childs = null;
 	}
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else if (variable_name == "childs") this.childs = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		else if (variable_name == "childs") return this.childs;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+		names.push("childs");
+	}
 	/**
 	 * Returns classname of the object
 	 * @return string
@@ -46,49 +61,6 @@ class OpChilds extends BaseOpCode{
 	 */
 	destructor(){
 		super.destructor();
-	}
-	/**
-	 * Returns name of variables to serialization
-	 * @return Vector<string>
-	 */
-	getVariablesNames(names){
-		super.getVariablesNames(names);
-		names.push("childs");
-	}
-	/**
-	 * Returns instance of the value by variable name
-	 * @param string variable_name
-	 * @return var
-	 */
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value=null;
-		if (variable_name == "childs"){
-			return this.childs;
-		}
-		return super.takeValue(variable_name, default_value);
-	}
-	/**
-	 * Set new value instance by variable name
-	 * @param string variable_name
-	 * @param var value
-	 */
-	assignValue(variable_name, value){
-		if (variable_name == "childs"){
-			this.childs = value;
-		}
-		else {
-			super.assignValue(variable_name, value);
-		}
-	}
-	/**
-	 * Assign all data from other object
-	 * @param CoreObject obj
-	 */
-	assign(obj){
-		if (obj instanceof OpChilds){
-			this.childs = rtl._clone(obj.childs);
-		}
-		super.assign(obj);
 	}
 }
 module.exports = OpChilds;

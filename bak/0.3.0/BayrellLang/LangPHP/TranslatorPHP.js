@@ -818,9 +818,6 @@ class TranslatorPHP extends CommonTranslator{
 			if (this.current_function_name.count() == 0){
 				this.current_function_is_static = false;
 			}
-			if (!this.current_function_is_static && this.current_function_name.count() > 0){
-				use_vars.push("$this");
-			}
 		}
 		this.current_function_name.push(op_code.name);
 		res += op_code.name;
@@ -1102,7 +1099,7 @@ class TranslatorPHP extends CommonTranslator{
 		/* Set current class name */
 		this.current_class_name = op_code.class_name;
 		this.modules.set(this.current_class_name, rtl.toString(this.current_namespace)+"."+rtl.toString(this.current_class_name));
-		this.is_interface = false;
+		/*this.is_interface = false;*/
 		/* Skip if declare class */
 		if (op_code.isFlag("declare")){
 			return "";

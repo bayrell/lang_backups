@@ -1,6 +1,6 @@
 "use strict;"
 /*!
- *  Bayrell Common Library
+ *  Bayrell Common
  *
  *  (c) Copyright 2016-2018 "Ildar Bikmamatov" <support@bayrell.org>
  *
@@ -16,12 +16,28 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-var rtl = require('BayrellRtl').Lib.rtl;
-var Map = require('BayrellRtl').Types.Map;
-var Vector = require('BayrellRtl').Types.Vector;
-class FileInfo{
-	_init(){
-		this.path = "";
+/**
+ * Provider "default:translate" 
+ */
+class TranslateInterface{
+	/**
+	 * Set application locale
+	 * @params string locale
+	 */
+	setLocale(locale){
+	}
+	/**
+	 * Get application locale
+	 * @params string locale
+	 */
+	getLocale(){
+	}
+	/**
+	 * Log message
+	 */
+	translate(message, params, locale){
+		if (params == undefined) params=null;
+		if (locale == undefined) locale="";
 	}
 }
-module.exports = FileInfo;
+module.exports = TranslateInterface;

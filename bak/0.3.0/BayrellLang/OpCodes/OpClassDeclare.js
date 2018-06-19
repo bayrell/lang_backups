@@ -33,6 +33,39 @@ class OpClassDeclare extends BaseOpCode{
 		this.class_template = null;
 		this.flags = null;
 	}
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else if (variable_name == "class_name") this.class_name = value;
+		else if (variable_name == "class_extends") this.class_extends = value;
+		else if (variable_name == "class_implements") this.class_implements = value;
+		else if (variable_name == "class_variables") this.class_variables = value;
+		else if (variable_name == "childs") this.childs = value;
+		else if (variable_name == "class_template") this.class_template = value;
+		else if (variable_name == "flags") this.flags = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		else if (variable_name == "class_name") return this.class_name;
+		else if (variable_name == "class_extends") return this.class_extends;
+		else if (variable_name == "class_implements") return this.class_implements;
+		else if (variable_name == "class_variables") return this.class_variables;
+		else if (variable_name == "childs") return this.childs;
+		else if (variable_name == "class_template") return this.class_template;
+		else if (variable_name == "flags") return this.flags;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+		names.push("class_name");
+		names.push("class_extends");
+		names.push("class_implements");
+		names.push("class_variables");
+		names.push("childs");
+		names.push("class_template");
+		names.push("flags");
+	}
 	/**
 	 * Returns classname of the object
 	 * @return string
@@ -67,81 +100,6 @@ class OpClassDeclare extends BaseOpCode{
 	 */
 	destructor(){
 		super.destructor();
-	}
-	/**
-	 * Returns name of variables to serialization
-	 * @return Vector<string>
-	 */
-	getVariablesNames(names){
-		super.getVariablesNames(names);
-		names.push("class_name");
-		names.push("class_template");
-		names.push("class_extends");
-		names.push("class_implements");
-		names.push("class_variables");
-		names.push("childs");
-		names.push("flags");
-	}
-	/**
-	 * Returns instance of the value by variable name
-	 * @param string variable_name
-	 * @return var
-	 */
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value=null;
-		if (variable_name == "class_name"){
-			return this.class_name;
-		}
-		else if (variable_name == "class_extends"){
-			return this.class_extends;
-		}
-		else if (variable_name == "class_implements"){
-			return this.class_implements;
-		}
-		else if (variable_name == "class_variables"){
-			return this.class_variables;
-		}
-		else if (variable_name == "class_template"){
-			return this.class_template;
-		}
-		else if (variable_name == "childs"){
-			return this.childs;
-		}
-		else if (variable_name == "flags"){
-			return this.flags;
-		}
-		return super.takeValue(variable_name, default_value);
-	}
-	/**
-	 * Set new value instance by variable name
-	 * @param string variable_name
-	 * @param var value
-	 */
-	assignValue(variable_name, value){
-		if (variable_name == "class_name"){
-			this.class_name = value;
-		}
-		else if (variable_name == "class_extends"){
-			this.class_extends = value;
-		}
-		else if (variable_name == "class_implements"){
-			this.class_implements = value;
-		}
-		else if (variable_name == "class_variables"){
-			this.class_variables = value;
-		}
-		else if (variable_name == "class_template"){
-			this.class_template = value;
-		}
-		else if (variable_name == "childs"){
-			this.childs = value;
-		}
-		else if (variable_name == "flags"){
-			this.flags = value;
-		}
-		else {
-			super.assignValue(variable_name, value);
-		}
 	}
 }
 module.exports = OpClassDeclare;

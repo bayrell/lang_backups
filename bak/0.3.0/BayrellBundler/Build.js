@@ -27,7 +27,7 @@ class Build{
 		if (callback == undefined) callback=null;
 		var source = folder + "/bay";
 		var dest = folder + "/" + lang;
-		return (new BundlerPipe()).then(Bundler.getFiles(source)).then(Bundler.filter((new Vector()).push("\\.bay$"))).then(Bundler.readFiles()).then(Bundler.translate(lang, callback)).then(Bundler.makeRelativePath(source)).then(Bundler.saveFiles(dest));
+		return (new BundlerPipe()).then(Bundler.getFiles(source)).then(Bundler.filter((new Vector()).push("\\.bay$").push("\\.template$"))).then(Bundler.readFiles()).then(Bundler.translate(lang, callback)).then(Bundler.makeRelativePath(source)).then(Bundler.saveFiles(dest));
 	}
 }
 module.exports = Build;

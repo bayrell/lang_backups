@@ -99,14 +99,14 @@ class Bundler{
 	static translate(lang, callback){
 		return (context, arr) => {
 			return arr.map((file) => {
-				var parser_bay_factory = new ParserBayFactory();
-				var translator_es6_factory = new LangTranslatorES6Factory();
-				var translator_nodejs_factory = new LangTranslatorNodeJSFactory();
-				var translator_php_factory = new LangTranslatorPHPFactory();
-				var template_parser_factory = new TemplateParserFactory();
-				var template_translator_es6_factory = new TemplateTranslatorES6Factory();
-				var template_translator_nodejs_factory = new TemplateTranslatorNodeJSFactory();
-				var template_translator_php_factory = new TemplateTranslatorPHPFactory();
+				var parser_bay_factory = new ParserBayFactory(context);
+				var translator_es6_factory = new LangTranslatorES6Factory(context);
+				var translator_nodejs_factory = new LangTranslatorNodeJSFactory(context);
+				var translator_php_factory = new LangTranslatorPHPFactory(context);
+				var template_parser_factory = new TemplateParserFactory(context);
+				var template_translator_es6_factory = new TemplateTranslatorES6Factory(context);
+				var template_translator_nodejs_factory = new TemplateTranslatorNodeJSFactory(context);
+				var template_translator_php_factory = new TemplateTranslatorPHPFactory(context);
 				var path_info = BayrellRtlUtils.pathinfo(file.path);
 				var extname = path_info.extension;
 				var filename = path_info.filename;

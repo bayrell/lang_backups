@@ -22,7 +22,7 @@ class FactoryInterface{
 	/**
 	 * Returns new Instance
 	 */
-	newInstance(context){
+	newInstance(){
 	}
 }
 module.exports = FactoryInterface;

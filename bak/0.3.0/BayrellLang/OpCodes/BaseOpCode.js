@@ -28,11 +28,17 @@ class BaseOpCode extends CoreObject{
 		if (this.__implements__ == undefined){this.__implements__ = [];}
 		this.__implements__.push(SerializeInterface);
 	}
-	assign(obj){
-		if (obj instanceof BaseOpCode){
-			this.op = rtl._clone(obj.op);
-		}
-		super.assign(obj);
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
 	}
 	/**
 	 * Constructor
@@ -46,35 +52,6 @@ class BaseOpCode extends CoreObject{
 	 */
 	getClassName(){
 		return "BayrellLang.OpCodes.BaseOpCode";
-	}
-	/**
-	 * Returns name of variables to serialization
-	 * @return Vector<string>
-	 */
-	getVariablesNames(names){
-		names.push("op");
-	}
-	/**
-	 * Returns instance of the value by variable name
-	 * @param string variable_name
-	 * @return var
-	 */
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value=null;
-		if (variable_name == "op"){
-			return this.op;
-		}
-		return null;
-	}
-	/**
-	 * Set new value instance by variable name
-	 * @param string variable_name
-	 * @param var value
-	 */
-	assignValue(variable_name, value){
-		if (variable_name == "op"){
-			this.op = value;
-		}
 	}
 }
 module.exports = BaseOpCode;

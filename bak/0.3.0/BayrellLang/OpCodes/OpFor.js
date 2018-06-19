@@ -29,6 +29,30 @@ class OpFor extends BaseOpCode{
 		this.loop_inc = null;
 		this.childs = null;
 	}
+	assignValue(variable_name, value){
+		if (variable_name == "op") this.op = value;
+		else if (variable_name == "loop_condition") this.loop_condition = value;
+		else if (variable_name == "loop_init") this.loop_init = value;
+		else if (variable_name == "loop_inc") this.loop_inc = value;
+		else if (variable_name == "childs") this.childs = value;
+		else super.assignValue(variable_name, value);
+	}
+	takeValue(variable_name, default_value){
+		if (default_value == undefined) default_value = null;
+		if (variable_name == "op") return this.op;
+		else if (variable_name == "loop_condition") return this.loop_condition;
+		else if (variable_name == "loop_init") return this.loop_init;
+		else if (variable_name == "loop_inc") return this.loop_inc;
+		else if (variable_name == "childs") return this.childs;
+		return super.takeValue(variable_name, default_value);
+	}
+	getVariablesNames(names){
+		names.push("op");
+		names.push("loop_condition");
+		names.push("loop_init");
+		names.push("loop_inc");
+		names.push("childs");
+	}
 	/**
 	 * Returns classname of the object
 	 * @return string
@@ -55,60 +79,6 @@ class OpFor extends BaseOpCode{
 	 */
 	destructor(){
 		super.destructor();
-	}
-	/**
-	 * Returns name of variables to serialization
-	 * @return Vector<string>
-	 */
-	getVariablesNames(names){
-		super.getVariablesNames(names);
-		names.push("loop_condition");
-		names.push("loop_init");
-		names.push("loop_inc");
-		names.push("childs");
-	}
-	/**
-	 * Returns instance of the value by variable name
-	 * @param string variable_name
-	 * @return var
-	 */
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value=null;
-		if (variable_name == "loop_condition"){
-			return this.loop_condition;
-		}
-		else if (variable_name == "loop_init"){
-			return this.loop_init;
-		}
-		else if (variable_name == "loop_inc"){
-			return this.loop_inc;
-		}
-		else if (variable_name == "childs"){
-			return this.childs;
-		}
-		return super.takeValue(variable_name, default_value);
-	}
-	/**
-	 * Set new value instance by variable name
-	 * @param string variable_name
-	 * @param var value
-	 */
-	assignValue(variable_name, value){
-		if (variable_name == "loop_condition"){
-			this.loop_condition = value;
-		}
-		if (variable_name == "loop_init"){
-			this.loop_init = value;
-		}
-		if (variable_name == "loop_inc"){
-			this.loop_inc = value;
-		}
-		if (variable_name == "childs"){
-			this.childs = value;
-		}
-		else {
-			super.assignValue(variable_name, value);
-		}
 	}
 }
 module.exports = OpFor;
