@@ -96,6 +96,7 @@ class TranslatorNodeJS extends TranslatorES6{
 		else {
 			var module_name = arr1.shift();
 			var module_path = rs.implode(".", arr1);
+			if (module_name == 'Runtime') module_name = 'BayrellRuntime';
 			res = "var "+rtl.toString(class_name)+" = require('"+rtl.toString(module_name)+"')."+rtl.toString(module_path)+";";
 		}
 		return res;
