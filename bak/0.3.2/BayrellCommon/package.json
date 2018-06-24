@@ -1,0 +1,11 @@
+{
+  "description": "Bayrell Common Library",
+  "files": [
+    "FileSystem/*.js",
+    "System/*.js",
+	"*.js"
+  ],
+  "main": "index.js",
+  "name": "BayrellCommon",
+  "version": "0.1.0"
+}
