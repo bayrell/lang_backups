@@ -19,17 +19,19 @@
 var rtl = require('BayrellRuntime').rtl;
 var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
+var Utils = require('BayrellRuntime').Utils;
 var ParserError = require('./ParserError.js');
 var ParserConstant = require('../ParserConstant.js');
 class ParserExpected extends ParserError{
 	constructor(context, s, line, col, prev){
 		if (prev == undefined) prev=null;
 		if (context == null){
-			context = rtl.globalContext();
+			context = Utils.globalContext();
 		}
 		super(context, rtl.toString(s)+" expected", ParserConstant.ERROR_PARSER_EXPECTED, prev);
 		this.line = line;
 		this.pos = col;
+		this.buildMessage();
 	}
 }
 module.exports = ParserExpected;

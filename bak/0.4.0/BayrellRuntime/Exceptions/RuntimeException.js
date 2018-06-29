@@ -31,6 +31,7 @@ class RuntimeException extends ClassException{
 		if (context == null){
 			context = Utils.globalContext();
 		}
+		this.error_str = message;
 		this.context = context;
 		this.message = message;
 		this.code = code;
@@ -67,14 +68,16 @@ class RuntimeException extends ClassException{
 		this.pos = pos;
 	}
 	toString(){
-		var s = this.message;
+		return this.message;
+	}
+	buildMessage(){
+		this.message = this.error_str;
 		if (this.line != -1 && this.pos != -1){
-			s = rtl.toString(s)+" at Ln:"+rtl.toString(this.line)+", Pos:"+rtl.toString(this.pos);
+			this.message += " at Ln:"+rtl.toString(this.line)+", Pos:"+rtl.toString(this.pos);
 		}
 		if (this.file != ""){
-			s = rtl.toString(s)+" in file:'"+rtl.toString(this.file)+"'";
+			this.message += " in file:'"+rtl.toString(this.file)+"'";
 		}
-		return s;
 	}
 }
 module.exports = RuntimeException;

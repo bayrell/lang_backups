@@ -19,13 +19,14 @@
 var rtl = require('BayrellRuntime').rtl;
 var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
+var Utils = require('BayrellRuntime').Utils;
 var ParserError = require('./ParserError.js');
 var ParserConstant = require('../ParserConstant.js');
 class ParserEOF extends ParserError{
 	constructor(context, prev){
 		if (prev == undefined) prev=null;
 		if (context == null){
-			context = rtl.globalContext();
+			context = Utils.globalContext();
 		}
 		super(context, context.translate("ERROR_PARSER_EOF"), ParserConstant.ERROR_PARSER_EOF, prev);
 	}

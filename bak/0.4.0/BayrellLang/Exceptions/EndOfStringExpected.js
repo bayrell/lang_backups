@@ -19,17 +19,19 @@
 var rtl = require('BayrellRuntime').rtl;
 var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
+var Utils = require('BayrellRuntime').Utils;
 var ParserError = require('BayrellParser').Exceptions.ParserError;
 var LangConstant = require('../LangConstant.js');
 class EndOfStringExpected extends ParserError{
 	constructor(context, line, col, prev){
 		if (prev == undefined) prev=null;
 		if (context == null){
-			context = rtl.globalContext();
+			context = Utils.globalContext();
 		}
 		super(context, context.translate("ERROR_END_OF_THE_STRING_EXPECTED"), LangConstant.ERROR_END_OF_THE_STRING_EXPECTED, prev);
 		this.line = line;
 		this.pos = col;
+		this.buildMessage();
 	}
 }
 module.exports = EndOfStringExpected;
