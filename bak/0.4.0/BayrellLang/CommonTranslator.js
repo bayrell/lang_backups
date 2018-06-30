@@ -35,6 +35,7 @@ var OpCall = require('./OpCodes/OpCall.js');
 var OpCallAwait = require('./OpCodes/OpCallAwait.js');
 var OpChilds = require('./OpCodes/OpChilds.js');
 var OpClassDeclare = require('./OpCodes/OpClassDeclare.js');
+var OpClassName = require('./OpCodes/OpClassName.js');
 var OpClone = require('./OpCodes/OpClone.js');
 var OpComment = require('./OpCodes/OpComment.js');
 var OpCompare = require('./OpCodes/OpCompare.js');
@@ -83,6 +84,7 @@ var OpUse = require('./OpCodes/OpUse.js');
 var OpVector = require('./OpCodes/OpVector.js');
 var OpWhile = require('./OpCodes/OpWhile.js');
 class CommonTranslator extends ContextObject{
+	getClassName(){return "BayrellLang.CommonTranslator";}
 	_init(){
 		super._init();
 		this.one_lines = null;
@@ -227,6 +229,9 @@ class CommonTranslator extends ContextObject{
 		return "";
 	}
 	OpClassDeclare(op_code){
+		return "";
+	}
+	OpClassName(op_code){
 		return "";
 	}
 	OpClone(op_code){
@@ -433,6 +438,9 @@ class CommonTranslator extends ContextObject{
 		}
 		else if (op_code instanceof OpClassDeclare){
 			return this.OpClassDeclare(op_code);
+		}
+		else if (op_code instanceof OpClassName){
+			return this.OpClassName(op_code);
 		}
 		else if (op_code instanceof OpClone){
 			return this.OpClone(op_code);

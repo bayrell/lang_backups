@@ -31,9 +31,18 @@ Runtime.Map = class extends Map{
 	 */
 	constructor(map){
 		super();
-		if (map != undefined && typeof map == 'object'){
-			for (var i in map){
-				super.set(i, map[i]);
+		var _Map = null; if (isBrowser()) _Map = Runtime.Map; else _Map = Map;
+		if (map != undefined && typeof map == 'object'){		
+			if (map instanceof Map){
+				var keys = map.keys();
+				keys.each((key)=>{
+					super.set(key, map.item(key));
+				});		
+			}
+			else{
+				for (var i in map){
+					super.set(i, map[i]);
+				}
 			}
 		}
 	}
@@ -60,12 +69,12 @@ Runtime.Map = class extends Map{
 	 * @return T2
 	 */
 	item(key){
-		var val = super.get(key);
-		if (val === null) return null;
-		if (val == undefined){
+		if (!super.has(key)){
 			if (isBrowser()) throw new Runtime.Exceptions.KeyNotFound(null, key);
 			throw new KeyNotFound(null, key);
 		}
+		var val = super.get(key);
+		if (val === null || val == undefined) return null;
 		return val;
 	}
 	
@@ -178,6 +187,22 @@ Runtime.Map = class extends Map{
 	each(f){
 		var keys = this.keys();
 		keys.each(f);
+		return this;
+	}
+	
+	
+	
+	/**
+	 * Add values from other map
+	 * @param Map<T1, T2> map
+	 * @return self
+	 */
+	addMap(map){
+		if (map != null)
+			map.each((key)=>{
+				this.set(key, map.item(key));
+			});
+		return this;
 	}
 	
 	

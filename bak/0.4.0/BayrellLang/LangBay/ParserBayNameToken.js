@@ -25,6 +25,7 @@ var ParserEOF = require('BayrellParser').Exceptions.ParserEOF;
 var ParserExpected = require('BayrellParser').Exceptions.ParserExpected;
 var EndOfStringExpected = require('../Exceptions/EndOfStringExpected.js');
 class ParserBayNameToken extends ParserToken{
+	getClassName(){return "BayrellLang.LangBay.ParserBayNameToken";}
 	_init(){
 		super._init();
 	}

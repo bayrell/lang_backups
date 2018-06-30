@@ -25,6 +25,7 @@ var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 var FactoryInterface = require('BayrellRuntime').Interfaces.FactoryInterface;
 var TranslatorNodeJS = require('./TranslatorNodeJS.js');
 class TranslatorNodeJSFactory extends ContextObject{
+	getClassName(){return "BayrellLang.LangNodeJS.TranslatorNodeJSFactory";}
 	_init(){
 		super._init();
 		if (this.__implements__ == undefined){this.__implements__ = [];}

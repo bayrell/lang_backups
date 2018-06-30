@@ -23,6 +23,7 @@ var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
 var OpChilds = require('BayrellLang').OpCodes.OpChilds;
 class OpHtmlExpression extends OpChilds{
+	getClassName(){return "BayrellTemplate.OpCodes.OpHtmlExpression";}
 	_init(){
 		super._init();
 		this.op = "op_html_expression";

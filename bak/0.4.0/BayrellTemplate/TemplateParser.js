@@ -26,6 +26,9 @@ var ParserBay = require('BayrellLang').LangBay.ParserBay;
 var ParserBayToken = require('BayrellLang').LangBay.ParserBayToken;
 var ParserBayNameToken = require('BayrellLang').LangBay.ParserBayNameToken;
 var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
+var OpAssign = require('BayrellLang').OpCodes.OpAssign;
+var OpAssignDeclare = require('BayrellLang').OpCodes.OpAssignDeclare;
+var OpFlags = require('BayrellLang').OpCodes.OpFlags;
 var OpNope = require('BayrellLang').OpCodes.OpNope;
 var OpString = require('BayrellLang').OpCodes.OpString;
 var OpComponent = require('./OpCodes/OpComponent.js');
@@ -38,6 +41,40 @@ var OpHtmlText = require('./OpCodes/OpHtmlText.js');
 var OpHtmlView = require('./OpCodes/OpHtmlView.js');
 var HtmlToken = require('./HtmlToken.js');
 class TemplateParser extends ParserBay{
+	getClassName(){return "BayrellTemplate.TemplateParser";}
+	/**
+	 * Read class body content
+	 */
+	readClassBodyContent(res, flags){
+		var op_code = null;
+		var is_declare_function = false;
+		if (flags != null && flags.p_declare || this.is_interface){
+			is_declare_function = true;
+		}
+		op_code = this.readDeclareArrowFunction(true, is_declare_function);
+		if (op_code){
+			op_code.flags = flags;
+			res.childs.push(op_code);
+			return ;
+		}
+		op_code = this.readOperatorAssign();
+		if (op_code instanceof OpAssign){
+			throw this.parserError("Assign are not alowed here");
+		}
+		else if (op_code instanceof OpAssignDeclare){
+			if (flags == null){
+				flags = new OpFlags();
+			}
+			if (!flags.takeValue("protected") && !flags.takeValue("private")){
+				flags.assignFlag("serializable", true);
+			}
+			op_code.flags = flags;
+			res.class_variables.push(op_code);
+			this.matchNextToken(";");
+			return ;
+		}
+		throw this.parserError("Unknown operator");
+	}
 	/**
 	 * Read Html Comment
 	 */
@@ -61,12 +98,19 @@ class TemplateParser extends ParserBay{
 	/**
 	 * Read Html Attributes
 	 */
-	readHtmlAttributes(){
+	readHtmlAttributes(op_code){
 		if (this.findNextToken(">")){
 			return null;
 		}
-		var res = new Vector();
+		var spreads = new Vector();
+		var attributes = new Vector();
 		while (!this.findNextToken(">") && !this.findNextToken("/>")){
+			if (this.findNextToken("...")){
+				this.matchNextToken("...");
+				var spread_name = this.readIdentifierName();
+				spreads.push(spread_name);
+				continue;
+			}
 			var attr = new OpHtmlAttribute();
 			attr.key = this.readNextToken().token;
 			if (this.findNextToken("=")){
@@ -91,9 +135,10 @@ class TemplateParser extends ParserBay{
 				attr.bracket = "\"";
 				attr.value = new OpString(attr.key);
 			}
-			res.push(attr);
+			attributes.push(attr);
 		}
-		return res;
+		op_code.spreads = spreads;
+		op_code.attributes = attributes;
 	}
 	/**
 	 * Read Html Expression
@@ -206,9 +251,19 @@ class TemplateParser extends ParserBay{
 		}
 		else if (this.findNextToken("<")){
 			this.matchNextToken("<");
+			if (this.findNextToken(">")){
+				this.matchNextToken(">");
+				var res = new OpHtmlView(this.readHtmlBlock("</>"));
+				if (res.childs != null && res.childs.count() == 1){
+					res = res.childs.item(0);
+				}
+				this.matchNextToken("</");
+				this.matchNextToken(">");
+				return res;
+			}
 			var res = new OpHtmlTag();
 			res.tag_name = this.readNextToken().token;
-			res.attributes = this.readHtmlAttributes();
+			this.readHtmlAttributes(res);
 			if (this.findNextToken("/>")){
 				this.matchNextToken("/>");
 			}
@@ -239,8 +294,20 @@ class TemplateParser extends ParserBay{
 		this.pushToken(new HtmlToken(this.context(), this));
 		/* Read Html tag */
 		this.current_token.skipSystemChar();
-		var res = new OpHtmlView(this.readHtmlBlock(";"));
-		/* Returns first item */
+		/* Read Html View */
+		var res = new OpHtmlView();
+		res.childs = new Vector();
+		while (this.findNextToken("<") || this.findNextToken("<!")){
+			res.childs.push(this.readHtmlTag());
+		}
+		if (res.childs == null){
+			this.popRestoreToken();
+			return null;
+		}
+		if (res.childs.count() == 0){
+			this.popRestoreToken();
+			return null;
+		}
 		if (res.childs != null && res.childs.count() == 1){
 			res = res.childs.item(0);
 		}

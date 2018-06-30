@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
 class OpComponent extends BaseOpCode{
+	getClassName(){return "BayrellTemplate.OpCodes.OpComponent";}
 	_init(){
 		super._init();
 		this.op = "op_component";

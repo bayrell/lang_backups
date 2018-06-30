@@ -23,6 +23,7 @@ var Utils = require('BayrellRuntime').Utils;
 var ParserError = require('BayrellParser').Exceptions.ParserError;
 var LangConstant = require('../LangConstant.js');
 class EndOfStringExpected extends ParserError{
+	getClassName(){return "BayrellLang.Exceptions.EndOfStringExpected";}
 	constructor(context, line, col, prev){
 		if (prev == undefined) prev=null;
 		if (context == null){

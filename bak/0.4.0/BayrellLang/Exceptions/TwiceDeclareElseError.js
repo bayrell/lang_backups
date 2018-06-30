@@ -23,6 +23,7 @@ var Utils = require('BayrellRuntime').Utils;
 var ParserError = require('BayrellParser').Exceptions.ParserError;
 var LangConstant = require('../LangConstant.js');
 class TwiceDeclareElseError extends ParserError{
+	getClassName(){return "BayrellLang.Exceptions.TwiceDeclareElseError";}
 	constructor(context, line, col, prev){
 		if (prev == undefined) prev=null;
 		if (context == null){

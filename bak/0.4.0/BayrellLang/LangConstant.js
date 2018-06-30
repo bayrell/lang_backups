@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var RuntimeConstant = require('BayrellRuntime').RuntimeConstant;
 class LangConstant{
+	getClassName(){return "BayrellLang.LangConstant";}
 	_init(){
 	}
 }

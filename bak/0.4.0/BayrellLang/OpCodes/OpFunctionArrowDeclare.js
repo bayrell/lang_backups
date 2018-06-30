@@ -23,6 +23,7 @@ var BaseOpCode = require('./BaseOpCode.js');
 var OpFunctionDeclare = require('./OpFunctionDeclare.js');
 var OpFlags = require('./OpFlags.js');
 class OpFunctionArrowDeclare extends OpFunctionDeclare{
+	getClassName(){return "BayrellLang.OpCodes.OpFunctionArrowDeclare";}
 	_init(){
 		super._init();
 		this.op = "op_arrow_function";

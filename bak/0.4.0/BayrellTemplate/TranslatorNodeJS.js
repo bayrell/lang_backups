@@ -23,6 +23,7 @@ var re = require('BayrellRuntime').re;
 var rs = require('BayrellRuntime').rs;
 var TranslatorES6 = require('./TranslatorES6.js');
 class TranslatorNodeJS extends TranslatorES6{
+	getClassName(){return "BayrellTemplate.TranslatorNodeJS";}
 	/**
 	 * Get name
 	 */

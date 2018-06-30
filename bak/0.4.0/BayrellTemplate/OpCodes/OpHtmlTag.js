@@ -23,11 +23,13 @@ var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
 var OpHtmlAttribute = require('./OpHtmlAttribute.js');
 class OpHtmlTag extends BaseOpCode{
+	getClassName(){return "BayrellTemplate.OpCodes.OpHtmlTag";}
 	_init(){
 		super._init();
 		this.op = "op_html_tag";
 		this.tag_name = "";
 		this.attributes = null;
+		this.spreads = null;
 		this.childs = null;
 		this.is_plain = false;
 	}
@@ -35,6 +37,7 @@ class OpHtmlTag extends BaseOpCode{
 		if (variable_name == "op") this.op = value;
 		else if (variable_name == "tag_name") this.tag_name = value;
 		else if (variable_name == "attributes") this.attributes = value;
+		else if (variable_name == "spreads") this.spreads = value;
 		else if (variable_name == "childs") this.childs = value;
 		else if (variable_name == "is_plain") this.is_plain = value;
 		else super.assignValue(variable_name, value);
@@ -44,6 +47,7 @@ class OpHtmlTag extends BaseOpCode{
 		if (variable_name == "op") return this.op;
 		else if (variable_name == "tag_name") return this.tag_name;
 		else if (variable_name == "attributes") return this.attributes;
+		else if (variable_name == "spreads") return this.spreads;
 		else if (variable_name == "childs") return this.childs;
 		else if (variable_name == "is_plain") return this.is_plain;
 		return super.takeValue(variable_name, default_value);
@@ -52,6 +56,7 @@ class OpHtmlTag extends BaseOpCode{
 		names.push("op");
 		names.push("tag_name");
 		names.push("attributes");
+		names.push("spreads");
 		names.push("childs");
 		names.push("is_plain");
 	}

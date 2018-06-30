@@ -21,6 +21,7 @@ var CoreObject = require('./CoreObject.js');
 var Utils = require('./Utils.js');
 var ContextInterface = require('./Interfaces/ContextInterface.js');
 class ContextObject extends CoreObject{
+	getClassName(){return "Runtime.ContextObject";}
 	/**
 	 * Returns context provider
 	 *

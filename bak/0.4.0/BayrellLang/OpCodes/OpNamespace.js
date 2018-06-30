@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var OpValueString = require('./OpValueString.js');
 class OpNamespace extends OpValueString{
+	getClassName(){return "BayrellLang.OpCodes.OpNamespace";}
 	_init(){
 		super._init();
 		this.op = "op_namespace";

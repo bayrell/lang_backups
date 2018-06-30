@@ -26,6 +26,7 @@ var OpPreprocessorCase = require('../OpCodes/OpPreprocessorCase.js');
 var TranslatorES6 = require('../LangES6/TranslatorES6.js');
 var CommonTranslator = require('../CommonTranslator.js');
 class TranslatorNodeJS extends TranslatorES6{
+	getClassName(){return "BayrellLang.LangNodeJS.TranslatorNodeJS";}
 	/**
 	 * Get name
 	 */

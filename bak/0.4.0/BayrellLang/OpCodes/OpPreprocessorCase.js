@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('./BaseOpCode.js');
 class OpPreprocessorCase extends BaseOpCode{
+	getClassName(){return "BayrellLang.OpCodes.OpPreprocessorCase";}
 	_init(){
 		super._init();
 		this.op = "op_preprocessor_case";

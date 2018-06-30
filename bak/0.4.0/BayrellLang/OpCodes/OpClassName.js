@@ -19,55 +19,31 @@
 var rtl = require('BayrellRuntime').rtl;
 var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
-var BaseOpCode = require('./BaseOpCode.js');
-class OpNew extends BaseOpCode{
-	getClassName(){return "BayrellLang.OpCodes.OpNew";}
+var OpValueString = require('./OpValueString.js');
+class OpClassName extends OpValueString{
+	getClassName(){return "BayrellLang.OpCodes.OpClassName";}
 	_init(){
 		super._init();
-		this.op = "op_new";
-		this.value = null;
-		this.args = null;
+		this.op = "op_class_name";
 	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = value;
-		else if (variable_name == "value") this.value = value;
-		else if (variable_name == "args") this.args = value;
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
 		if (variable_name == "op") return this.op;
-		else if (variable_name == "value") return this.value;
-		else if (variable_name == "args") return this.args;
 		return super.takeValue(variable_name, default_value);
 	}
 	getVariablesNames(names){
 		names.push("op");
-		names.push("value");
-		names.push("args");
 	}
 	/**
 	 * Returns classname of the object
 	 * @return string
 	 */
 	getClassName(){
-		return "BayrellLang.OpCodes.OpNew";
-	}
-	/**
-	 * Constructor
-	 */
-	constructor(value, args){
-		if (value == undefined) value=null;
-		if (args == undefined) args=null;
-		super();
-		this.value = value;
-		this.args = args;
-	}
-	/**
-	 * Destructor
-	 */
-	destructor(){
-		super.destructor();
+		return "BayrellLang.OpCodes.OpClassName";
 	}
 }
-module.exports = OpNew;
+module.exports = OpClassName;

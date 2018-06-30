@@ -24,6 +24,7 @@ var ContextInterface = require('./Interfaces/ContextInterface.js');
 var FactoryInterface = require('./Interfaces/FactoryInterface.js');
 var ModuleDescriptionInterface = require('./Interfaces/ModuleDescriptionInterface.js');
 class Context extends CoreObject{
+	getClassName(){return "Runtime.Context";}
 	/**
 	 * Constructor
 	 */

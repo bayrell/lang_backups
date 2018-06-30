@@ -21,6 +21,7 @@ var Vector = require('./Vector.js');
 var AssetsInterface = require('./Interfaces/AssetsInterface.js');
 var ModuleDescriptionInterface = require('./Interfaces/ModuleDescriptionInterface.js');
 class ModuleDescription{
+	getClassName(){return "Runtime.ModuleDescription";}
 	/**
 	 * Returns module name
 	 * @return string

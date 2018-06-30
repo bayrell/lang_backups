@@ -25,6 +25,7 @@ var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 var FactoryInterface = require('BayrellRuntime').Interfaces.FactoryInterface;
 var TranslatorES6 = require('./TranslatorES6.js');
 class TranslatorES6Factory extends ContextObject{
+	getClassName(){return "BayrellTemplate.TranslatorES6Factory";}
 	_init(){
 		super._init();
 		if (this.__implements__ == undefined){this.__implements__ = [];}

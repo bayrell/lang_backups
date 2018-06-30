@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('./BaseOpCode.js');
 var OpIfElse = require('./OpIfElse.js');
 class OpIf extends BaseOpCode{
+	getClassName(){return "BayrellLang.OpCodes.OpIf";}
 	_init(){
 		super._init();
 		this.op = "op_if";

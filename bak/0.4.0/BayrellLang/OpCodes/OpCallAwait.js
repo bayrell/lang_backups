@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('./BaseOpCode.js');
 class OpCallAwait extends BaseOpCode{
+	getClassName(){return "BayrellLang.OpCodes.OpCallAwait";}
 	_init(){
 		super._init();
 		this.op = "op_call_await";

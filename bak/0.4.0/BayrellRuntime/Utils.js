@@ -26,6 +26,7 @@ var FactoryInterface = require('./Interfaces/FactoryInterface.js');
 
 var isBrowser=function(){return typeof window !== "undefined" && this === window;}
 class Utils{
+	getClassName(){return "Runtime.Utils";}
 	/**
 	 * Returns global context
 	 * @return ContextInterface

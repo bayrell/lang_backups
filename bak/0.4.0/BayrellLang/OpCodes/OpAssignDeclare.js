@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('./BaseOpCode.js');
 var OpFlags = require('./OpFlags.js');
 class OpAssignDeclare extends BaseOpCode{
+	getClassName(){return "BayrellLang.OpCodes.OpAssignDeclare";}
 	_init(){
 		super._init();
 		this.op = "op_assign_declare";

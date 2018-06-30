@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('./BaseOpCode.js');
 class OpBreak extends BaseOpCode{
+	getClassName(){return "BayrellLang.OpCodes.OpBreak";}
 	_init(){
 		super._init();
 		this.op = "op_break";

@@ -24,6 +24,7 @@ var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
 var OpValue1 = require('BayrellLang').OpCodes.OpValue1;
 var OpHtmlAttribute = require('./OpHtmlAttribute.js');
 class OpHtmlEscape extends OpValue1{
+	getClassName(){return "BayrellTemplate.OpCodes.OpHtmlEscape";}
 	_init(){
 		super._init();
 		this.op = "op_html_raw";

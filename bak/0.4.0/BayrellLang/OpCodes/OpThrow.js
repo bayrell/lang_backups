@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var OpValue1 = require('./OpValue1.js');
 class OpThrow extends OpValue1{
+	getClassName(){return "BayrellLang.OpCodes.OpThrow";}
 	_init(){
 		super._init();
 		this.op = "op_throw";

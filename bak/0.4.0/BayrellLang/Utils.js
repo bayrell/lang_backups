@@ -28,6 +28,7 @@ var TranslatorES6 = require('./LangES6/TranslatorES6.js');
 var CommonParser = require('./CommonParser.js');
 var CommonTranslator = require('./CommonTranslator.js');
 class Utils extends ContextObject{
+	getClassName(){return "BayrellLang.Utils";}
 	/**
 	 * Transcompile one language to other
 	 * @string string parser_factory_name

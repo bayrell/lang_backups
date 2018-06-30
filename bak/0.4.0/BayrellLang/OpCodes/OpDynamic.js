@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('./BaseOpCode.js');
 class OpDynamic extends BaseOpCode{
+	getClassName(){return "BayrellLang.OpCodes.OpDynamic";}
 	_init(){
 		super._init();
 		this.op = "op_dynamic";

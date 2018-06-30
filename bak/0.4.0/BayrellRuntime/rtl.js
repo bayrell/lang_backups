@@ -20,6 +20,7 @@ var StringInterface = require('./Interfaces/StringInterface.js');
 
 var isBrowser=function(){return typeof window !== "undefined" && this === window;}
 class rtl{
+	getClassName(){return "Runtime.rtl";}
 	
 	static implements(obj, interface_name){
 		if (obj == undefined) return false;
@@ -142,6 +143,17 @@ class rtl{
 		else if (val instanceof Date){
 			return new Date(val);
 		}
+		else if (typeof val == 'object' && val.nodeType && typeof val.cloneNode == "function"){
+			return val.cloneNode(true);
+		}
+		else if (typeof val == 'object' && 
+			val.createNewInstance && typeof val.createNewInstance == "function" &&
+			val.assign && typeof val.assign == "function")
+		{
+			var res = val.createNewInstance();
+			res.assign(val);
+			return res;
+		}
 		else if (Array.isArray(val)){	
 			var res = [];
 			for (var i=0;i<val.length;i++){
@@ -149,30 +161,7 @@ class rtl{
 			}
 			return res;
 		}
-		else if (typeof val == 'object'){
 		
-			var _rtl = null;
-			var _CloneableInterface = null;
-			if (isBrowser()){
-				_rtl = Runtime.rtl;
-				_CloneableInterface = Runtime.Interfaces.CloneableInterface;
-			}
-			else {
-				_rtl = rtl;
-				_CloneableInterface = require('./Interfaces/CloneableInterface.js');
-			}
-			
-			if (val.nodeType && typeof val.cloneNode == "function"){
-				return val.cloneNode(true);
-			}
-			else if (_rtl.implements(val, _CloneableInterface)){
-				var res = val.createNewInstance();
-				res.assign(val);
-				return res;
-			}
-			
-			return val;
-		}
 		return val;
 	}
 	/**
@@ -255,6 +244,14 @@ class rtl{
 	
 	static toInt(val){
 		return parseInt(val);
+	}
+	/**
+	 * Returns unique value
+	 * @return string
+	 */
+	
+	static unique(){
+		return "" + (new Date).getTime() + Math.floor((Math.random() * 899999 + 100000));
 	}
 }
 module.exports = rtl;

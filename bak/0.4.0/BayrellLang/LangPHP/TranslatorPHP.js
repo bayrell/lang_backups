@@ -36,6 +36,7 @@ var OpCall = require('../OpCodes/OpCall.js');
 var OpCallAwait = require('../OpCodes/OpCallAwait.js');
 var OpChilds = require('../OpCodes/OpChilds.js');
 var OpClassDeclare = require('../OpCodes/OpClassDeclare.js');
+var OpClassName = require('../OpCodes/OpClassName.js');
 var OpClone = require('../OpCodes/OpClone.js');
 var OpComment = require('../OpCodes/OpComment.js');
 var OpCompare = require('../OpCodes/OpCompare.js');
@@ -83,6 +84,7 @@ var OpTryCatchChilds = require('../OpCodes/OpTryCatchChilds.js');
 var OpUse = require('../OpCodes/OpUse.js');
 var OpWhile = require('../OpCodes/OpWhile.js');
 class TranslatorPHP extends CommonTranslator{
+	getClassName(){return "BayrellLang.LangPHP.TranslatorPHP";}
 	_init(){
 		super._init();
 		this.modules = null;
@@ -505,6 +507,12 @@ class TranslatorPHP extends CommonTranslator{
 			return "new \\Runtime\\Callback("+rtl.toString(obj)+"::class, "+rtl.toString(this.convertString(name))+")";
 		}
 		return this.translateRun(op_code.value);
+	}
+	/**
+	 * Class name
+	 */
+	OpClassName(op_code){
+		return rtl.toString(op_code.value)+"::class";
 	}
 	/** ============================ Operators ============================ */
 	/**
@@ -1015,6 +1023,9 @@ class TranslatorPHP extends CommonTranslator{
 		var res = "";
 		var has_serializable = false;
 		var has_cloneable = false;
+		if (!this.is_interface){
+			res += this.s("public function getClassName(){"+"return "+rtl.toString(this.convertString(rtl.toString(this.current_namespace)+"."+rtl.toString(this.current_class_name)))+";}");
+		}
 		for (var i = 0; i < class_variables.count(); i++){
 			var variable = class_variables.item(i);
 			if (variable.isFlag("serializable")){
@@ -1026,7 +1037,7 @@ class TranslatorPHP extends CommonTranslator{
 		}
 		if (this.current_module_name != "Runtime" && this.current_class_name != "CoreObject"){
 			if (has_cloneable){
-				res += this.s("function assign($obj){");
+				res += this.s("public function assign($obj){");
 				this.levelInc();
 				res += this.s("if ($obj instanceof "+rtl.toString(this.getName(this.current_class_name))+"){");
 				this.levelInc();
@@ -1043,41 +1054,46 @@ class TranslatorPHP extends CommonTranslator{
 				res += this.s("}");
 			}
 			if (has_serializable){
-				res += this.s("function assignValue($variable_name, $value){");
+				var class_variables_serializable_count = 0;
+				res += this.s("public function assignValue($variable_name, $value){");
 				this.levelInc();
+				class_variables_serializable_count = 0;
 				for (var i = 0; i < class_variables.count(); i++){
 					var variable = class_variables.item(i);
 					if (variable.isFlag("serializable")){
 						var take_value_s = "if ($variable_name == "+rtl.toString(this.convertString(variable.name))+") "+"$this->"+rtl.toString(variable.name)+" = $value;";
-						if (i == 0){
+						if (class_variables_serializable_count == 0){
 							res += this.s(take_value_s);
 						}
 						else {
 							res += this.s("else "+rtl.toString(take_value_s));
 						}
+						class_variables_serializable_count++
 					}
 				}
 				res += this.s("else parent::assignValue($variable_name, $value);");
 				this.levelDec();
 				res += this.s("}");
-				res += this.s("function takeValue($variable_name, $default_value = null){");
+				res += this.s("public function takeValue($variable_name, $default_value = null){");
 				this.levelInc();
+				class_variables_serializable_count = 0;
 				for (var i = 0; i < class_variables.count(); i++){
 					var variable = class_variables.item(i);
 					if (variable.isFlag("serializable")){
 						var take_value_s = "if ($variable_name == "+rtl.toString(this.convertString(variable.name))+") "+"return $this->"+rtl.toString(variable.name)+";";
-						if (i == 0){
+						if (class_variables_serializable_count == 0){
 							res += this.s(take_value_s);
 						}
 						else {
 							res += this.s("else "+rtl.toString(take_value_s));
 						}
+						class_variables_serializable_count++
 					}
 				}
 				res += this.s("return parent::takeValue($variable_name, $default_value);");
 				this.levelDec();
 				res += this.s("}");
-				res += this.s("function getVariablesNames($names){");
+				res += this.s("public function getVariablesNames($names){");
 				this.levelInc();
 				for (var i = 0; i < class_variables.count(); i++){
 					var variable = class_variables.item(i);

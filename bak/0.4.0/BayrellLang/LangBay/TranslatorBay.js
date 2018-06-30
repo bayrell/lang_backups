@@ -26,6 +26,7 @@ var OutputNope = require('./Output/OutputNope.js');
 var OutputOneLine = require('./Output/OutputOneLine.js');
 var OutputString = require('./Output/OutputString.js');
 class TranslatorBay extends CommonTranslator{
+	getClassName(){return "BayrellLang.TranslatorBay";}
 	/**
 	 * Operator ADD
 	 */

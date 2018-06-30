@@ -26,6 +26,7 @@ var FactoryInterface = require('BayrellRuntime').Interfaces.FactoryInterface;
 var CommonTranslator = require('BayrellLang').CommonTranslator;
 var TemplateParser = require('./TemplateParser.js');
 class Utils{
+	getClassName(){return "BayrellTemplate.Utils";}
 	/**
 	 * Transcompile Bayrell language to other
 	 * @string FactoryInterface translator_factory

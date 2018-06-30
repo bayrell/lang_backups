@@ -23,6 +23,7 @@ var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
 var OpFlags = require('BayrellLang').OpCodes.OpFlags;
 class OpTemplateDeclare extends BaseOpCode{
+	getClassName(){return "BayrellTemplate.OpCodes.OpTemplateDeclare";}
 	_init(){
 		super._init();
 		this.op = "op_template";

@@ -17,6 +17,7 @@
  *  limitations under the License.
  */
 class re{
+	getClassName(){return "Runtime.re";}
 	
 	static compile(r){
 		if (!Array.isArray(r))

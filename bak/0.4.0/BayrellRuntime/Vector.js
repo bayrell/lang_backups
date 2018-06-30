@@ -26,6 +26,29 @@ Runtime.Vector = class extends Array{
 	
 	
 	/**
+	 * Returns new Instance
+	 */
+	createNewInstance(){
+		if (isBrowser) return new Runtime.Vector();
+		return new Vector();
+	}
+	
+	
+	
+	/**
+	 * Assign all data from other object
+	 * @param Vector obj
+	 */
+	assign(obj){
+		this.clear();
+		obj.each((item)=>{
+			this.push(item);
+		});
+	}
+	
+	
+	
+	/**
 	 * Append value to the end of array
 	 * @param T value
 	 */
@@ -308,6 +331,9 @@ Runtime.Vector = class extends Array{
 	 * @return Vector<T>
 	 */
 	concat(arr){
+		if (arr == null && arr == undefined){
+			return arr.slice();
+		}
 		return super.concat(arr);
 	}
 }

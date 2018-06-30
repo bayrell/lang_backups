@@ -22,6 +22,7 @@ var RuntimeConstant = require('../RuntimeConstant.js');
 var RuntimeException = require('./RuntimeException.js');
 var ContextInterface = require('../Interfaces/ContextInterface.js');
 class IndexOutOfRange extends RuntimeException{
+	getClassName(){return "Runtime.Exceptions.IndexOutOfRange";}
 	constructor(context, prev){
 		if (context == undefined) context=null;
 		if (prev == undefined) prev=null;

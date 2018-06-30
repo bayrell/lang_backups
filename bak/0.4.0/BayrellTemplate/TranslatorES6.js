@@ -31,6 +31,7 @@ var OpHtmlComment = require('./OpCodes/OpHtmlComment.js');
 var OpHtmlText = require('./OpCodes/OpHtmlText.js');
 var OpHtmlView = require('./OpCodes/OpHtmlView.js');
 class TranslatorES6 extends BayrellLangTranslatorES6{
+	getClassName(){return "BayrellTemplate.TranslatorES6";}
 	/**
 	 * Check if name is component
 	 * @param string name
@@ -87,6 +88,11 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 		if (op_code.attributes != null && op_code.attributes.count() > 0){
 			op_code.attributes.each((item) => {
 				res += this.s(".set("+rtl.toString(this.convertString(item.key))+", "+rtl.toString(this.translateRun(item.value))+")");
+			});
+		}
+		if (op_code.spreads != null && op_code.spreads.count() > 0){
+			op_code.spreads.each((item) => {
+				res += this.s(".addMap("+rtl.toString(item)+")");
 			});
 		}
 		res += this.s(".toObject()");

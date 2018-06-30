@@ -35,6 +35,7 @@ var OpCall = require('../OpCodes/OpCall.js');
 var OpCallAwait = require('../OpCodes/OpCallAwait.js');
 var OpChilds = require('../OpCodes/OpChilds.js');
 var OpClassDeclare = require('../OpCodes/OpClassDeclare.js');
+var OpClassName = require('../OpCodes/OpClassName.js');
 var OpClone = require('../OpCodes/OpClone.js');
 var OpComment = require('../OpCodes/OpComment.js');
 var OpCompare = require('../OpCodes/OpCompare.js');
@@ -90,6 +91,7 @@ var HexNumberExpected = require('../Exceptions/HexNumberExpected.js');
 var TwiceDeclareElseError = require('../Exceptions/TwiceDeclareElseError.js');
 var ParserError = require('BayrellParser').Exceptions.ParserError;
 class ParserBay extends CommonParser{
+	getClassName(){return "BayrellLang.LangBay.ParserBay";}
 	_init(){
 		super._init();
 		this.is_interface = false;
@@ -171,23 +173,6 @@ class ParserBay extends CommonParser{
 		}
 		this.readNextToken();
 		return res;
-	}
-	/**
-	 * Read name
-	 */
-	readDynamicNameOld(){
-		/* Create new token */
-		var token = new ParserBayNameToken(this.context(), this);
-		token.assign(this.current_token);
-		token.readNextToken();
-		/* Get name */
-		var name = token.token;
-		/* Assign next token */
-		this.current_token.assign(token);
-		this.next_token.assign(token);
-		this.next_token.readNextToken();
-		/* Destroy new token */
-		return name;
 	}
 	/**
 	 * Read name
@@ -290,6 +275,15 @@ class ParserBay extends CommonParser{
 		this.matchNextToken("method");
 		var value = this.readCallDynamic(true, false, true, false);
 		return new OpMethod(value);
+	}
+	/**
+	 * Read get class name
+	 */
+	readClassName(){
+		this.matchNextToken("class");
+		this.matchNextToken("of");
+		var value = this.readIdentifierName();
+		return new OpClassName(value);
 	}
 	/**
 	 * Read call dynamic
@@ -407,6 +401,9 @@ class ParserBay extends CommonParser{
 		}
 		else if (this.findNextToken("clone")){
 			return this.readClone();
+		}
+		else if (this.findNextToken("class")){
+			return this.readClassName();
 		}
 		else if (this.findNextToken("method")){
 			return this.readMethod();

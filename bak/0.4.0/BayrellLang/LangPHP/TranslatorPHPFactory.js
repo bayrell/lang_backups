@@ -25,6 +25,7 @@ var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 var FactoryInterface = require('BayrellRuntime').Interfaces.FactoryInterface;
 var TranslatorPHP = require('./TranslatorPHP.js');
 class TranslatorPHPFactory extends ContextObject{
+	getClassName(){return "BayrellLang.LangPHP.TranslatorPHPFactory";}
 	_init(){
 		super._init();
 		if (this.__implements__ == undefined){this.__implements__ = [];}

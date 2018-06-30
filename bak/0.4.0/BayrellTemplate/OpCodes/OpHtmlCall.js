@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var OpCall = require('BayrellLang').OpCodes.OpCall;
 class OpHtmlCall extends OpCall{
+	getClassName(){return "BayrellTemplate.OpCodes.OpHtmlCall";}
 	_init(){
 		super._init();
 		this.op = "op_html_call";

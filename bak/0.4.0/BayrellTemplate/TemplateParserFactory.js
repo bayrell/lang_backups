@@ -24,6 +24,7 @@ var ContextObject = require('BayrellRuntime').ContextObject;
 var FactoryInterface = require('BayrellRuntime').Interfaces.FactoryInterface;
 var TemplateParser = require('./TemplateParser.js');
 class TemplateParserFactory extends ContextObject{
+	getClassName(){return "BayrellTemplate.TemplateParserFactory";}
 	_init(){
 		super._init();
 		if (this.__implements__ == undefined){this.__implements__ = [];}

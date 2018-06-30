@@ -17,6 +17,7 @@
  *  limitations under the License.
  */
 class RuntimeConstant{
+	getClassName(){return "Runtime.RuntimeConstant";}
 	/* Log level */
 	/**
 	 * Fatal error. Application stoped

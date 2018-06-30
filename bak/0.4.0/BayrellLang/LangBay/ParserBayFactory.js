@@ -25,6 +25,7 @@ var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 var FactoryInterface = require('BayrellRuntime').Interfaces.FactoryInterface;
 var ParserBay = require('./ParserBay.js');
 class ParserBayFactory extends ContextObject{
+	getClassName(){return "BayrellLang.LangBay.ParserBayFactory";}
 	_init(){
 		super._init();
 		if (this.__implements__ == undefined){this.__implements__ = [];}

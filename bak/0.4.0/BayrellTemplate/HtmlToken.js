@@ -25,6 +25,7 @@ var ParserEOF = require('BayrellParser').Exceptions.ParserEOF;
 var ParserExpected = require('BayrellParser').Exceptions.ParserExpected;
 var EndOfStringExpected = require('BayrellLang').Exceptions.EndOfStringExpected;
 class HtmlToken extends ParserToken{
+	getClassName(){return "BayrellTemplate.HtmlToken";}
 	_init(){
 		super._init();
 		this._special_tokens = null;
@@ -39,7 +40,7 @@ class HtmlToken extends ParserToken{
 	 * Returns special tokens
 	 */
 	static getSpecialTokens(){
-		return (new Vector()).push("@json{").push("@raw{").push("@{").push("<!--").push("-->").push("<!").push("</").push("/>");
+		return (new Vector()).push("...").push("@json{").push("@raw{").push("@{").push("<!--").push("-->").push("<!").push("</").push("/>");
 	}
 	/**
 	 * Constructor

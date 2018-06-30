@@ -18,12 +18,7 @@
  */
 var rtl = require('./rtl.js');
 class CoreObject{
-	/**
-	 * Get class name
-	 */
-	getClassName(){
-		return "Runtime.CoreObject";
-	}
+	getClassName(){return "Runtime.CoreObject";}
 	/** 
 	 * Constructor
 	 */
