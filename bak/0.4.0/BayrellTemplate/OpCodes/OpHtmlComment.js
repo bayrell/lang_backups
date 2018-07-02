@@ -39,6 +39,7 @@ class OpHtmlComment extends OpValue1{
 		return super.takeValue(variable_name, default_value);
 	}
 	getVariablesNames(names){
+		super.getVariablesNames(names);
 		names.push("op");
 	}
 	/**

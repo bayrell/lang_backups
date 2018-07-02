@@ -43,6 +43,7 @@ class OpHtmlAttribute extends BaseOpCode{
 		return super.takeValue(variable_name, default_value);
 	}
 	getVariablesNames(names){
+		super.getVariablesNames(names);
 		names.push("op");
 		names.push("key");
 		names.push("value");

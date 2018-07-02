@@ -512,7 +512,7 @@ class TranslatorPHP extends CommonTranslator{
 	 * Class name
 	 */
 	OpClassName(op_code){
-		return rtl.toString(op_code.value)+"::class";
+		return this.convertString(this.modules.get(op_code.value, ""));
 	}
 	/** ============================ Operators ============================ */
 	/**
@@ -1095,6 +1095,7 @@ class TranslatorPHP extends CommonTranslator{
 				res += this.s("}");
 				res += this.s("public function getVariablesNames($names){");
 				this.levelInc();
+				res += this.s("parent::getVariablesNames($names);");
 				for (var i = 0; i < class_variables.count(); i++){
 					var variable = class_variables.item(i);
 					if (variable.isFlag("serializable")){

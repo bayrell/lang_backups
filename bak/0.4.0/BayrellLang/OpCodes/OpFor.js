@@ -48,6 +48,7 @@ class OpFor extends BaseOpCode{
 		return super.takeValue(variable_name, default_value);
 	}
 	getVariablesNames(names){
+		super.getVariablesNames(names);
 		names.push("op");
 		names.push("loop_condition");
 		names.push("loop_init");

@@ -36,6 +36,7 @@ var OpCall = require('../OpCodes/OpCall.js');
 var OpCallAwait = require('../OpCodes/OpCallAwait.js');
 var OpChilds = require('../OpCodes/OpChilds.js');
 var OpClassDeclare = require('../OpCodes/OpClassDeclare.js');
+var OpClassName = require('../OpCodes/OpClassName.js');
 var OpClone = require('../OpCodes/OpClone.js');
 var OpComment = require('../OpCodes/OpComment.js');
 var OpCompare = require('../OpCodes/OpCompare.js');
@@ -481,7 +482,7 @@ class TranslatorES6 extends CommonTranslator{
 	 * Class name
 	 */
 	OpClassName(op_code){
-		return op_code.value;
+		return this.convertString(this.modules.get(op_code.value, ""));
 	}
 	/** ============================ Operators ============================ */
 	/**
@@ -1009,6 +1010,7 @@ class TranslatorES6 extends CommonTranslator{
 				res += this.s("}");
 				res += this.s("getVariablesNames(names){");
 				this.levelInc();
+				res += this.s("super.getVariablesNames(names);");
 				for (var i = 0; i < class_variables.count(); i++){
 					var variable = class_variables.item(i);
 					if (variable.isFlag("serializable")){

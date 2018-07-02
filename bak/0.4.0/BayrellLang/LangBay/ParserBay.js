@@ -280,10 +280,18 @@ class ParserBay extends CommonParser{
 	 * Read get class name
 	 */
 	readClassName(){
-		this.matchNextToken("class");
-		this.matchNextToken("of");
-		var value = this.readIdentifierName();
-		return new OpClassName(value);
+		if (this.findNextToken("class")){
+			this.matchNextToken("class");
+			this.matchNextToken("of");
+			var value = this.readIdentifierName();
+			return new OpClassName(value);
+		}
+		if (this.findNextToken("classof")){
+			this.matchNextToken("classof");
+			var value = this.readIdentifierName();
+			return new OpClassName(value);
+		}
+		return null;
 	}
 	/**
 	 * Read call dynamic
@@ -403,6 +411,9 @@ class ParserBay extends CommonParser{
 			return this.readClone();
 		}
 		else if (this.findNextToken("class")){
+			return this.readClassName();
+		}
+		else if (this.findNextToken("classof")){
 			return this.readClassName();
 		}
 		else if (this.findNextToken("method")){
