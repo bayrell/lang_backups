@@ -24,7 +24,7 @@ if (typeof Runtime == "undefined") Runtime = {};
 
 Runtime.Vector = class extends Array{
 	
-	
+
 	/**
 	 * Returns new Instance
 	 */

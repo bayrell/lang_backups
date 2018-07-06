@@ -20,6 +20,7 @@ var CoreObject = require('../CoreObject.js');
 var Map = require('../Map.js');
 var Vector = require('../Vector.js');
 var ContextInterface = require('./ContextInterface.js');
+var SerializeContainer = require('../SerializeContainer.js');
 class SerializeInterface{
 	/**
 	 * Returns classname of the object

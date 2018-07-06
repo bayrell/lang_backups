@@ -23,6 +23,7 @@ var Lib = require('./Lib.js');
 var BayrellCommonUtils = require('BayrellCommon').Utils;
 var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 class Bundler{
+	getClassName(){return "BayrellBundler.Bundler";}
 	/**
 	 * Returns files from directory
 	 * @params string path
@@ -47,7 +48,7 @@ class Bundler{
 	static filter(rules){
 		return (context, arr) => {
 			if (rules == null){
-				rules = (new Vector()).push("\\.bay$").push("\\.component$").push("\\.css$");
+				rules = (new Vector()).push("\\.bay$").push("\\.component$").push("\\.css$").push("\\.es6$");
 			}
 			return arr.filter((file) => {
 				return Lib.filter(rules, file);
@@ -88,20 +89,30 @@ class Bundler{
 		return (context, arr) => {
 			arr = arr.map((file) => {
 				var res = null;
-				var extname = BayrellCommonUtils.extname(file.path);
-				if (extname == "bay" || extname == "component"){
+				var path_info = BayrellCommonUtils.pathinfo(file.path);
+				var filename = path_info.filename;
+				var dirname = path_info.dirname;
+				var extension = path_info.extension;
+				if (extension == "bay" || extension == "component"){
 					if (callback != null){
 						callback(file);
 					}
 					res = Lib.translate(context, lang, file, callback);
 				}
-				else if (extname == "css" && lang == "es6"){
+				else if (extension == "css" && lang == "es6"){
 					if (callback != null){
 						callback(file);
 					}
 					res = rtl._clone(file);
 				}
-				else if (extname == "php" && lang == "php"){
+				else if (extension == "es6" && lang == "es6"){
+					if (callback != null){
+						callback(file);
+					}
+					res = rtl._clone(file);
+					res.path = dirname + "/" + filename + ".js";
+				}
+				else if (extension == "php" && lang == "php"){
 					if (callback != null){
 						callback(file);
 					}

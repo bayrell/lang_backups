@@ -34,6 +34,7 @@ var TemplateTranslatorNodeJSFactory = require('BayrellTemplate').TranslatorNodeJ
 var TemplateTranslatorPHPFactory = require('BayrellTemplate').TranslatorPHPFactory;
 var BundleFile = require('./BundleFile.js');
 class Lib{
+	getClassName(){return "BayrellBundler.Lib";}
 	/**
 	 * Returns files from directory
 	 * @params FileSystemInterface fs

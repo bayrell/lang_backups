@@ -16,23 +16,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-var rtl = require('BayrellRuntime').rtl;
-var Map = require('BayrellRuntime').Map;
-var Vector = require('BayrellRuntime').Vector;
-var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
-var Pipe = require('BayrellCommon').Types.Pipe;
-class BundlerPipe extends Pipe{
-	getClassName(){return "BayrellBundler.BundlerPipe";}
-	/**
-	 * Run pipe of functions
-	 * @param ContextInterface context - the context
-	 * @param mixed obj - input value
-	 * @return mixed - the result
-	 */
-	run(context, obj){
-		return this.pipe.reduce((res, item) => {
-			return item(context, res);
-		}, obj);
-	}
+var Vector = require('./Vector.js');
+class VectorString extends Vector{
+	getClassName(){return "Runtime.VectorString";}
 }
-module.exports = BundlerPipe;
+module.exports = VectorString;

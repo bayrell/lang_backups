@@ -24,6 +24,7 @@ var Lib = require('./Lib.js');
 var Bundler = require('./Bundler.js');
 var BundlerPipe = require('./BundlerPipe.js');
 class Build{
+	getClassName(){return "BayrellBundler.Build";}
 	/**
 	 * Get files from library
 	 */

@@ -171,7 +171,7 @@ class rs{
 		return s.replace(new RegExp("^[" + ch + "]+", "g"),"").replace(new RegExp("[" + ch + "]+$", "g"),"");
 	}
 	/**
-	 * json encode
+	 * json encode scalar values
 	 * @param {mixed} obj - объект
 	 * @param {int} flags - Флаги
 	 * @return {string} json строка

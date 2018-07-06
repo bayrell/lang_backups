@@ -193,6 +193,23 @@ Runtime.Map = class extends Map{
 	
 	
 	/**
+	 * Call function map
+	 * @param func f
+	 * @return Map
+	 */
+	map(f){
+		var _Map = null; if (isBrowser()) _Map = Runtime.Map; else _Map = Map;
+		var res = new _Map();
+		this.each((key)=>{
+			var value = this.item(key);
+			res.set(key, f(key, value));
+		});
+		return res;
+	}
+	
+	
+	
+	/**
 	 * Add values from other map
 	 * @param Map<T1, T2> map
 	 * @return self

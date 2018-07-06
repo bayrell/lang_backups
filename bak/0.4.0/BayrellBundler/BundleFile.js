@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var CoreObject = require('BayrellRuntime').CoreObject;
 var CloneableInterface = require('BayrellRuntime').Interfaces.CloneableInterface;
 class BundleFile extends CoreObject{
+	getClassName(){return "BayrellBundler.BundleFile";}
 	_init(){
 		super._init();
 		this.path = "";
