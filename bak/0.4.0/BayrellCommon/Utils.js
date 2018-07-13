@@ -27,6 +27,7 @@ var FactoryInterface = require('BayrellRuntime').Interfaces.FactoryInterface;
 var AssertError = require('./Exceptions/AssertError.js');
 var PathInfo = require('./Types/PathInfo.js');
 class Utils{
+	getClassName(){return "BayrellCommon.Utils";}
 	/**
 	 * Equals value1 and value2. Throw exception if value1 != value2
 	 * @param var value1

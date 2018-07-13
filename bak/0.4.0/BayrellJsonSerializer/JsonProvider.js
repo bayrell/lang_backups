@@ -16,24 +16,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-var rtl = require('BayrellRtl').Lib.rtl;
-var Map = require('BayrellRtl').Types.Map;
-var Vector = require('BayrellRtl').Types.Vector;
-var ContextObject = require('BayrellRtl').ContextObject;
-var AssertInterface = require('BayrellRtl').Interfaces.AssertInterface;
-var SerializeInterface = require('BayrellRtl').Interfaces.SerializeInterface;
-var SerializeStringInterface = require('BayrellRtl').Providers.SerializeStringInterface;
+var rtl = require('BayrellRuntime').rtl;
+var Map = require('BayrellRuntime').Map;
+var Vector = require('BayrellRuntime').Vector;
+var ContextObject = require('BayrellRuntime').ContextObject;
+var AssertInterface = require('BayrellRuntime').Interfaces.AssertInterface;
+var SerializeInterface = require('BayrellRuntime').Interfaces.SerializeInterface;
 var JsonConvertToString = require('./JsonConvertToString.js');
 var JsonRestoreFromString = require('./JsonRestoreFromString.js');
 class JsonProvider extends ContextObject{
+	getClassName(){return "BayrellJsonSerializer.JsonProvider";}
 	_init(){
 		super._init();
 		this._display_class_name = true;
 		this._indent = "  ";
 		this._space = " ";
 		this._crlf = "\n";
-		if (this.__implements__ == undefined){this.__implements__ = [];}
-		this.__implements__.push(SerializeStringInterface);
 	}
 	/**
 	 * Convert object to string

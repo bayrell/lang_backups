@@ -29,23 +29,23 @@ class AssetsInterface{
 	 * Returns required assets
 	 * @return Vector<string>
 	 */
-	static getRequiredAssets(){
+	static getRequiredAssets(context){
 	}
 	/**
 	 * Returns required modules
 	 * @return Map<string, string>
 	 */
-	static getRequiredModules(){
+	static getRequiredModules(context){
 	}
 	/**
 	 * Returns sync loaded files
 	 */
-	static assetsSyncLoad(){
+	static assetsSyncLoad(context){
 	}
 	/**
 	 * Returns async loaded files
 	 */
-	static assetsAsyncLoad(){
+	static assetsAsyncLoad(context){
 	}
 }
 module.exports = AssetsInterface;

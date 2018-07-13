@@ -16,15 +16,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-var rtl = require('BayrellRtl').Lib.rtl;
-var Map = require('BayrellRtl').Types.Map;
-var Vector = require('BayrellRtl').Types.Vector;
-var CoreObject = require('BayrellRtl').CoreObject;
-var ContextObject = require('BayrellRtl').ContextObject;
-var ContextInterface = require('BayrellRtl').Interfaces.ContextInterface;
-var FactoryInterface = require('BayrellRtl').Interfaces.FactoryInterface;
+var rtl = require('BayrellRuntime').rtl;
+var Map = require('BayrellRuntime').Map;
+var Vector = require('BayrellRuntime').Vector;
+var CoreObject = require('BayrellRuntime').CoreObject;
+var ContextObject = require('BayrellRuntime').ContextObject;
+var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
+var FactoryInterface = require('BayrellRuntime').Interfaces.FactoryInterface;
 var JsonProvider = require('./JsonProvider.js');
 class JsonProviderFactory extends ContextObject{
+	getClassName(){return "BayrellJsonSerializer.JsonProviderFactory";}
 	_init(){
 		super._init();
 		this.display_class_name = true;

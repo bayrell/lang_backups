@@ -82,7 +82,6 @@ class Lib{
 	 * @params ContextInterface context
 	 * @params string lang
 	 * @params BundleFile file
-	 * @params func callback
 	 * @return BundleFile
 	 */
 	static translate(context, lang, file){
@@ -139,6 +138,33 @@ class Lib{
 			file.path = path;
 			file.content = BayrellLangUtils.translate(context, parser_factory, translator_factory, file.content);
 		}
+		return file;
+	}
+	/**
+	 * Translate sass
+	 * @params ContextInterface context
+	 * @params string lang
+	 * @params BundleFile file
+	 * @return BundleFile
+	 */
+	static translateSass(context, lang, file){
+		/* Get PathInfo ofthe file */
+		var path_info = BayrellCommonUtils.pathinfo(file.path);
+		var extname = path_info.extension;
+		var filename = path_info.filename;
+		var dirname = path_info.dirname;
+		var content = file.content;
+		file = rtl._clone(file);
+		file.path = dirname + "/" + filename + ".css";
+		file.content = "";
+		
+		var sass = require('node-sass');
+		var res = sass.renderSync({
+			data: content,
+			outputStyle: 'compressed',
+			includePaths: [ dirname ],
+		});
+		file.content = res.css.toString();
 		return file;
 	}
 	/**

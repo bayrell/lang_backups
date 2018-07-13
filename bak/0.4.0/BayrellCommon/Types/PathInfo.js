@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var StringInterface = require('BayrellRuntime').Interfaces.StringInterface;
 class PathInfo{
+	getClassName(){return "BayrellCommon.Types.PathInfo";}
 	_init(){
 		this.filepath = "";
 		this.dirname = "";

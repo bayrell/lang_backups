@@ -27,6 +27,7 @@ var shellModule = require('shelljs');
 var upathModule = require('upath');
 var pathModule = require('path');
 class FileSystemProvider extends ContextObject{
+	getClassName(){return "BayrellFileSystem.FileSystemProvider";}
 	_init(){
 		super._init();
 		if (this.__implements__ == undefined){this.__implements__ = [];}

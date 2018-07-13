@@ -60,7 +60,7 @@ class Context extends CoreObject{
 		var args = (new Vector()).push(this);
 		rtl.callStaticMethod(module_description_class_name, "onRegister", args);
 		/* Register required Modules*/
-		var modules = rtl.callStaticMethod(module_description_class_name, "getRequiredModules");
+		var modules = rtl.callStaticMethod(module_description_class_name, "getRequiredModules", args);
 		if (modules != null){
 			var keys = modules.keys();
 			var sz = keys.count();

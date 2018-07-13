@@ -54,13 +54,7 @@ class ModuleDescriptionInterface{
 	 * Returns required modules
 	 * @return Map<string, string>
 	 */
-	static getRequiredModules(){
-	}
-	/**
-	 * Returns required modules
-	 * @return Map<string, string>
-	 */
-	static getRequiredDevModules(){
+	static getRequiredModules(context){
 	}
 }
 module.exports = ModuleDescriptionInterface;

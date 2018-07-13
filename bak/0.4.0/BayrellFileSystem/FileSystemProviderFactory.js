@@ -25,6 +25,7 @@ var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 var FactoryInterface = require('BayrellRuntime').Interfaces.FactoryInterface;
 var FileSystemProvider = require('./FileSystemProvider.js');
 class FileSystemProviderFactory extends ContextObject{
+	getClassName(){return "BayrellFileSystem.FileSystemProviderFactory";}
 	_init(){
 		super._init();
 		if (this.__implements__ == undefined){this.__implements__ = [];}

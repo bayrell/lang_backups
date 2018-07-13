@@ -23,6 +23,7 @@ var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 var ModuleDescriptionInterface = require('BayrellRuntime').Interfaces.ModuleDescriptionInterface;
 var FileSystemProviderFactory = require('./FileSystemProviderFactory.js');
 class ModuleDescription{
+	getClassName(){return "BayrellFileSystem.ModuleDescription";}
 	_init(){
 		if (this.__implements__ == undefined){this.__implements__ = [];}
 		this.__implements__.push(ModuleDescriptionInterface);
@@ -65,15 +66,8 @@ class ModuleDescription{
 	 * Returns required modules
 	 * @return Map<string, string>
 	 */
-	static getRequiredModules(){
+	static getRequiredModules(context){
 		return (new Map()).set("Runtime", ">=0.2 <1.0");
-	}
-	/**
-	 * Returns required modules
-	 * @return Map<string, string>
-	 */
-	static getRequiredDevModules(){
-		return null;
 	}
 }
 module.exports = ModuleDescription;

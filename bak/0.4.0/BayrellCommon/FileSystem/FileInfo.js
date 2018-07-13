@@ -20,6 +20,7 @@ var rtl = require('BayrellRuntime').rtl;
 var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 class FileInfo{
+	getClassName(){return "BayrellCommon.FileSystem.FileInfo";}
 	_init(){
 		this.path = "";
 	}

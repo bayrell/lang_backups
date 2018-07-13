@@ -64,15 +64,8 @@ class ModuleDescription{
 	 * Returns required modules
 	 * @return Map<string, string>
 	 */
-	static getRequiredModules(){
+	static getRequiredModules(context){
 		return (new Map()).set("BayrellLang", ">=0.2");
-	}
-	/**
-	 * Returns required modules
-	 * @return Map<string, string>
-	 */
-	static getRequiredDevModules(){
-		return null;
 	}
 }
 module.exports = ModuleDescription;

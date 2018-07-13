@@ -59,33 +59,26 @@ class ModuleDescription{
 	 * Returns required assets
 	 * @return Map<string, string>
 	 */
-	static getRequiredAssets(){
+	static getRequiredAssets(context){
 		return null;
 	}
 	/**
 	 * Returns required modules
 	 * @return Map<string, string>
 	 */
-	static getRequiredModules(){
-		return null;
-	}
-	/**
-	 * Returns required modules
-	 * @return Map<string, string>
-	 */
-	static getRequiredDevModules(){
+	static getRequiredModules(context){
 		return null;
 	}
 	/**
 	 * Returns sync loaded files
 	 */
-	static assetsSyncLoad(){
+	static assetsSyncLoad(context){
 		return null;
 	}
 	/**
 	 * Returns async loaded files
 	 */
-	static assetsAsyncLoad(){
+	static assetsAsyncLoad(context){
 		return (new Vector()).push((new Vector()).push("/assets/Runtime/rs.js").push("/assets/Runtime/re.js").push("/assets/Runtime/rtl.js").push("/assets/Runtime/Map.js").push("/assets/Runtime/Utils.js").push("/assets/Runtime/Vector.js").push("/assets/Runtime/CoreObject.js").push("/assets/Runtime/RuntimeConstant.js").push("/assets/Runtime/Exceptions/RuntimeException.js").push("/assets/Runtime/Interfaces/CloneableInterface.js").push("/assets/Runtime/Interfaces/ContextInterface.js").push("/assets/Runtime/Interfaces/FactoryInterface.js").push("/assets/Runtime/Interfaces/ModuleDescriptionInterface.js").push("/assets/Runtime/Interfaces/SerializeInterface.js").push("/assets/Runtime/Interfaces/StringInterface.js")).push((new Vector()).push("/assets/Runtime/Context.js").push("/assets/Runtime/ContextObject.js").push("/assets/Runtime/ModuleDescription.js").push("/assets/Runtime/SerializeContainer.js").push("/assets/Runtime/VectorString.js").push("/assets/Runtime/Exceptions/IndexOutOfRange.js").push("/assets/Runtime/Exceptions/KeyNotFound.js").push("/assets/Runtime/Exceptions/UnknownError.js"));
 	}
 }

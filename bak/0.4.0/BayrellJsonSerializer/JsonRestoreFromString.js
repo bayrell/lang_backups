@@ -16,13 +16,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-var rtl = require('BayrellRtl').Lib.rtl;
-var Map = require('BayrellRtl').Types.Map;
-var Vector = require('BayrellRtl').Types.Vector;
-var CoreObject = require('BayrellRtl').CoreObject;
-var Vector = require('BayrellRtl').Types.Vector;
-var SerializeInterface = require('BayrellRtl').Interfaces.SerializeInterface;
+var rtl = require('BayrellRuntime').rtl;
+var Map = require('BayrellRuntime').Map;
+var Vector = require('BayrellRuntime').Vector;
+var CoreObject = require('BayrellRuntime').CoreObject;
+var SerializeInterface = require('BayrellRuntime').Interfaces.SerializeInterface;
 class JsonRestoreFromString extends CoreObject{
+	getClassName(){return "BayrellJsonSerializer.JsonRestoreFromString";}
 	/**
 	 * Restore object from string
 	 * @param string s

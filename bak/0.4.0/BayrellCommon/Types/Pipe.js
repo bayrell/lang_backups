@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var CoreObject = require('BayrellRuntime').CoreObject;
 class Pipe extends CoreObject{
+	getClassName(){return "BayrellCommon.Types.Pipe";}
 	_init(){
 		super._init();
 		this.pipe = null;

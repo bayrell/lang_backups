@@ -16,15 +16,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-var rtl = require('BayrellRtl').Lib.rtl;
-var Map = require('BayrellRtl').Types.Map;
-var Vector = require('BayrellRtl').Types.Vector;
-var CoreObject = require('BayrellRtl').CoreObject;
-var rs = require('BayrellRtl').Lib.rs;
-var Utils = require('BayrellRtl').Lib.Utils;
-var SerializeInterface = require('BayrellRtl').Interfaces.SerializeInterface;
-var KeyNotFound = require('BayrellRtl').Exceptions.KeyNotFound;
+var rtl = require('BayrellRuntime').rtl;
+var Map = require('BayrellRuntime').Map;
+var Vector = require('BayrellRuntime').Vector;
+var CoreObject = require('BayrellRuntime').CoreObject;
+var rs = require('BayrellRuntime').rs;
+var Utils = require('BayrellRuntime').Utils;
+var KeyNotFound = require('BayrellRuntime').Exceptions.KeyNotFound;
+var SerializeInterface = require('BayrellRuntime').Interfaces.SerializeInterface;
 class JsonConvertToString extends CoreObject{
+	getClassName(){return "BayrellJsonSerializer.JsonConvertToString";}
 	_init(){
 		super._init();
 		this._display_class_name = true;

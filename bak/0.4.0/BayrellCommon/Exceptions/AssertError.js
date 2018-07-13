@@ -25,6 +25,7 @@ var RuntimeConstant = require('BayrellRuntime').RuntimeConstant;
 var RuntimeException = require('BayrellRuntime').Exceptions.RuntimeException;
 var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 class AssertError extends RuntimeException{
+	getClassName(){return "BayrellCommon.Exceptions.AssertError";}
 	constructor(context, message, prev){
 		if (prev == undefined) prev=null;
 		if (message == ""){

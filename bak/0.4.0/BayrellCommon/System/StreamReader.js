@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var CoreObject = require('BayrellRuntime').CoreObject;
 class StreamReader extends CoreObject{
+	getClassName(){return "BayrellCommon.System.StreamReader";}
 	_init(){
 		super._init();
 		this.stream = null;

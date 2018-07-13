@@ -20,5 +20,6 @@ var rtl = require('BayrellRuntime').rtl;
 var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 class CommonConstant{
+	getClassName(){return "BayrellCommon.CommonConstant";}
 }
 module.exports = CommonConstant;

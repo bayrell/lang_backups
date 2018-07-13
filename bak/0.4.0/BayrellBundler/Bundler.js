@@ -48,10 +48,19 @@ class Bundler{
 	static filter(rules){
 		return (context, arr) => {
 			if (rules == null){
-				rules = (new Vector()).push("\\.bay$").push("\\.component$").push("\\.css$").push("\\.es6$");
+				rules = (new Vector()).push("\\.bay$").push("\\.component$").push("\\.css$").push("\\.es6$").push("\\.scss$");
 			}
 			return arr.filter((file) => {
-				return Lib.filter(rules, file);
+				var res = Lib.filter(rules, file);
+				if (!res){
+					return false;
+				}
+				var basename = BayrellCommonUtils.basename(file.path);
+				var extname = BayrellCommonUtils.extname(file.path);
+				if (extname == "scss" && basename[0] == "_"){
+					return false;
+				}
+				return true;
 			});
 		}
 	}
@@ -97,7 +106,7 @@ class Bundler{
 					if (callback != null){
 						callback(file);
 					}
-					res = Lib.translate(context, lang, file, callback);
+					res = Lib.translate(context, lang, file);
 				}
 				else if (extension == "css" && lang == "es6"){
 					if (callback != null){
@@ -111,6 +120,12 @@ class Bundler{
 					}
 					res = rtl._clone(file);
 					res.path = dirname + "/" + filename + ".js";
+				}
+				else if (extension == "scss" && lang == "es6"){
+					if (callback != null){
+						callback(file);
+					}
+					res = Lib.translateSass(context, lang, file);
 				}
 				else if (extension == "php" && lang == "php"){
 					if (callback != null){

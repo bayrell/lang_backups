@@ -21,6 +21,7 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var FileInterface = require('BayrellCommon').FileSystem.FileInterface;
 class FileInstance{
+	getClassName(){return "BayrellFileSystem.FileInstance";}
 	_init(){
 		if (this.__implements__ == undefined){this.__implements__ = [];}
 		this.__implements__.push(FileInterface);

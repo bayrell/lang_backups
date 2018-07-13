@@ -23,6 +23,7 @@ var Utils = require('BayrellRuntime').Utils;
 var ParserError = require('./ParserError.js');
 var ParserConstant = require('../ParserConstant.js');
 class ParserEOF extends ParserError{
+	getClassName(){return "BayrellParser.Exceptions.ParserEOF";}
 	constructor(context, prev){
 		if (prev == undefined) prev=null;
 		if (context == null){
