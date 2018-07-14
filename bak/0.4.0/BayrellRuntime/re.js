@@ -18,6 +18,7 @@
  */
 class re{
 	getClassName(){return "Runtime.re";}
+	static getParentClassName(){return "";}
 	
 	static compile(r){
 		if (!Array.isArray(r))

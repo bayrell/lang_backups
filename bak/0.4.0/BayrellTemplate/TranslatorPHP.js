@@ -32,6 +32,7 @@ var OpHtmlText = require('./OpCodes/OpHtmlText.js');
 var OpHtmlView = require('./OpCodes/OpHtmlView.js');
 class TranslatorPHP extends BayrellLangTranslatorPHP{
 	getClassName(){return "BayrellTemplate.TranslatorPHP";}
+	static getParentClassName(){return "BayrellLangTranslatorPHP";}
 	/**
 	 * Check if name is component
 	 * @param string name

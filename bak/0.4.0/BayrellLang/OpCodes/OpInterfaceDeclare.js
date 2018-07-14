@@ -23,6 +23,7 @@ var BaseOpCode = require('./BaseOpCode.js');
 var OpClassDeclare = require('./OpClassDeclare.js');
 class OpInterfaceDeclare extends OpClassDeclare{
 	getClassName(){return "BayrellLang.OpCodes.OpInterfaceDeclare";}
+	static getParentClassName(){return "OpClassDeclare";}
 	_init(){
 		super._init();
 		this.op = "op_interace";

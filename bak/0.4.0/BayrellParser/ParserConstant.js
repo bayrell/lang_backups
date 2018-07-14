@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var RuntimeConstant = require('BayrellRuntime').RuntimeConstant;
 class ParserConstant{
 	getClassName(){return "BayrellParser.ParserConstant";}
+	static getParentClassName(){return "";}
 	_init(){
 	}
 }

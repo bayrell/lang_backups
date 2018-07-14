@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var OpChilds = require('BayrellLang').OpCodes.OpChilds;
 class OpHtmlView extends OpChilds{
 	getClassName(){return "BayrellTemplate.OpCodes.OpHtmlView";}
+	static getParentClassName(){return "OpChilds";}
 	_init(){
 		super._init();
 		this.op = "op_html_view";

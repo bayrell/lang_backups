@@ -24,6 +24,7 @@ var ParserError = require('BayrellParser').Exceptions.ParserError;
 var LangConstant = require('../LangConstant.js');
 class HexNumberExpected extends ParserError{
 	getClassName(){return "BayrellLang.Exceptions.HexNumberExpected";}
+	static getParentClassName(){return "ParserError";}
 	constructor(context, line, col, prev){
 		if (prev == undefined) prev=null;
 		if (context == null){

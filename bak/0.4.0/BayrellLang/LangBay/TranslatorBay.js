@@ -27,6 +27,7 @@ var OutputOneLine = require('./Output/OutputOneLine.js');
 var OutputString = require('./Output/OutputString.js');
 class TranslatorBay extends CommonTranslator{
 	getClassName(){return "BayrellLang.TranslatorBay";}
+	static getParentClassName(){return "CommonTranslator";}
 	/**
 	 * Operator ADD
 	 */

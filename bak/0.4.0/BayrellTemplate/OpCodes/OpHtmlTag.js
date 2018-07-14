@@ -24,6 +24,7 @@ var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
 var OpHtmlAttribute = require('./OpHtmlAttribute.js');
 class OpHtmlTag extends BaseOpCode{
 	getClassName(){return "BayrellTemplate.OpCodes.OpHtmlTag";}
+	static getParentClassName(){return "BaseOpCode";}
 	_init(){
 		super._init();
 		this.op = "op_html_tag";

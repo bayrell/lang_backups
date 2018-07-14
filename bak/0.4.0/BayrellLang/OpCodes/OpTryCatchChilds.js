@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('./BaseOpCode.js');
 class OpTryCatchChilds extends BaseOpCode{
 	getClassName(){return "BayrellLang.OpCodes.OpTryCatchChilds";}
+	static getParentClassName(){return "BaseOpCode";}
 	_init(){
 		super._init();
 		this.op = "op_try_catch_childs";

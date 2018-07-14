@@ -23,6 +23,7 @@ var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 var ModuleDescriptionInterface = require('BayrellRuntime').Interfaces.ModuleDescriptionInterface;
 class ModuleDescription{
 	getClassName(){return "BayrellLang.ModuleDescription";}
+	static getParentClassName(){return "";}
 	_init(){
 		if (this.__implements__ == undefined){this.__implements__ = [];}
 		this.__implements__.push(ModuleDescriptionInterface);

@@ -23,6 +23,7 @@ var RuntimeException = require('./RuntimeException.js');
 var ContextInterface = require('../Interfaces/ContextInterface.js');
 class UnknownError extends RuntimeException{
 	getClassName(){return "Runtime.Exceptions.UnknownError";}
+	static getParentClassName(){return "RuntimeException";}
 	constructor(context, prev){
 		if (context == undefined) context=null;
 		if (prev == undefined) prev=null;

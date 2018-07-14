@@ -23,6 +23,7 @@ var ContextInterface = require('../Interfaces/ContextInterface.js');
 class ClassException extends Error { _init(){} }
 class RuntimeException extends ClassException{
 	getClassName(){return "Runtime.Exceptions.RuntimeException";}
+	static getParentClassName(){return "ClassException";}
 	constructor(context, message, code, prev){
 		if (context == undefined) context=null;
 		if (message == undefined) message="";

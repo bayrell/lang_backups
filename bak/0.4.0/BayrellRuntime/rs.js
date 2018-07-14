@@ -22,6 +22,7 @@ var Vector = require('./Vector.js');
 var isBrowser=function(){return typeof window !== "undefined" && this === window;}
 class rs{
 	getClassName(){return "Runtime.rs";}
+	static getParentClassName(){return "";}
 	/**
 	 * Returns string lenght
 	 * @param string s The string

@@ -85,6 +85,7 @@ var OpUse = require('../OpCodes/OpUse.js');
 var OpWhile = require('../OpCodes/OpWhile.js');
 class TranslatorPHP extends CommonTranslator{
 	getClassName(){return "BayrellLang.LangPHP.TranslatorPHP";}
+	static getParentClassName(){return "CommonTranslator";}
 	_init(){
 		super._init();
 		this.modules = null;
@@ -1019,12 +1020,25 @@ class TranslatorPHP extends CommonTranslator{
 	/**
 	 * Class init functions
 	 */
-	OpClassInit(class_variables){
+	OpClassInit(op_code){
+		var class_variables = op_code.class_variables;
+		var class_implements = op_code.class_implements;
+		var class_extends = "";
+		if (op_code.class_extends){
+			var name = op_code.class_extends.value;
+			if (this.modules.has(name)){
+				class_extends = this.modules.item(name);
+			}
+			else {
+				class_extends = name;
+			}
+		}
 		var res = "";
 		var has_serializable = false;
 		var has_cloneable = false;
 		if (!this.is_interface){
 			res += this.s("public function getClassName(){"+"return "+rtl.toString(this.convertString(rtl.toString(this.current_namespace)+"."+rtl.toString(this.current_class_name)))+";}");
+			res += this.s("public static function getParentClassName(){"+"return "+rtl.toString(this.convertString(class_extends))+";}");
 		}
 		for (var i = 0; i < class_variables.count(); i++){
 			var variable = class_variables.item(i);
@@ -1125,7 +1139,7 @@ class TranslatorPHP extends CommonTranslator{
 		res += this.OpClassDeclareHeader(op_code);
 		/* Variables */
 		res += this.OpClassDeclareVariables(op_code);
-		res += this.OpClassInit(op_code.class_variables);
+		res += this.OpClassInit(op_code);
 		/* Class functions */
 		for (var i = 0; i < op_code.childs.count(); i++){
 			var op_code2 = op_code.childs.item(i);

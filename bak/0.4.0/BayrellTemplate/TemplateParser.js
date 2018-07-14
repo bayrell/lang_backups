@@ -28,7 +28,9 @@ var ParserBayNameToken = require('BayrellLang').LangBay.ParserBayNameToken;
 var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
 var OpAssign = require('BayrellLang').OpCodes.OpAssign;
 var OpAssignDeclare = require('BayrellLang').OpCodes.OpAssignDeclare;
+var OpConcat = require('BayrellLang').OpCodes.OpConcat;
 var OpFlags = require('BayrellLang').OpCodes.OpFlags;
+var OpIdentifier = require('BayrellLang').OpCodes.OpIdentifier;
 var OpNope = require('BayrellLang').OpCodes.OpNope;
 var OpString = require('BayrellLang').OpCodes.OpString;
 var OpComponent = require('./OpCodes/OpComponent.js');
@@ -42,6 +44,7 @@ var OpHtmlView = require('./OpCodes/OpHtmlView.js');
 var HtmlToken = require('./HtmlToken.js');
 class TemplateParser extends ParserBay{
 	getClassName(){return "BayrellTemplate.TemplateParser";}
+	static getParentClassName(){return "ParserBay";}
 	/**
 	 * Read class body content
 	 */
@@ -315,12 +318,137 @@ class TemplateParser extends ParserBay{
 		return res;
 	}
 	/**
+	 * Retuns css hash 
+	 * @param string 
+	 * @return string hash
+	 */
+	getCssHash(s){
+		var arr = "abcdefghijklmnopqrstuvwxyz1234567890";
+		var arr_sz = 36;
+		var arr_mod = 1679616;
+		var sz = rs.strlen(s);
+		var hash = 0;
+		for (var i = 0; i < sz; i++){
+			var ch = rs.ord(s[i]);
+			hash = ((hash << 2) + ch) % arr_mod;
+		}
+		var res = "";
+		var pos = 0;
+		var c = 0;
+		while (hash != 0 || pos < 4){
+			c = hash % 36;
+			hash = rtl.floor(hash / 36);
+			res += arr[c];
+			pos++
+		}
+		return res;
+	}
+	/**
+	 * Read CSS Selector
+	 */
+	readCssSelector(){
+		var s = "";
+		s = this.current_token.readUntilVector((new Vector()).push(",").push("{"));
+		var pos = 0;
+		var sz = rs.strlen(s);
+		while (pos < sz && s[pos] != " "){
+			pos++
+		}
+		/* Get component name and postfix */
+		var name = "";
+		var postfix = "";
+		if (pos == sz){
+			name = s;
+		}
+		else {
+			name = rs.substr(s, 0, pos);
+			postfix = rs.substr(s, pos, sz - pos);
+		}
+		var hash = "-"+rtl.toString(this.getCssHash(rtl.toString(this.current_namespace)+"."+rtl.toString(this.current_class_name)));
+		/*string hash = "-1";*/
+		return rtl.toString(name)+rtl.toString(hash)+rtl.toString(postfix);
+	}
+	/**
+	 * Add OpCode
+	 * @return BaseOpCode
+	 */
+	readCssAddOpCode(current_op_code, s, new_op_code){
+		if (s != ""){
+			if (current_op_code == null){
+				current_op_code = new OpString(s);
+			}
+			else {
+				current_op_code = new OpConcat(current_op_code, new OpString(s));
+			}
+		}
+		if (new_op_code != null){
+			current_op_code = new OpConcat(current_op_code, new_op_code);
+		}
+		return current_op_code;
+	}
+	/**
+	 * Read CSS
+	 * @return BaseOpCode
+	 */
+	readCss(){
+		this.matchNextToken("{");
+		var op_code = null;
+		var s = "";
+		var look_str = this.current_token.lookString(1);
+		var match_str = "}";
+		var bracket_level = 0;
+		var flag_is_media = false;
+		var flag_is_css_body = false;
+		/* Main loop */
+		while (look_str != "" && !this.current_token.isEOF() && (look_str != match_str || look_str == "}" && bracket_level > 0)){
+			var look = this.current_token.readChar();
+			if (look == "$"){
+				this.assignCurrentToken(this.current_token);
+				this.pushToken(new ParserBayToken(this.context(), this));
+				var name = this.readIdentifierName();
+				op_code = this.readCssAddOpCode(op_code, s, new OpIdentifier(name));
+				s = "";
+				this.popRestoreToken();
+			}
+			else if (look == "." && !flag_is_media && !flag_is_css_body){
+				s = rtl.toString(s)+"."+rtl.toString(this.readCssSelector());
+			}
+			else if (look != "\t" && look != "\n" && look != "\r"){
+				s = rtl.toString(s)+rtl.toString(look);
+			}
+			if (look == "@" && this.current_token.lookString(5) == "media"){
+				flag_is_media = true;
+			}
+			if (look == "{"){
+				if (!flag_is_media){
+					flag_is_css_body = true;
+				}
+				flag_is_media = false;
+				bracket_level++
+			}
+			else if (look == "}"){
+				flag_is_css_body = false;
+				bracket_level--
+			}
+			look_str = this.current_token.lookString(1);
+		}
+		this.assignCurrentToken(this.current_token);
+		op_code = this.readCssAddOpCode(op_code, s, null);
+		this.matchNextToken("}");
+		return op_code;
+	}
+	/**
 	 * Read element
 	 * @return BaseOpCode
 	 */
 	readExpressionElement(){
 		if (this.findNextToken("<")){
 			return this.readHtml();
+		}
+		else if (this.findNextToken("@") && this.next_token.lookString(3) == "css"){
+			this.matchNextToken("@");
+			this.matchNextToken("css");
+			return this.readCss();
 		}
 		return super.readExpressionElement();
 	}

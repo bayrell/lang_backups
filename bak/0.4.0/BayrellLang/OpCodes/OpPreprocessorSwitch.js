@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var OpChilds = require('./OpChilds.js');
 class OpPreprocessorSwitch extends OpChilds{
 	getClassName(){return "BayrellLang.OpCodes.OpPreprocessorSwitch";}
+	static getParentClassName(){return "OpChilds";}
 	_init(){
 		super._init();
 		this.op = "op_preprocessor_switch";

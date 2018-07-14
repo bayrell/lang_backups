@@ -26,6 +26,7 @@ var ParserInterface = require('./Interfaces/ParserInterface.js');
 var ParserCursorPos = require('./ParserCursorPos.js');
 class ParserReader extends ParserCursorPos{
 	getClassName(){return "BayrellParser.ParserReader";}
+	static getParentClassName(){return "ParserCursorPos";}
 	/**
 	 * Returns new Instance
 	 */

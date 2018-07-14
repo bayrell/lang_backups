@@ -24,6 +24,7 @@ var rs = require('BayrellRuntime').rs;
 var TranslatorES6 = require('./TranslatorES6.js');
 class TranslatorNodeJS extends TranslatorES6{
 	getClassName(){return "BayrellTemplate.TranslatorNodeJS";}
+	static getParentClassName(){return "TranslatorES6";}
 	/**
 	 * Get name
 	 */

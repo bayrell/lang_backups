@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var OpValue1 = require('./OpValue1.js');
 class OpClone extends OpValue1{
 	getClassName(){return "BayrellLang.OpCodes.OpClone";}
+	static getParentClassName(){return "OpValue1";}
 	_init(){
 		super._init();
 		this.op = "op_clone";

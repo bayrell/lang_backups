@@ -19,5 +19,6 @@
 var CoreObject = require('./CoreObject.js');
 class SerializeContainer extends CoreObject{
 	getClassName(){return "Runtime.SerializeContainer";}
+	static getParentClassName(){return "CoreObject";}
 }
 module.exports = SerializeContainer;

@@ -85,6 +85,7 @@ var OpVector = require('./OpCodes/OpVector.js');
 var OpWhile = require('./OpCodes/OpWhile.js');
 class CommonTranslator extends ContextObject{
 	getClassName(){return "BayrellLang.CommonTranslator";}
+	static getParentClassName(){return "ContextObject";}
 	_init(){
 		super._init();
 		this.one_lines = null;
@@ -459,6 +460,9 @@ class CommonTranslator extends ContextObject{
 		}
 		else if (op_code instanceof OpDelete){
 			return this.OpDelete(op_code);
+		}
+		else if (op_code instanceof OpDiv){
+			return this.OpDiv(op_code);
 		}
 		else if (op_code instanceof OpDynamic){
 			return this.OpDynamic(op_code);

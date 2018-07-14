@@ -24,6 +24,7 @@ var RuntimeException = require('BayrellRuntime').Exceptions.RuntimeException;
 var ParserConstant = require('../ParserConstant.js');
 class ParserError extends RuntimeException{
 	getClassName(){return "BayrellParser.Exceptions.ParserError";}
+	static getParentClassName(){return "RuntimeException";}
 	constructor(context, s, line, col, prev){
 		if (prev == undefined) prev=null;
 		if (context == null){

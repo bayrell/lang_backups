@@ -29,6 +29,7 @@ var CommonParser = require('./CommonParser.js');
 var CommonTranslator = require('./CommonTranslator.js');
 class Utils extends ContextObject{
 	getClassName(){return "BayrellLang.Utils";}
+	static getParentClassName(){return "ContextObject";}
 	/**
 	 * Transcompile one language to other
 	 * @string string parser_factory_name

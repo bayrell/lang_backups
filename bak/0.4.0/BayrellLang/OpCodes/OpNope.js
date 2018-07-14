@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var OpChilds = require('./OpChilds.js');
 class OpNope extends OpChilds{
 	getClassName(){return "BayrellLang.OpCodes.OpNope";}
+	static getParentClassName(){return "OpChilds";}
 	_init(){
 		super._init();
 		this.op = "op_nope";

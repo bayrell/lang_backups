@@ -23,6 +23,7 @@ var CoreObject = require('BayrellRuntime').CoreObject;
 var SerializeInterface = require('BayrellRuntime').Interfaces.SerializeInterface;
 class BaseOpCode extends CoreObject{
 	getClassName(){return "BayrellLang.OpCodes.BaseOpCode";}
+	static getParentClassName(){return "CoreObject";}
 	_init(){
 		super._init();
 		this.op = "";

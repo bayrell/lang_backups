@@ -25,6 +25,7 @@ var ParserExpected = require('./Exceptions/ParserExpected.js');
 var ParserReader = require('./ParserReader.js');
 class ParserToken extends ParserReader{
 	getClassName(){return "BayrellParser.ParserToken";}
+	static getParentClassName(){return "ParserReader";}
 	_init(){
 		super._init();
 		this.token = "";

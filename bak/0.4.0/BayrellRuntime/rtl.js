@@ -21,6 +21,7 @@ var StringInterface = require('./Interfaces/StringInterface.js');
 var isBrowser=function(){return typeof window !== "undefined" && this === window;}
 class rtl{
 	getClassName(){return "Runtime.rtl";}
+	static getParentClassName(){return "";}
 	
 	static implements(obj, interface_name){
 		if (obj == undefined) return false;
@@ -95,6 +96,14 @@ class rtl{
 	}
 	#endswitch
 	*/
+	/**
+	 * Call method
+	 * @return Object
+	 */
+	
+	static call(f, args){
+		return f.apply(null, args);
+	}
 	/**
 	 * Call method
 	 * @return Object
@@ -247,11 +256,42 @@ class rtl{
 	}
 	/**
 	 * Returns unique value
+	 * @param bool flag If true returns as text. Default true
 	 * @return string
 	 */
 	
-	static unique(){
-		return "" + (new Date).getTime() + Math.floor((Math.random() * 899999 + 100000));
+	static unique(flag){
+		if (flag == undefined) flag = true;
+		if (flag)
+			return "" + (new Date).getTime() + Math.floor((Math.random() * 899999 + 100000));
+		return Symbol();
+	}
+	/**
+	 * Round up
+	 * @param double value
+	 * @return int
+	 */
+	
+	static ceil(value){
+		return Math.ceil(value);
+	}
+	/**
+	 * Round down
+	 * @param double value
+	 * @return int
+	 */
+	
+	static floor(value){
+		return Math.floor(value);
+	}
+	/**
+	 * Round down
+	 * @param double value
+	 * @return int
+	 */
+	
+	static round(value){
+		return Math.round(value);
 	}
 }
 module.exports = rtl;

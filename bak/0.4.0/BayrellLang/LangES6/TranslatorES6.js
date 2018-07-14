@@ -87,6 +87,7 @@ var OpVector = require('../OpCodes/OpVector.js');
 var OpWhile = require('../OpCodes/OpWhile.js');
 class TranslatorES6 extends CommonTranslator{
 	getClassName(){return "BayrellLang.LangES6.TranslatorES6";}
+	static getParentClassName(){return "CommonTranslator";}
 	_init(){
 		super._init();
 		this.modules = null;
@@ -897,8 +898,13 @@ class TranslatorES6 extends CommonTranslator{
 	/**
 	 * Class init functions
 	 */
-	OpClassInit(class_variables, class_implements, class_extends){
-		if (class_extends == undefined) class_extends="";
+	OpClassInit(op_code){
+		var class_variables = op_code.class_variables;
+		var class_implements = op_code.class_implements;
+		var class_extends = "";
+		if (op_code.class_extends){
+			class_extends = this.getName(op_code.class_extends.value);
+		}
 		var s = "";
 		var res = "";
 		var has_serializable = false;
@@ -918,6 +924,7 @@ class TranslatorES6 extends CommonTranslator{
 		}
 		if (!this.is_interface){
 			res += this.s("getClassName(){"+"return "+rtl.toString(this.convertString(rtl.toString(this.current_namespace)+"."+rtl.toString(this.current_class_name)))+";}");
+			res += this.s("static getParentClassName(){"+"return "+rtl.toString(this.convertString(class_extends))+";}");
 		}
 		if (this.current_module_name != "Runtime" && this.current_class_name != "CoreObject"){
 			if (has_variables || has_implements){
@@ -1066,7 +1073,7 @@ class TranslatorES6 extends CommonTranslator{
 			return "";
 		}
 		res += this.OpClassDeclareHeader(op_code);
-		res += this.OpClassInit(op_code.class_variables, op_code.class_implements, op_code.class_extends);
+		res += this.OpClassInit(op_code);
 		/* Body */
 		res += this.OpClassBody(op_code);
 		/* Footer class */

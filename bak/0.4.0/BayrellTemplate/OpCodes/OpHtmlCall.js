@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var OpCall = require('BayrellLang').OpCodes.OpCall;
 class OpHtmlCall extends OpCall{
 	getClassName(){return "BayrellTemplate.OpCodes.OpHtmlCall";}
+	static getParentClassName(){return "OpCall";}
 	_init(){
 		super._init();
 		this.op = "op_html_call";

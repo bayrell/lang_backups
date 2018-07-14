@@ -19,9 +19,11 @@
 var rtl = require('./rtl.js');
 var Vector = require('./Vector.js');
 var AssetsInterface = require('./Interfaces/AssetsInterface.js');
+var ContextInterface = require('./Interfaces/ContextInterface.js');
 var ModuleDescriptionInterface = require('./Interfaces/ModuleDescriptionInterface.js');
 class ModuleDescription{
 	getClassName(){return "Runtime.ModuleDescription";}
+	static getParentClassName(){return "";}
 	/**
 	 * Returns module name
 	 * @return string

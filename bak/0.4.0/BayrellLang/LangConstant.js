@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var RuntimeConstant = require('BayrellRuntime').RuntimeConstant;
 class LangConstant{
 	getClassName(){return "BayrellLang.LangConstant";}
+	static getParentClassName(){return "";}
 	_init(){
 	}
 }

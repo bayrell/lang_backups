@@ -21,5 +21,6 @@ var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 class BayrellParserES6{
 	getClassName(){return "BayrellLang.LangES6.BayrellParserES6";}
+	static getParentClassName(){return "";}
 }
 module.exports = BayrellParserES6;

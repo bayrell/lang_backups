@@ -23,6 +23,7 @@ var RuntimeException = require('./RuntimeException.js');
 var ContextInterface = require('../Interfaces/ContextInterface.js');
 class KeyNotFound extends RuntimeException{
 	getClassName(){return "Runtime.Exceptions.KeyNotFound";}
+	static getParentClassName(){return "RuntimeException";}
 	constructor(context, key, prev){
 		if (context == undefined) context=null;
 		if (prev == undefined) prev=null;

@@ -26,6 +26,7 @@ var HexNumberExpected = require('./Exceptions/HexNumberExpected.js');
 var BaseOpCode = require('./OpCodes/BaseOpCode.js');
 class CommonParser extends CoreParser{
 	getClassName(){return "BayrellLang.CommonParser";}
+	static getParentClassName(){return "CoreParser";}
 	_init(){
 		super._init();
 		this._result = null;

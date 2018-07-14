@@ -24,6 +24,7 @@ var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
 var OpValue1 = require('BayrellLang').OpCodes.OpValue1;
 class OpHtmlJson extends OpValue1{
 	getClassName(){return "BayrellTemplate.OpCodes.OpHtmlJson";}
+	static getParentClassName(){return "OpValue1";}
 	_init(){
 		super._init();
 		this.op = "op_html_json";

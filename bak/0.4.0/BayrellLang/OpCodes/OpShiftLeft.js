@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var OpValue2 = require('./OpValue2.js');
 class OpShiftLeft extends OpValue2{
 	getClassName(){return "BayrellLang.OpCodes.OpShiftLeft";}
+	static getParentClassName(){return "OpValue2";}
 	_init(){
 		super._init();
 		this.op = "op_shift_left";

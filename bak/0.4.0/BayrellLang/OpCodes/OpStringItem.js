@@ -23,6 +23,7 @@ var BaseOpCode = require('./BaseOpCode.js');
 var OpValue2 = require('./OpValue2.js');
 class OpStringItem extends OpValue2{
 	getClassName(){return "BayrellLang.OpCodes.OpStringItem";}
+	static getParentClassName(){return "OpValue2";}
 	_init(){
 		super._init();
 		this.op = "op_string_item";

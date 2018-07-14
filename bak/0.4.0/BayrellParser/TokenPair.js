@@ -23,6 +23,7 @@ var CoreObject = require('BayrellRuntime').CoreObject;
 var ParserToken = require('./ParserToken.js');
 class TokenPair extends CoreObject{
 	getClassName(){return "BayrellParser.TokenPair";}
+	static getParentClassName(){return "CoreObject";}
 	_init(){
 		super._init();
 		this.current_token = null;

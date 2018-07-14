@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var OpValueString = require('./OpValueString.js');
 class OpString extends OpValueString{
 	getClassName(){return "BayrellLang.OpCodes.OpString";}
+	static getParentClassName(){return "OpValueString";}
 	_init(){
 		super._init();
 		this.op = "op_string";

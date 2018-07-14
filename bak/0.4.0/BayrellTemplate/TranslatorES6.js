@@ -32,6 +32,7 @@ var OpHtmlText = require('./OpCodes/OpHtmlText.js');
 var OpHtmlView = require('./OpCodes/OpHtmlView.js');
 class TranslatorES6 extends BayrellLangTranslatorES6{
 	getClassName(){return "BayrellTemplate.TranslatorES6";}
+	static getParentClassName(){return "BayrellLangTranslatorES6";}
 	/**
 	 * Check if name is component
 	 * @param string name

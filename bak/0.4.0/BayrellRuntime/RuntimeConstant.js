@@ -18,6 +18,7 @@
  */
 class RuntimeConstant{
 	getClassName(){return "Runtime.RuntimeConstant";}
+	static getParentClassName(){return "";}
 	/* Log level */
 	/**
 	 * Fatal error. Application stoped
@@ -42,8 +43,6 @@ class RuntimeConstant{
 	 */
 	/* Status codes */
 	/* Errors */
-	/* Modules error */
-	/* Bus errors */
 }
 RuntimeConstant.LOG_FATAL = 0;
 RuntimeConstant.LOG_CRITICAL = 2;
@@ -62,15 +61,4 @@ RuntimeConstant.ERROR_INDEX_OUT_OF_RANGE = -2;
 RuntimeConstant.ERROR_KEY_NOT_FOUND = -3;
 RuntimeConstant.ERROR_STOP_ITERATION = -4;
 RuntimeConstant.ERROR_ASSERT = -5;
-RuntimeConstant.ERROR_MODULE_CONTEXT = -1000;
-RuntimeConstant.ERROR_MODULE_LANG = -2000;
-RuntimeConstant.ERROR_MODULE_UNIT = -3000;
-RuntimeConstant.ERROR_MODULE_BUS = -4100;
-RuntimeConstant.ERROR_MODULE_PARSER = -5000;
-RuntimeConstant.ERROR_USER = -100000;
-RuntimeConstant.ERROR_BUS_CONNECTION = -4001;
-RuntimeConstant.ERROR_BUS_RUNTIME = -4002;
-RuntimeConstant.ERROR_BUS_UNKNOWN_COMMAND = -4003;
-RuntimeConstant.ERROR_BUS_WRONG_ANSWER = -4005;
-RuntimeConstant.ERROR_BUS_TIMEOUT = -4006;
 module.exports = RuntimeConstant;

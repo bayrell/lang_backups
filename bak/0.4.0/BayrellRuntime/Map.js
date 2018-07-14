@@ -186,7 +186,10 @@ Runtime.Map = class extends Map{
 	 */
 	each(f){
 		var keys = this.keys();
-		keys.each(f);
+		keys.each((key)=>{
+			var value = this.item(key);
+			f(key, value);
+		});
 		return this;
 	}
 	
@@ -200,9 +203,24 @@ Runtime.Map = class extends Map{
 	map(f){
 		var _Map = null; if (isBrowser()) _Map = Runtime.Map; else _Map = Map;
 		var res = new _Map();
-		this.each((key)=>{
-			var value = this.item(key);
+		this.each((key, value)=>{
 			res.set(key, f(key, value));
+		});
+		return res;
+	}
+	
+	
+	
+	/**
+	 * Reduce
+	 * @param func f
+	 * @param mixed init_value
+	 * @return init_value
+	 */
+	reduce(f, init_value){
+		var res = init_value;
+		this.each((key, value) => {
+			res = f(res, key, value);
 		});
 		return res;
 	}
@@ -229,7 +247,7 @@ Runtime.Map = class extends Map{
 	 */
 	toObject(){
 		var obj = {};
-		this.each((key)=>{obj[key]=this.get(key);});
+		this.each((key)=>{obj[key]=this.get(key, null);});
 		return obj;
 	}
 }

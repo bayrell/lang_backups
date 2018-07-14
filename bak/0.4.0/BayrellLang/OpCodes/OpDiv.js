@@ -22,6 +22,7 @@ var Vector = require('BayrellRuntime').Vector;
 var OpValue2 = require('./OpValue2.js');
 class OpDiv extends OpValue2{
 	getClassName(){return "BayrellLang.OpCodes.OpDiv";}
+	static getParentClassName(){return "OpValue2";}
 	_init(){
 		super._init();
 		this.op = "op_div";

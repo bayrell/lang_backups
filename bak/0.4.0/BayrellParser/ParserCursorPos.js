@@ -27,6 +27,7 @@ var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 var ParserInterface = require('./Interfaces/ParserInterface.js');
 class ParserCursorPos extends ContextObject{
 	getClassName(){return "BayrellParser.ParserCursorPos";}
+	static getParentClassName(){return "ContextObject";}
 	_init(){
 		super._init();
 		this.parser = null;

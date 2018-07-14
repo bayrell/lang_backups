@@ -282,6 +282,17 @@ Runtime.Vector = class extends Array{
 	
 	
 	/**
+	 * Remove value
+	 */
+	removeItem(value){
+		var index = this.indexOf(value);
+		if (index != -1)
+			this.remove(index, 1);
+	}
+	
+	
+	
+	/**
 	 * Map
 	 * @param func f
 	 * @return Vector

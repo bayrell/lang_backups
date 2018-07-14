@@ -19,5 +19,6 @@
 var Vector = require('./Vector.js');
 class VectorString extends Vector{
 	getClassName(){return "Runtime.VectorString";}
+	static getParentClassName(){return "Vector";}
 }
 module.exports = VectorString;

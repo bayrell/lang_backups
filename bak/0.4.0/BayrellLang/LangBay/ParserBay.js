@@ -92,8 +92,11 @@ var TwiceDeclareElseError = require('../Exceptions/TwiceDeclareElseError.js');
 var ParserError = require('BayrellParser').Exceptions.ParserError;
 class ParserBay extends CommonParser{
 	getClassName(){return "BayrellLang.LangBay.ParserBay";}
+	static getParentClassName(){return "CommonParser";}
 	_init(){
 		super._init();
+		this.current_namespace = "";
+		this.current_class_name = "";
 		this.is_interface = false;
 	}
 	/**
@@ -1102,6 +1105,7 @@ class ParserBay extends CommonParser{
 	readOperatorNamespace(){
 		this.matchNextToken("namespace");
 		var name = this.readDynamicName();
+		this.current_namespace = name;
 		this.matchNextToken(";");
 		return new OpNamespace(name);
 	}
@@ -1310,6 +1314,7 @@ class ParserBay extends CommonParser{
 	 */
 	readClassHead(res){
 		res.class_name = this.readIdentifierName();
+		this.current_class_name = res.class_name;
 		if (this.findNextToken("<")){
 			this.matchNextToken("<");
 			while (true){

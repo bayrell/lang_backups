@@ -28,6 +28,7 @@ var SerializeInterface = require('./Interfaces/SerializeInterface.js');
 var isBrowser=function(){return typeof window !== "undefined" && this === window;}
 class Utils{
 	getClassName(){return "Runtime.Utils";}
+	static getParentClassName(){return "";}
 	/**
 	 * Returns global context
 	 * @return ContextInterface
@@ -77,6 +78,20 @@ class Utils{
 		return context;
 	}
 	/**
+	 * Returns parents class names
+	 * @return Vector<string>
+	 */
+	static getParents(class_name){
+		var res = new Vector();
+		while (class_name != ""){
+			class_name = rtl.callStaticMethod(class_name, "getParentClassName");
+			if (class_name != ""){
+				res.push(class_name);
+			}
+		}
+		return res;
+	}
+	/**
 	 * Returns true if value is primitive value
 	 * @return boolean 
 	 */
@@ -120,6 +135,10 @@ class Utils{
 		}
 		if (obj instanceof Map){
 			obj.set(key, value);
+		}
+		
+		if (typeof obj == 'object'){
+			obj[key] = value;
 		}
 	}
 	/**
@@ -173,11 +192,10 @@ class Utils{
 	}
 	/**
 	 * Returns object to primitive value
-	 * @param SerializeContainer container
+	 * @param mixed obj
 	 * @return mixed
 	 */
-	static toPrimitiveValue(obj, container){
-		if (container == undefined) container=null;
+	static ObjectToPrimitive(obj){
 		if (obj == null){
 			return null;
 		}
@@ -186,21 +204,21 @@ class Utils{
 		}
 		if (obj instanceof Vector){
 			return obj.map((value) => {
-				return Utils.toPrimitiveValue(value);
+				return Utils.ObjectToPrimitive(value);
 			});
 		}
 		if (obj instanceof Map){
 			return obj.map((key, value) => {
-				return Utils.toPrimitiveValue(value);
+				return Utils.ObjectToPrimitive(value);
 			});
 		}
-		if (obj instanceof SerializeInterface){
+		if (rtl.implements(obj, SerializeInterface)){
 			var names = new Vector();
 			var values = new Map();
 			obj.getVariablesNames(names);
 			names.each((variable_name) => {
 				var value = obj.takeValue(variable_name, null);
-				var value = Utils.toPrimitiveValue(value);
+				var value = Utils.ObjectToPrimitive(value);
 				values.set(variable_name, value);
 			});
 			values.set("__class_name__", obj.getClassName());
@@ -213,7 +231,7 @@ class Utils{
 	 * @param SerializeContainer container
 	 * @return mixed
 	 */
-	static fromPrimitiveValue(context, obj){
+	static PrimitiveToObject(context, obj){
 		if (obj == null){
 			return null;
 		}
@@ -222,12 +240,12 @@ class Utils{
 		}
 		if (obj instanceof Vector){
 			return obj.map((value) => {
-				return Utils.fromPrimitiveValue(context, value);
+				return Utils.PrimitiveToObject(context, value);
 			});
 		}
 		if (obj instanceof Map){
 			obj = obj.map((key, value) => {
-				return Utils.fromPrimitiveValue(context, value);
+				return Utils.PrimitiveToObject(context, value);
 			});
 			if (!obj.has("__class_name__")){
 				return obj;
@@ -293,7 +311,7 @@ class Utils{
 		}
 	}
 	
-	static toPrimitive(value){
+	static NativeToPrimitive(value){
 		
 		var _rtl = null; if (isBrowser()) _rtl=Runtime.rtl; else _rtl=rtl;
 		var _Utils = null; if (isBrowser()) _Utils=Runtime.Utils; else _Utils=Utils;
@@ -303,18 +321,48 @@ class Utils{
 		if (Array.isArray(value)){
 			var new_value = (new _Vector()).concat(value);
 			new_value = new_value.map((val)=>{
-				return _Utils.toPrimitive(val);
+				return _Utils.NativeToPrimitive(val);
 			});
 			return new_value;
 		}
 		if (typeof value == 'object'){
 			var new_value = new _Map(value);
 			new_value = new_value.map((key, val)=>{
-				return _Utils.toPrimitive(val);
+				return _Utils.NativeToPrimitive(val);
 			});
 			return new_value;
 		}
 		
+		return value;
+	}
+	static PrimitiveToNative(value){
+		
+		var _rtl = null; if (isBrowser()) _rtl=Runtime.rtl; else _rtl=rtl;
+		var _Utils = null; if (isBrowser()) _Utils=Runtime.Utils; else _Utils=Utils;
+		var _Vector=null; if (isBrowser()) _Vector=Runtime.Vector; else _Vector=Vector;
+		var _Map=null; if (isBrowser()) _Map=Runtime.Map; else _Map=Map;
+		
+		if (value instanceof _Vector){
+			var arr = [];
+			value.each((v)=>{
+				arr.push( _Utils.PrimitiveToNative(v) );
+			});
+			return arr;
+		}
+		if (value instanceof _Map){
+			var obj = {};
+			value.each((k, v)=>{
+				obj[k] = _Utils.PrimitiveToNative(v);
+			});
+			return obj;
+		}
+		
+		return value;
+	}
+	static ObjectToNative(value){
+		var _Utils = null; if (isBrowser()) _Utils=Runtime.Utils; else _Utils=Utils;
+		value = _Utils.ObjectToPrimitive(value);
+		value = _Utils.PrimitiveToNative(value);
 		return value;
 	}
 }

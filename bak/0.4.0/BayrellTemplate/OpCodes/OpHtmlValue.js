@@ -25,6 +25,7 @@ var OpValue1 = require('BayrellLang').OpCodes.OpValue1;
 var OpHtmlAttribute = require('./OpHtmlAttribute.js');
 class OpHtmlValue extends OpValue1{
 	getClassName(){return "BayrellTemplate.OpCodes.OpHtmlValue";}
+	static getParentClassName(){return "OpValue1";}
 	_init(){
 		super._init();
 		this.op = "op_html_value";

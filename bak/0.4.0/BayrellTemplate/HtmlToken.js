@@ -26,6 +26,7 @@ var ParserExpected = require('BayrellParser').Exceptions.ParserExpected;
 var EndOfStringExpected = require('BayrellLang').Exceptions.EndOfStringExpected;
 class HtmlToken extends ParserToken{
 	getClassName(){return "BayrellTemplate.HtmlToken";}
+	static getParentClassName(){return "ParserToken";}
 	_init(){
 		super._init();
 		this._special_tokens = null;

@@ -23,6 +23,7 @@ var BaseOpCode = require('./BaseOpCode.js');
 var OpFlags = require('./OpFlags.js');
 class OpFunctionDeclare extends BaseOpCode{
 	getClassName(){return "BayrellLang.OpCodes.OpFunctionDeclare";}
+	static getParentClassName(){return "BaseOpCode";}
 	_init(){
 		super._init();
 		this.op = "op_function";

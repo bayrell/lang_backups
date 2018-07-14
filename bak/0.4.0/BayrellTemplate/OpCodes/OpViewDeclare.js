@@ -24,6 +24,7 @@ var BaseOpCode = require('BayrellLang').OpCodes.BaseOpCode;
 var OpFlags = require('BayrellLang').OpCodes.OpFlags;
 class OpViewDeclare extends BaseOpCode{
 	getClassName(){return "BayrellTemplate.OpCodes.OpViewDeclare";}
+	static getParentClassName(){return "BaseOpCode";}
 	_init(){
 		super._init();
 		this.op = "op_view";
