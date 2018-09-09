@@ -28,6 +28,9 @@ class OpVector extends BaseOpCode{
 		this.op = "op_vector";
 		this.values = null;
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpVector){
 			this.op = rtl._clone(obj.op);
@@ -36,8 +39,8 @@ class OpVector extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "values") this.values = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_vector", "");
+		else if (variable_name == "values") this.values = rtl.correct(value, "Vector", null, "BaseOpCode");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

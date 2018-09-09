@@ -28,6 +28,9 @@ class OpInterfaceDeclare extends OpClassDeclare{
 		super._init();
 		this.op = "op_interace";
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpInterfaceDeclare){
 			this.op = rtl._clone(obj.op);
@@ -35,7 +38,7 @@ class OpInterfaceDeclare extends OpClassDeclare{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_interace", "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

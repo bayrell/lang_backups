@@ -28,6 +28,9 @@ class OpUse extends OpValueString{
 		this.op = "op_use";
 		this.alias_name = "";
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpUse){
 			this.op = rtl._clone(obj.op);
@@ -36,8 +39,8 @@ class OpUse extends OpValueString{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "alias_name") this.alias_name = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_use", "");
+		else if (variable_name == "alias_name") this.alias_name = rtl.correct(value, "string", "", "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

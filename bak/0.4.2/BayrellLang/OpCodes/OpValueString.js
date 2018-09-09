@@ -28,6 +28,9 @@ class OpValueString extends BaseOpCode{
 		this.op = "op_value";
 		this.value = "";
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpValueString){
 			this.op = rtl._clone(obj.op);
@@ -36,8 +39,8 @@ class OpValueString extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "value") this.value = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_value", "");
+		else if (variable_name == "value") this.value = rtl.correct(value, "string", "", "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

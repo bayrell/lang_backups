@@ -68,6 +68,13 @@ class ParserCursorPos extends ContextObject{
 		}
 	}
 	/**
+	 * Assign all data from other object
+	 * @param CoreObject obj
+	 */
+	assignObject(obj){
+		this.assign(obj);
+	}
+	/**
 	 * Return true if eof
 	 * @param {bool}
 	 */

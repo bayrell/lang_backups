@@ -29,6 +29,9 @@ class OpHtmlEscape extends OpValue1{
 		super._init();
 		this.op = "op_html_escape";
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpHtmlEscape){
 			this.op = rtl._clone(obj.op);
@@ -36,7 +39,7 @@ class OpHtmlEscape extends OpValue1{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_html_escape", "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

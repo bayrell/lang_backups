@@ -31,6 +31,9 @@ class OpComponent extends BaseOpCode{
 		this.alias = "";
 		this.args = null;
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpComponent){
 			this.op = rtl._clone(obj.op);
@@ -41,10 +44,10 @@ class OpComponent extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "name") this.name = value;
-		else if (variable_name == "alias") this.alias = value;
-		else if (variable_name == "args") this.args = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_component", "");
+		else if (variable_name == "name") this.name = rtl.correct(value, "BaseOpCode", "", "");
+		else if (variable_name == "alias") this.alias = rtl.correct(value, "string", "", "");
+		else if (variable_name == "args") this.args = rtl.correct(value, "Map", null, "string");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

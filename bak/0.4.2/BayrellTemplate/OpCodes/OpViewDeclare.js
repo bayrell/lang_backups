@@ -34,6 +34,9 @@ class OpViewDeclare extends BaseOpCode{
 		this.childs = null;
 		this.flags = null;
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpViewDeclare){
 			this.op = rtl._clone(obj.op);
@@ -46,12 +49,12 @@ class OpViewDeclare extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "view_name") this.view_name = value;
-		else if (variable_name == "view_extends") this.view_extends = value;
-		else if (variable_name == "view_variables") this.view_variables = value;
-		else if (variable_name == "childs") this.childs = value;
-		else if (variable_name == "flags") this.flags = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_view", "");
+		else if (variable_name == "view_name") this.view_name = rtl.correct(value, "string", "", "");
+		else if (variable_name == "view_extends") this.view_extends = rtl.correct(value, "BaseOpCode", null, "");
+		else if (variable_name == "view_variables") this.view_variables = rtl.correct(value, "Vector", null, "OpAssignDeclare");
+		else if (variable_name == "childs") this.childs = rtl.correct(value, "Vector", null, "BaseOpCode");
+		else if (variable_name == "flags") this.flags = rtl.correct(value, "OpFlags", null, "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

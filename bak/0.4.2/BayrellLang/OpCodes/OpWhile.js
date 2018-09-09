@@ -29,6 +29,9 @@ class OpWhile extends BaseOpCode{
 		this.condition = null;
 		this.childs = null;
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpWhile){
 			this.condition = rtl._clone(obj.condition);
@@ -37,8 +40,8 @@ class OpWhile extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "condition") this.condition = value;
-		else if (variable_name == "childs") this.childs = value;
+		if (variable_name == "condition") this.condition = rtl.correct(value, "BaseOpCode", null, "");
+		else if (variable_name == "childs") this.childs = rtl.correct(value, "Vector", null, "BaseOpCode");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

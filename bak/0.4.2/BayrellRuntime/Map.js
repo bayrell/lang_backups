@@ -28,13 +28,37 @@ Runtime.Map = class extends Map{
 	
 	
 	/**
+	 * Correct items
+	 */
+	_correctItemsByType(type){
+		return this.map((key, value) =>{
+			if (isBrowser()) return Runtime.rtl.correct(value, type, null);
+			return rtl.correct(value, type, null);
+		});
+	}
+	
+	
+	
+	/**
+	 * Convert to string
+	 * @param var value
+	 * @return value
+	 */
+	toString(value){
+		if (isBrowser()) return Runtime.rtl.toString(value);
+		return rtl.toString(value);
+	}
+	
+	
+	
+	/**
 	 * Returns new Instance
 	 * @param ContextInterface context
 	 * @param Map<string, mixed> values
 	 * @return CoreObject
 	 */
 	createNewInstance(){
-		if (isBrowser) return new Runtime.Map();
+		if (isBrowser()) return new Runtime.Map();
 		return new Runtime.Map();
 	}
 	
@@ -43,12 +67,12 @@ Runtime.Map = class extends Map{
 	/**
 	 * Assign objects
 	 */
-	assign(obj){
+	assignObject(obj){
 		if (obj instanceof Runtime.Map){
 			obj.each((key, value) => {
-				if (isBrowser) this.set(key, Runtime.rtl._clone(value));
+				if (isBrowser()) this.set(key, Runtime.rtl._clone(value));
 				else this.set(key, rtl._clone(value));
-			})
+			});
 		}
 	}
 	
@@ -78,11 +102,12 @@ Runtime.Map = class extends Map{
 	
 	/**
 	 * Returns value from position
-	 * @param T1 key
-	 * @param T2 default_value
-	 * @return T2
+	 * @param T key
+	 * @param T default_value
+	 * @return T
 	 */
 	get(key, default_value){
+		key = this.toString(key);
 		var val = super.get(key);
 		if (val == undefined)
 			return default_value;
@@ -93,10 +118,11 @@ Runtime.Map = class extends Map{
 	
 	/**
 	 * Returns value from position. Throw exception, if position does not exists
-	 * @param T1 key - position
-	 * @return T2
+	 * @param T key - position
+	 * @return T
 	 */
 	item(key){
+		key = this.toString(key);
 		if (!super.has(key)){
 			if (isBrowser()) throw new Runtime.Exceptions.KeyNotFound(null, key);
 			throw new KeyNotFound(null, key);
@@ -110,10 +136,11 @@ Runtime.Map = class extends Map{
 	
 	/**
 	 * Set value size_to position
-	 * @param T1 pos - position
-	 * @param T2 value 
+	 * @param T pos - position
+	 * @param T value 
 	 */
 	set(key, value){
+		key = this.toString(key);
 		super.set(key, value);
 		return this;
 	}
@@ -122,9 +149,10 @@ Runtime.Map = class extends Map{
 	
 	/**
 	 * Remove value from position
-	 * @param T1 key
+	 * @param T key
 	 */
 	remove(key){
+		key = this.toString(key);
 		if (super.has(key)){
 			super.delete(key);
 		}
@@ -135,10 +163,11 @@ Runtime.Map = class extends Map{
 	
 	/**
 	 * Return true if key exists
-	 * @param T1 key
+	 * @param T key
 	 * @return bool var
 	 */
 	contains(key){
+		key = this.toString(key);
 		return super.has(key);
 	}
 	
@@ -146,10 +175,11 @@ Runtime.Map = class extends Map{
 	
 	/**
 	 * Return true if key exists
-	 * @param T1 key
+	 * @param T key
 	 * @return bool var
 	 */
 	has(key){
+		key = this.toString(key);
 		return super.has(key);
 	}
 	
@@ -176,7 +206,7 @@ Runtime.Map = class extends Map{
 	
 	/**
 	 * Returns vector of the keys
-	 * @return Vector<T1>
+	 * @return Vector<T>
 	 */
 	keys(){
 		var it = super.keys();
@@ -193,7 +223,7 @@ Runtime.Map = class extends Map{
 	
 	/**
 	 * Returns vector of the values
-	 * @return Vector<T2>
+	 * @return Vector<T>
 	 */
 	values(){
 		var it = super.values();
@@ -257,7 +287,7 @@ Runtime.Map = class extends Map{
 	
 	/**
 	 * Add values from other map
-	 * @param Map<T1, T2> map
+	 * @param Map<T, T> map
 	 * @return self
 	 */
 	addMap(map){
@@ -277,6 +307,19 @@ Runtime.Map = class extends Map{
 		var obj = {};
 		this.each((key)=>{obj[key]=this.get(key, null);});
 		return obj;
+	}
+	
+	
+	
+	/**
+	 * Returns copy of the current Map
+	 */
+	copy(){
+		var instance = this.createNewInstance();
+		this.each((key, value) => {
+			instance.set(key, value);
+		});
+		return instance;
 	}
 }
 module.exports = Runtime.Map;

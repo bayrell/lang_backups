@@ -28,6 +28,9 @@ class OpStringItem extends OpValue2{
 		super._init();
 		this.op = "op_string_item";
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpStringItem){
 			this.op = rtl._clone(obj.op);
@@ -35,7 +38,7 @@ class OpStringItem extends OpValue2{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_string_item", "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

@@ -27,6 +27,9 @@ class OpBitXor extends OpValue2{
 		super._init();
 		this.op = "op_bit_xor";
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpBitXor){
 			this.op = rtl._clone(obj.op);
@@ -34,7 +37,7 @@ class OpBitXor extends OpValue2{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_bit_xor", "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

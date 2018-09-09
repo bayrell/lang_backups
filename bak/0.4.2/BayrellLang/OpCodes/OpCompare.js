@@ -30,6 +30,9 @@ class OpCompare extends BaseOpCode{
 		this.value1 = null;
 		this.value2 = null;
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpCompare){
 			this.op = rtl._clone(obj.op);
@@ -40,10 +43,10 @@ class OpCompare extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "condition") this.condition = value;
-		else if (variable_name == "value1") this.value1 = value;
-		else if (variable_name == "value2") this.value2 = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_compare", "");
+		else if (variable_name == "condition") this.condition = rtl.correct(value, "string", "", "");
+		else if (variable_name == "value1") this.value1 = rtl.correct(value, "BaseOpCode", null, "");
+		else if (variable_name == "value2") this.value2 = rtl.correct(value, "BaseOpCode", null, "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

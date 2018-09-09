@@ -35,6 +35,7 @@ var TemplateTranslatorPHPFactory = require('BayrellTemplate').TranslatorPHPFacto
 var BundleFile = require('./BundleFile.js');
 class Lib{
 	getClassName(){return "BayrellBundler.Lib";}
+	static getParentClassName(){return "";}
 	/**
 	 * Returns files from directory
 	 * @params FileSystemInterface fs
@@ -73,9 +74,7 @@ class Lib{
 	 * @return BundleFile
 	 */
 	static readFile(fs, file){
-		//console.log(file);
 		file = rtl._clone(file);
-		//console.log(file);
 		file.content = fs.readFile(file.path);
 		return file;
 	}

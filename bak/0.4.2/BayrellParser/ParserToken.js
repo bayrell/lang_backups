@@ -61,7 +61,7 @@ class ParserToken extends ParserReader{
 	}
 	/**
 	 * Assign all data from other object
-	 * @param {BayrellObject} obj
+	 * @param CoreObject obj
 	 */
 	assign(obj){
 		if (obj instanceof ParserToken){
@@ -72,6 +72,13 @@ class ParserToken extends ParserReader{
 			this.start_col = obj.start_col;
 		}
 		super.assign(obj);
+	}
+	/**
+	 * Assign all data from other object
+	 * @param CoreObject obj
+	 */
+	assignObject(obj){
+		this.assign(obj);
 	}
 	/**
 	 * Reset cursor

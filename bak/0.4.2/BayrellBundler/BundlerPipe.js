@@ -23,6 +23,7 @@ var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 var Pipe = require('BayrellCommon').Types.Pipe;
 class BundlerPipe extends Pipe{
 	getClassName(){return "BayrellBundler.BundlerPipe";}
+	static getParentClassName(){return "Pipe";}
 	/**
 	 * Run pipe of functions
 	 * @param ContextInterface context - the context

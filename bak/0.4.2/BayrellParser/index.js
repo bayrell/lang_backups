@@ -18,7 +18,7 @@
 
 
 module.exports = {
-	VERSION: '0.4.0',
+	VERSION: '0.4.2',
 	'Exceptions': {
 		'ParserEOF': require("./Exceptions/ParserEOF.js"),
 		'ParserError': require("./Exceptions/ParserError.js"),

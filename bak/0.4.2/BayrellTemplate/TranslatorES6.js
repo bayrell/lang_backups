@@ -210,7 +210,7 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 	 */
 	translateRun(op_code){
 		if (op_code instanceof OpHtmlEscape){
-			return this.OpString(op_code.value);
+			return super.translateRun(op_code.value);
 		}
 		else if (op_code instanceof OpHtmlJson){
 			return this.OpHtmlJson(op_code);

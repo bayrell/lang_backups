@@ -29,6 +29,9 @@ class OpIfElse extends BaseOpCode{
 		this.condition = null;
 		this.if_true = null;
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpIfElse){
 			this.op = rtl._clone(obj.op);
@@ -38,9 +41,9 @@ class OpIfElse extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "condition") this.condition = value;
-		else if (variable_name == "if_true") this.if_true = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_if_else", "");
+		else if (variable_name == "condition") this.condition = rtl.correct(value, "BaseOpCode", null, "");
+		else if (variable_name == "if_true") this.if_true = rtl.correct(value, "Vector", null, "BaseOpCode");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

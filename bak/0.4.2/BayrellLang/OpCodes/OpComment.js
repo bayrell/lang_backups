@@ -27,6 +27,9 @@ class OpComment extends OpValueString{
 		super._init();
 		this.op = "op_comment";
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpComment){
 			this.op = rtl._clone(obj.op);
@@ -34,7 +37,7 @@ class OpComment extends OpValueString{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_comment", "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

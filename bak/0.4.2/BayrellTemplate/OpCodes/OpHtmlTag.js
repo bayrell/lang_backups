@@ -34,6 +34,9 @@ class OpHtmlTag extends BaseOpCode{
 		this.childs = null;
 		this.is_plain = false;
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpHtmlTag){
 			this.op = rtl._clone(obj.op);
@@ -46,12 +49,12 @@ class OpHtmlTag extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "tag_name") this.tag_name = value;
-		else if (variable_name == "attributes") this.attributes = value;
-		else if (variable_name == "spreads") this.spreads = value;
-		else if (variable_name == "childs") this.childs = value;
-		else if (variable_name == "is_plain") this.is_plain = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_html_tag", "");
+		else if (variable_name == "tag_name") this.tag_name = rtl.correct(value, "string", "", "");
+		else if (variable_name == "attributes") this.attributes = rtl.correct(value, "Vector", null, "OpHtmlAttribute");
+		else if (variable_name == "spreads") this.spreads = rtl.correct(value, "Vector", null, "mixed");
+		else if (variable_name == "childs") this.childs = rtl.correct(value, "Vector", null, "BaseOpCode");
+		else if (variable_name == "is_plain") this.is_plain = rtl.correct(value, "bool", false, "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

@@ -213,7 +213,9 @@ class TemplateParser extends ParserBay{
 			}
 			if (res == null){
 				if (this.current_token.findString("{") && !is_plain || this.current_token.findString("@{") || this.current_token.findString("@raw{") || this.current_token.findString("@json{")){
-					s = rs.trim(s, "\\t\\r\\n");
+					if (!is_plain){
+						s = rs.trim(s, "\\t\\r\\n");
+					}
 					if (s != ""){
 						childs.push(new OpHtmlText(s));
 					}

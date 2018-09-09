@@ -20,7 +20,10 @@ var rtl = require('BayrellRuntime').rtl;
 var Map = require('BayrellRuntime').Map;
 var Vector = require('BayrellRuntime').Vector;
 var BaseOpCode = require('./BaseOpCode.js');
+var OpDynamic = require('./OpDynamic.js');
 var OpFlags = require('./OpFlags.js');
+var OpIdentifier = require('./OpIdentifier.js');
+var OpTemplateIdentifier = require('./OpTemplateIdentifier.js');
 class OpAssignDeclare extends BaseOpCode{
 	getClassName(){return "BayrellLang.OpCodes.OpAssignDeclare";}
 	static getParentClassName(){return "BaseOpCode";}
@@ -31,6 +34,9 @@ class OpAssignDeclare extends BaseOpCode{
 		this.name = null;
 		this.value = null;
 		this.flags = null;
+	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
 	}
 	assignObject(obj){
 		if (obj instanceof OpAssignDeclare){
@@ -43,11 +49,11 @@ class OpAssignDeclare extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "tp") this.tp = value;
-		else if (variable_name == "name") this.name = value;
-		else if (variable_name == "value") this.value = value;
-		else if (variable_name == "flags") this.flags = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_assign_declare", "");
+		else if (variable_name == "tp") this.tp = rtl.correct(value, "BaseOpCode", null, "");
+		else if (variable_name == "name") this.name = rtl.correct(value, "string", null, "");
+		else if (variable_name == "value") this.value = rtl.correct(value, "BaseOpCode", null, "");
+		else if (variable_name == "flags") this.flags = rtl.correct(value, "OpFlags", null, "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

@@ -28,6 +28,9 @@ class OpMap extends BaseOpCode{
 		this.op = "op_map";
 		this.values = null;
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpMap){
 			this.op = rtl._clone(obj.op);
@@ -36,8 +39,8 @@ class OpMap extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "values") this.values = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_map", "");
+		else if (variable_name == "values") this.values = rtl.correct(value, "Map", null, "string");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

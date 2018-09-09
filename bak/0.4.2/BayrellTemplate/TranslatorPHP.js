@@ -185,9 +185,8 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 				res += this.s("->set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
 			}
 		}
-		res += ",";
-		/* Childs */
 		if (raw_item == null && !op_code.is_plain){
+			res += ",";
 			if (op_code.childs == null || op_code.childs.count() == 0){
 				res += this.s("[]");
 			}
@@ -225,7 +224,7 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 	 */
 	translateRun(op_code){
 		if (op_code instanceof OpHtmlEscape){
-			return this.OpString(op_code.value);
+			return super.translateRun(op_code.value);
 		}
 		else if (op_code instanceof OpHtmlJson){
 			return this.OpHtmlJson(op_code);

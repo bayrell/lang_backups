@@ -34,6 +34,9 @@ class OpFunctionDeclare extends BaseOpCode{
 		this.use_variables = null;
 		this.flags = null;
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpFunctionDeclare){
 			this.op = rtl._clone(obj.op);
@@ -47,13 +50,13 @@ class OpFunctionDeclare extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "name") this.name = value;
-		else if (variable_name == "result_type") this.result_type = value;
-		else if (variable_name == "args") this.args = value;
-		else if (variable_name == "childs") this.childs = value;
-		else if (variable_name == "use_variables") this.use_variables = value;
-		else if (variable_name == "flags") this.flags = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_function", "");
+		else if (variable_name == "name") this.name = rtl.correct(value, "string", "", "");
+		else if (variable_name == "result_type") this.result_type = rtl.correct(value, "BaseOpCode", null, "");
+		else if (variable_name == "args") this.args = rtl.correct(value, "Vector", null, "OpAssignDeclare");
+		else if (variable_name == "childs") this.childs = rtl.correct(value, "Vector", null, "BaseOpCode");
+		else if (variable_name == "use_variables") this.use_variables = rtl.correct(value, "Vector", null, "string");
+		else if (variable_name == "flags") this.flags = rtl.correct(value, "OpFlags", null, "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

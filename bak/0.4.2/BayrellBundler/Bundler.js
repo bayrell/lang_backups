@@ -24,6 +24,7 @@ var BayrellCommonUtils = require('BayrellCommon').Utils;
 var ContextInterface = require('BayrellRuntime').Interfaces.ContextInterface;
 class Bundler{
 	getClassName(){return "BayrellBundler.Bundler";}
+	static getParentClassName(){return "";}
 	/**
 	 * Returns files from directory
 	 * @params string path
@@ -50,8 +51,7 @@ class Bundler{
 			if (rules == null){
 				rules = (new Vector()).push("\\.bay$").push("\\.component$").push("\\.css$").push("\\.es6$").push("\\.scss$");
 			}
-			
-			arr = arr.filter((file) => {
+			return arr.filter((file) => {
 				var res = Lib.filter(rules, file);
 				if (!res){
 					return false;
@@ -63,9 +63,6 @@ class Bundler{
 				}
 				return true;
 			});
-			//console.log(arr);
-			
-			return arr;
 		}
 	}
 	/**
@@ -76,7 +73,6 @@ class Bundler{
 		return (context, arr) => {
 			var fs = context.createProvider("default:fs");
 			var res = arr.map((file) => {
-				
 				return Lib.readFile(fs, file);
 			});
 			return res;

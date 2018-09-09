@@ -119,6 +119,17 @@ class TranslatorPHP extends CommonTranslator{
 		return "$"+rtl.toString(name);
 	}
 	/**
+	 * Get module name
+	 * @param string name
+	 * @return string
+	 */
+	getModuleName(name){
+		if (this.modules.has(name)){
+			return this.modules.item(name);
+		}
+		return name;
+	}
+	/**
 	 * Constructor
 	 */
 	constructor(context){
@@ -1018,6 +1029,56 @@ class TranslatorPHP extends CommonTranslator{
 		return res;
 	}
 	/**
+	 * Returns declare type
+	 * @return string
+	 */
+	getTypeValue(tp){
+		var res = "";
+		while (tp != null){
+			if (tp instanceof OpIdentifier){
+				if (res != ""){
+					res = "."+rtl.toString(res);
+				}
+				res = rtl.toString(this.getModuleName(tp.value))+rtl.toString(res);
+				tp = null;
+			}
+			else if (tp instanceof OpDynamic){
+				if (res != ""){
+					res = "."+rtl.toString(res);
+				}
+				res = rtl.toString(tp.name)+rtl.toString(res);
+				tp = tp.value;
+			}
+			else if (tp instanceof OpTemplateIdentifier){
+				tp = tp.t;
+			}
+			else {
+				tp = null;
+			}
+		}
+		return res;
+	}
+	/**
+	 * Returns declare type
+	 * @return string
+	 */
+	getAssignDeclareTypeValue(variable){
+		return this.getTypeValue(variable.tp);
+	}
+	/**
+	 * Returns declare type
+	 * @return string
+	 */
+	getAssignDeclareTypeTemplate(variable){
+		if (variable.tp instanceof OpTemplateIdentifier){
+			if (variable.tp.childs != null){
+				var code = variable.tp.childs.get(0);
+				return this.getTypeValue(code);
+			}
+		}
+		return "";
+	}
+	/**
 	 * Class init functions
 	 */
 	OpClassInit(op_code){
@@ -1073,6 +1134,11 @@ class TranslatorPHP extends CommonTranslator{
 				res += this.s("}");
 			}
 			if (has_cloneable){
+				res += this.s("public function createNewInstance(){");
+				this.levelInc();
+				res += this.s("return new "+rtl.toString(this.current_class_name)+"();");
+				this.levelDec();
+				res += this.s("}");
 				res += this.s("public function assignObject($obj){");
 				this.levelInc();
 				res += this.s("if ($obj instanceof "+rtl.toString(this.getName(this.current_class_name))+"){");
@@ -1097,12 +1163,20 @@ class TranslatorPHP extends CommonTranslator{
 				for (var i = 0; i < class_variables.count(); i++){
 					var variable = class_variables.item(i);
 					if (variable.isFlag("serializable")){
-						var take_value_s = "if ($variable_name == "+rtl.toString(this.convertString(variable.name))+") "+"$this->"+rtl.toString(variable.name)+" = $value;";
+						var type_value = this.getAssignDeclareTypeValue(variable);
+						var type_template = this.getAssignDeclareTypeTemplate(variable);
+						var def_val = "null";
+						if (variable.value != null){
+							def_val = this.translateRun(variable.value);
+						}
+						var s = "if ($variable_name == "+rtl.toString(this.convertString(variable.name))+") ";
+						s += "$this->"+rtl.toString(variable.name)+" = ";
+						s += "rtl::correct($value, \""+rtl.toString(type_value)+"\", "+rtl.toString(def_val)+", \""+rtl.toString(type_template)+"\");";
 						if (class_variables_serializable_count == 0){
-							res += this.s(take_value_s);
+							res += this.s(s);
 						}
 						else {
-							res += this.s("else "+rtl.toString(take_value_s));
+							res += this.s("else "+rtl.toString(s));
 						}
 						class_variables_serializable_count++
 					}

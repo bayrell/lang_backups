@@ -17,6 +17,9 @@
  *  limitations under the License.
  */
 var CoreObject = require('../CoreObject.js');
+var Map = require('../Map.js');
+var Vector = require('../Vector.js');
+var ContextInterface = require('./ContextInterface.js');
 class CloneableInterface{
 	/**
 	 * Returns new Instance
@@ -24,10 +27,10 @@ class CloneableInterface{
 	createNewInstance(){
 	}
 	/**
-	 * Assign all data from other object
+	 * Assign and clone data from other object
 	 * @param CoreObject obj
 	 */
-	assign(obj){
+	assignObject(obj){
 	}
 }
 module.exports = CloneableInterface;

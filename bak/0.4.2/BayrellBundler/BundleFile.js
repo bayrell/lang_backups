@@ -23,6 +23,7 @@ var CoreObject = require('BayrellRuntime').CoreObject;
 var CloneableInterface = require('BayrellRuntime').Interfaces.CloneableInterface;
 class BundleFile extends CoreObject{
 	getClassName(){return "BayrellBundler.BundleFile";}
+	static getParentClassName(){return "CoreObject";}
 	_init(){
 		super._init();
 		this.path = "";
@@ -30,18 +31,29 @@ class BundleFile extends CoreObject{
 		if (this.__implements__ == undefined){this.__implements__ = [];}
 		this.__implements__.push(CloneableInterface);
 	}
-	assign(obj){
-		if (obj instanceof BundleFile){
-			this.path = rtl._clone(obj.path);
-			this.content = rtl._clone(obj.content);
-		}
-		super.assign(obj);
-	}
 	/**
 	 * Returns new Instance
 	 */
 	createNewInstance(){
 		return new BundleFile();
+	}
+	/**
+	 * Assign all data from other object
+	 * @param CoreObject obj
+	 */
+	assign(obj){
+		if (obj instanceof BundleFile){
+			this.path = obj.path;
+			this.content = obj.content;
+		}
+		super.assign(obj);
+	}
+	/**
+	 * Assign all data from other object
+	 * @param CoreObject obj
+	 */
+	assignObject(obj){
+		this.assign(obj);
 	}
 	/**
 	 * Constructor
@@ -54,4 +66,6 @@ class BundleFile extends CoreObject{
 		this.content = content;
 	}
 }
+BundleFile.__static_implements__ = [];
+BundleFile.__static_implements__.push(CloneableInterface)
 module.exports = BundleFile;

@@ -33,6 +33,9 @@ class OpTemplateDeclare extends BaseOpCode{
 		this.childs = null;
 		this.flags = null;
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpTemplateDeclare){
 			this.op = rtl._clone(obj.op);
@@ -44,11 +47,11 @@ class OpTemplateDeclare extends BaseOpCode{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
-		else if (variable_name == "name") this.name = value;
-		else if (variable_name == "args") this.args = value;
-		else if (variable_name == "childs") this.childs = value;
-		else if (variable_name == "flags") this.flags = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_template", "");
+		else if (variable_name == "name") this.name = rtl.correct(value, "string", "", "");
+		else if (variable_name == "args") this.args = rtl.correct(value, "Vector", null, "OpAssignDeclare");
+		else if (variable_name == "childs") this.childs = rtl.correct(value, "Vector", null, "BaseOpCode");
+		else if (variable_name == "flags") this.flags = rtl.correct(value, "OpFlags", null, "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

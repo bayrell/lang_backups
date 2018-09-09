@@ -30,8 +30,20 @@ Runtime.Vector = class extends Array{
 	 * Returns new Instance
 	 */
 	createNewInstance(){
-		if (isBrowser) return new Runtime.Vector();
+		if (isBrowser()) return new Runtime.Vector();
 		return new Vector();
+	}
+	
+	
+	
+	/**
+	 * Correct items
+	 */
+	_correctItemsByType(type){
+		return this.map((value) =>{
+			if (isBrowser()) return Runtime.rtl.correct(item, type, null);
+			return rtl.correct(item, type, null);
+		});
 	}
 	
 	
@@ -43,7 +55,7 @@ Runtime.Vector = class extends Array{
 	assign(obj){
 		this.clear();
 		obj.each((item)=>{
-			if (isBrowser) this.push( Runtime.rtl._clone(item) );
+			if (isBrowser()) this.push( Runtime.rtl._clone(item) );
 			else this.push( rtl._clone(item) );
 		});
 	}
@@ -358,14 +370,29 @@ Runtime.Vector = class extends Array{
 	
 	/**
 	 * Returns Vector
-	 * @param int b begin
-	 * @param int e end
+	 * @param int offset begin
+	 * @param int length end
 	 * @return Vector<T>
 	 */
-	slice(b, e){
-		return super.slice(b, e);
+	slice(offset, length){
+		if (length == undefined){
+			return super.slice(offset);
+		}
+		if (length >= 0){
+			length = this.count() - offset + length - 1;
+		}
+		return super.slice(offset, length);
 	}
 	
+	
+	
+	/**
+	 * Copy Vector
+	 * @return Vector<T>
+	 */
+	copy(){
+		return super.slice();
+	}
 	
 	
 	

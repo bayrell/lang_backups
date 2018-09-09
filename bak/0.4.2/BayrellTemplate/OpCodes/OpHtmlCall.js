@@ -27,6 +27,9 @@ class OpHtmlCall extends OpCall{
 		super._init();
 		this.op = "op_html_call";
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof OpHtmlCall){
 			this.op = rtl._clone(obj.op);
@@ -34,7 +37,7 @@ class OpHtmlCall extends OpCall{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_html_call", "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){

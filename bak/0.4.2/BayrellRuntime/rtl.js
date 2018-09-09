@@ -27,19 +27,6 @@ class rtl{
 		return typeof window !== "undefined";
 		return false;
 	}
-	/**
-	 * Returns true if class exists
-	 * @return bool
-	 */
-	
-	static implements(obj, interface_name){
-		if (obj == undefined) return false;
-		if (obj.__implements__ == undefined) return false;
-		return obj.__implements__.indexOf(interface_name) != -1;
-	}
-	static class_implements(class_name, interface_name){
-		var obj = find_class(class_name);
-	}
 	
 	/**
 	 * Find class instance by name. If class does not exists return null.
@@ -75,6 +62,29 @@ class rtl{
 		return obj;
 	}
 	/**
+	 * Returns true if class instanceof class_name
+	 * @return bool
+	 */
+	
+	static is_instanceof(obj, class_name){
+		var c = this.find_class(class_name);
+		if (c == null) return false;
+		return c.prototype.isPrototypeOf(obj);
+	}
+	/**
+	 * Returns true if obj implements interface_name
+	 * @return bool
+	 */
+	
+	static implements(obj, interface_name){
+		if (obj == undefined) return false;
+		if (obj.__implements__ == undefined) return false;
+		return obj.__implements__.indexOf(interface_name) != -1;
+	}
+	static is_implements(obj, interface_name){
+		return this.implements(obj, interface_name);
+	}
+	/**
 	 * Returns true if class exists
 	 * @return bool
 	 */
@@ -83,6 +93,14 @@ class rtl{
 		var obj = this.find_class(class_name);
 		if (!this.exists(obj)) return false;
 		return true;
+	}
+	/**
+	 * Returns true if class exists
+	 * @return bool
+	 */
+	
+	static class_implements(class_name, interface_name){
+		var obj = find_class(class_name);
 	}
 	/**
 	 * Returns true if class exists
@@ -115,25 +133,6 @@ class rtl{
 		return new f;
 	}
 	/**
-	 * Create object by class_name. If class name does not exists return null
-	 * @return Object
-	 *
-	declare export static Object newInstanceByObject(Object obj);
-	
-	#switch
-	#case ifcode PHP then
-	static function newInstanceByObject($obj){
-		$class_name = get_class($obj);
-		return new $class_name();
-	}
-	#case ifcode JAVASCRIPT then
-	static newInstanceByObject(obj){
-		var f = Function.prototype.bind.apply(obj.constructor, [null]);
-		return new f;
-	}
-	#endswitch
-	*/
-	/**
 	 * Call method
 	 * @return Object
 	 */
@@ -162,6 +161,65 @@ class rtl{
 			throw new Error(class_name + "." + method_name + " not found");
 		}
 		return f.apply(obj, args);
+	}
+	/**
+	 * Returns value if value instanceof type_value, else returns def_value
+	 * @param var value
+	 * @param string type_value
+	 * @param var def_value
+	 * @param var type_template
+	 * @return var
+	 */
+	static correct(value, type_value, def_value, type_template){
+		if (def_value == undefined) def_value=null;
+		if (type_template == undefined) type_template="";
+		/* check value */
+		if (rtl.checkValue(value, type_value)){
+			if ((type_value == "Runtime.Vector" || type_value == "Runtime.Map") && type_template != ""){
+				
+				return value._correctItemsByType($type_template);
+			}
+			return value;
+		}
+		if (!rtl.checkValue(def_value, type_value)){
+			if (type_value == "int" || type_value == "float" || type_value == "double"){
+				def_value = 0;
+			}
+			else if (type_value == "string"){
+				def_value = "";
+			}
+			else if (type_value == "bool" || type_value == "boolean"){
+				def_value = false;
+			}
+			else {
+				def_value = null;
+			}
+		}
+		return def_value;
+	}
+	/**
+	 * Returns true if value instanceof tp
+	 * @param var value
+	 * @param string tp
+	 * @return bool
+	 */
+	static checkValue(value, tp){
+		if (tp == "int"){
+			return rtl.isInt(value);
+		}
+		if (tp == "float" || tp == "double"){
+			return rtl.isDouble(value);
+		}
+		if (tp == "string"){
+			return rtl.isString(value);
+		}
+		if (tp == "bool" || tp == "boolean"){
+			return rtl.isBool(value);
+		}
+		if (rtl.is_instanceof(value, tp)){
+			return true;
+		}
+		return false;
 	}
 	/**
 	 * Clone var
@@ -194,10 +252,10 @@ class rtl{
 		}
 		else if (typeof val == 'object' && 
 			val.createNewInstance && typeof val.createNewInstance == "function" &&
-			val.assign && typeof val.assign == "function")
+			val.assignObject && typeof val.assignObject == "function")
 		{
 			var res = val.createNewInstance();
-			res.assign(val);
+			res.assignObject(val);
 			return res;
 		}
 		else if (Array.isArray(val)){	
@@ -248,6 +306,27 @@ class rtl{
 		if (value === false || value === true){
 			return true;
 		}
+		return false;
+	}
+	/**
+	 * Return true if value is number
+	 * @param var value
+	 * @return boolean
+	 */
+	
+	static isInt(value){
+		if (typeof value != "number") return false;
+		if (value % 1 !== 0) return false;
+		return true;
+	}
+	/**
+	 * Return true if value is number
+	 * @param var value
+	 * @return boolean
+	 */
+	
+	static isDouble(value){
+		if (typeof value == "number") return true;
 		return false;
 	}
 	/**

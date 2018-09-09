@@ -462,6 +462,24 @@ class Utils{
 		}
 		return res;
 	}
+	/**
+	 * Base64 encode
+	 * @param string s
+	 * @return string 
+	 */
+	
+	static base64_encode(s){
+		return Buffer.from(s).toString('base64');
+	}
+	/**
+	 * Base64 decode
+	 * @param string s
+	 * @return string 
+	 */
+	
+	static base64_decode(s){
+		return Buffer.from(s, 'base64').toString('ascii');
+	}
 }
 Utils._global_context = null;
 module.exports = Utils;

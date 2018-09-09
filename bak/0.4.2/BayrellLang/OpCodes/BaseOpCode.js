@@ -30,6 +30,9 @@ class BaseOpCode extends CoreObject{
 		if (this.__implements__ == undefined){this.__implements__ = [];}
 		this.__implements__.push(SerializeInterface);
 	}
+	createNewInstance(){
+		return rtl.newInstance( this.getClassName() );
+	}
 	assignObject(obj){
 		if (obj instanceof BaseOpCode){
 			this.op = rtl._clone(obj.op);
@@ -37,7 +40,7 @@ class BaseOpCode extends CoreObject{
 		super.assign(obj);
 	}
 	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = value;
+		if (variable_name == "op") this.op = rtl.correct(value, "string", "", "");
 		else super.assignValue(variable_name, value);
 	}
 	takeValue(variable_name, default_value){
