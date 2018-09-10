@@ -29,17 +29,6 @@ class OpPreprocessorCase extends BaseOpCode{
 		this.condition = null;
 		this.value = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpPreprocessorCase){
-			this.op = rtl._clone(obj.op);
-			this.condition = rtl._clone(obj.condition);
-			this.value = rtl._clone(obj.value);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_preprocessor_case", "");
 		else if (variable_name == "condition") this.condition = rtl.correct(value, "BaseOpCode", null, "");

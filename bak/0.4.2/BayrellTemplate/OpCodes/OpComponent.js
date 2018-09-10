@@ -31,18 +31,6 @@ class OpComponent extends BaseOpCode{
 		this.alias = "";
 		this.args = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpComponent){
-			this.op = rtl._clone(obj.op);
-			this.name = rtl._clone(obj.name);
-			this.alias = rtl._clone(obj.alias);
-			this.args = rtl._clone(obj.args);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_component", "");
 		else if (variable_name == "name") this.name = rtl.correct(value, "BaseOpCode", "", "");

@@ -572,7 +572,7 @@ class TranslatorPHP extends CommonTranslator{
 		if (op_code.isFlag("const")){
 			ch_var = "";
 		}
-		if (op_code.value == null || !output_value && !op_code.isFlag("static")){
+		if (op_code.value == null || !output_value && !op_code.isFlag("static") && !op_code.isFlag("const")){
 			this.pushOneLine(true);
 			res = rtl.toString(ch_var)+rtl.toString(op_code.name);
 			this.popOneLine();
@@ -1106,13 +1106,15 @@ class TranslatorPHP extends CommonTranslator{
 			var variable = class_variables.item(i);
 			if (variable.isFlag("serializable")){
 				has_serializable = true;
+			}
+			if (variable.isFlag("cloneable")){
 				has_cloneable = true;
 			}
-			if (!variable.isFlag("static")){
+			if (!variable.isFlag("static") && !variable.isFlag("const")){
 				has_variables = true;
 			}
 		}
-		if (this.current_module_name != "Runtime" && this.current_class_name != "CoreObject"){
+		if (this.current_module_name != "Runtime" || this.current_class_name != "CoreObject"){
 			if (has_variables){
 				res += this.s("protected function _init(){");
 				this.levelInc();
@@ -1122,7 +1124,7 @@ class TranslatorPHP extends CommonTranslator{
 				if (class_variables != null){
 					for (var i = 0; i < class_variables.count(); i++){
 						var variable = class_variables.item(i);
-						if (!variable.isFlag("static")){
+						if (!variable.isFlag("static") && !variable.isFlag("const")){
 							this.beginOperation();
 							var s = "$this->"+rtl.toString(variable.name)+" = "+rtl.toString(this.translateRun(variable.value))+";";
 							this.endOperation();
@@ -1134,18 +1136,13 @@ class TranslatorPHP extends CommonTranslator{
 				res += this.s("}");
 			}
 			if (has_cloneable){
-				res += this.s("public function createNewInstance(){");
-				this.levelInc();
-				res += this.s("return new "+rtl.toString(this.current_class_name)+"();");
-				this.levelDec();
-				res += this.s("}");
 				res += this.s("public function assignObject($obj){");
 				this.levelInc();
 				res += this.s("if ($obj instanceof "+rtl.toString(this.getName(this.current_class_name))+"){");
 				this.levelInc();
 				for (var i = 0; i < class_variables.count(); i++){
 					var variable = class_variables.item(i);
-					if (variable.isFlag("serializable")){
+					if (variable.isFlag("cloneable")){
 						res += this.s("$this->"+rtl.toString(variable.name)+" = "+rtl.toString(this.getName("rtl"))+"::_clone("+"$obj->"+rtl.toString(variable.name)+");");
 					}
 				}

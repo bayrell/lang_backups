@@ -24,6 +24,17 @@ class ClassException extends Error { _init(){} }
 class RuntimeException extends ClassException{
 	getClassName(){return "Runtime.Exceptions.RuntimeException";}
 	static getParentClassName(){return "ClassException";}
+	_init(){
+		super._init();
+		this.context = null;
+		this.prev = null;
+		this.error_str = "";
+		this.message = "";
+		this.code = 0;
+		this.file = "";
+		this.line = -1;
+		this.pos = -1;
+	}
 	constructor(context, message, code, prev){
 		if (context == undefined) context=null;
 		if (message == undefined) message="";

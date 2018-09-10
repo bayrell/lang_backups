@@ -30,18 +30,6 @@ class OpCall extends BaseOpCode{
 		this.args = null;
 		this.is_await = false;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpCall){
-			this.op = rtl._clone(obj.op);
-			this.value = rtl._clone(obj.value);
-			this.args = rtl._clone(obj.args);
-			this.is_await = rtl._clone(obj.is_await);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_call", "");
 		else if (variable_name == "value") this.value = rtl.correct(value, "BaseOpCode", null, "");

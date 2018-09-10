@@ -28,16 +28,6 @@ class OpChilds extends BaseOpCode{
 		this.op = "op_childs";
 		this.childs = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpChilds){
-			this.op = rtl._clone(obj.op);
-			this.childs = rtl._clone(obj.childs);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_childs", "");
 		else if (variable_name == "childs") this.childs = rtl.correct(value, "Vector", null, "BaseOpCode");

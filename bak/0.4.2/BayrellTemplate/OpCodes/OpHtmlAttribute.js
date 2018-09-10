@@ -30,17 +30,6 @@ class OpHtmlAttribute extends BaseOpCode{
 		this.key = "";
 		this.value = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpHtmlAttribute){
-			this.op = rtl._clone(obj.op);
-			this.key = rtl._clone(obj.key);
-			this.value = rtl._clone(obj.value);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_html_attribute", "");
 		else if (variable_name == "key") this.key = rtl.correct(value, "string", "", "");

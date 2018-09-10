@@ -150,27 +150,27 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 					var value = "";
 					if (item instanceof OpHtmlJson){
 						value = "rs::json_encode("+rtl.toString(this.translateRun(item.value))+")";
-						value = rtl.toString(this.getName("rtl"))+"::toString("+rtl.toString(value)+")";
+						value = "rtl::toString("+rtl.toString(value)+")";
 					}
 					else if (item instanceof OpHtmlRaw){
 						value = this.translateRun(item.value);
-						value = rtl.toString(this.getName("rtl"))+"::toString("+rtl.toString(value)+")";
+						value = "rtl::toString("+rtl.toString(value)+")";
 					}
 					else if (item instanceof OpConcat || item instanceof OpString || item instanceof OpHtmlText){
 						value = this.translateRun(item);
 					}
 					else if (item instanceof OpHtmlEscape){
 						value = this.translateRun(item);
-						value = rtl.toString(this.getName("rs"))+".htmlEscape("+rtl.toString(value)+")";
+						value = "rs::htmlEscape("+rtl.toString(value)+")";
 					}
 					else {
 						value = this.translateRun(item);
-						value = rtl.toString(this.getName("rtl"))+"::toString("+rtl.toString(value)+")";
+						value = "rtl::toString("+rtl.toString(value)+")";
 					}
 					if (res == ""){
 						return value;
 					}
-					return rtl.toString(res)+"~"+rtl.toString(value);
+					return rtl.toString(res)+"."+rtl.toString(value);
 				}, "");
 				res += this.s("->set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
 			}

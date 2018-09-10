@@ -31,19 +31,6 @@ class OpFor extends BaseOpCode{
 		this.loop_inc = null;
 		this.childs = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpFor){
-			this.op = rtl._clone(obj.op);
-			this.loop_condition = rtl._clone(obj.loop_condition);
-			this.loop_init = rtl._clone(obj.loop_init);
-			this.loop_inc = rtl._clone(obj.loop_inc);
-			this.childs = rtl._clone(obj.childs);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_for", "");
 		else if (variable_name == "loop_condition") this.loop_condition = rtl.correct(value, "BaseOpCode", null, "");

@@ -30,18 +30,6 @@ class OpTryCatchChilds extends BaseOpCode{
 		this.op_ident = null;
 		this.childs = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpTryCatchChilds){
-			this.op = rtl._clone(obj.op);
-			this.op_type = rtl._clone(obj.op_type);
-			this.op_ident = rtl._clone(obj.op_ident);
-			this.childs = rtl._clone(obj.childs);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_try_catch_childs", "");
 		else if (variable_name == "op_type") this.op_type = rtl.correct(value, "BaseOpCode", null, "");

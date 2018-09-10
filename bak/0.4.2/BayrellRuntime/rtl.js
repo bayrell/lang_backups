@@ -173,7 +173,9 @@ class rtl{
 	static correct(value, type_value, def_value, type_template){
 		if (def_value == undefined) def_value=null;
 		if (type_template == undefined) type_template="";
-		/* check value */
+		if (type_value == "mixed" || type_value == "var"){
+			return value;
+		}
 		if (rtl.checkValue(value, type_value)){
 			if ((type_value == "Runtime.Vector" || type_value == "Runtime.Map") && type_template != ""){
 				
@@ -251,11 +253,18 @@ class rtl{
 			return val.cloneNode(true);
 		}
 		else if (typeof val == 'object' && 
-			val.createNewInstance && typeof val.createNewInstance == "function" &&
+			val.getClassName && typeof val.getClassName == "function" &&
 			val.assignObject && typeof val.assignObject == "function")
 		{
-			var res = val.createNewInstance();
-			res.assignObject(val);
+			var res = null;
+			if (val.createNewInstance && typeof val.createNewInstance == "function"){
+				res = val.createNewInstance();
+			}
+			else{
+				if (isBrowser()) res = Runtime.rtl.newInstance( val.getClassName() );
+				else res = rtl.newInstance( val.getClassName() );
+			}
+			if (res) res.assignObject(val);
 			return res;
 		}
 		else if (Array.isArray(val)){	

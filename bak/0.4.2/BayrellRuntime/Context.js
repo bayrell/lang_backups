@@ -26,6 +26,15 @@ var ModuleDescriptionInterface = require('./Interfaces/ModuleDescriptionInterfac
 class Context extends CoreObject{
 	getClassName(){return "Runtime.Context";}
 	static getParentClassName(){return "CoreObject";}
+	_init(){
+		super._init();
+		this._locale = "";
+		this._modules = null;
+		this._managers = null;
+		this._providers_names = null;
+		if (this.__implements__ == undefined){this.__implements__ = [];}
+		this.__implements__.push(ContextInterface);
+	}
 	/**
 	 * Constructor
 	 */

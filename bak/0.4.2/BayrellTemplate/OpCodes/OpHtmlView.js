@@ -28,16 +28,6 @@ class OpHtmlView extends OpChilds{
 		this.op = "op_html_view";
 		this.variable = "";
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpHtmlView){
-			this.op = rtl._clone(obj.op);
-			this.variable = rtl._clone(obj.variable);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_html_view", "");
 		else if (variable_name == "variable") this.variable = rtl.correct(value, "string", "", "");

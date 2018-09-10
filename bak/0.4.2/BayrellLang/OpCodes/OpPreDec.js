@@ -27,15 +27,6 @@ class OpPreDec extends OpValue1{
 		super._init();
 		this.op = "op_pre_dec";
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpPreDec){
-			this.op = rtl._clone(obj.op);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_pre_dec", "");
 		else super.assignValue(variable_name, value);

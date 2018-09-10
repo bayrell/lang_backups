@@ -34,20 +34,6 @@ class OpHtmlTag extends BaseOpCode{
 		this.childs = null;
 		this.is_plain = false;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpHtmlTag){
-			this.op = rtl._clone(obj.op);
-			this.tag_name = rtl._clone(obj.tag_name);
-			this.attributes = rtl._clone(obj.attributes);
-			this.spreads = rtl._clone(obj.spreads);
-			this.childs = rtl._clone(obj.childs);
-			this.is_plain = rtl._clone(obj.is_plain);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_html_tag", "");
 		else if (variable_name == "tag_name") this.tag_name = rtl.correct(value, "string", "", "");

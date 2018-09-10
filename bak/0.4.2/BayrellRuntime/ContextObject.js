@@ -23,6 +23,10 @@ var ContextInterface = require('./Interfaces/ContextInterface.js');
 class ContextObject extends CoreObject{
 	getClassName(){return "Runtime.ContextObject";}
 	static getParentClassName(){return "CoreObject";}
+	_init(){
+		super._init();
+		this._context = null;
+	}
 	/**
 	 * Returns context provider
 	 *

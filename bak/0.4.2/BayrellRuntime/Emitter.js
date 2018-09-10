@@ -23,6 +23,11 @@ var SubscribeInterface = require('./Interfaces/SubscribeInterface.js');
 class Emitter extends CoreObject{
 	getClassName(){return "Runtime.Emitter";}
 	static getParentClassName(){return "CoreObject";}
+	_init(){
+		super._init();
+		this.methods = null;
+		this.subscribers = null;
+	}
 	/**
 	 * Constructor
 	 */

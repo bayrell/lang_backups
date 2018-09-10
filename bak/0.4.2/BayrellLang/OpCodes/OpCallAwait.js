@@ -29,17 +29,6 @@ class OpCallAwait extends BaseOpCode{
 		this.value = null;
 		this.args = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpCallAwait){
-			this.op = rtl._clone(obj.op);
-			this.value = rtl._clone(obj.value);
-			this.args = rtl._clone(obj.args);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_call_await", "");
 		else if (variable_name == "value") this.value = rtl.correct(value, "BaseOpCode", null, "");

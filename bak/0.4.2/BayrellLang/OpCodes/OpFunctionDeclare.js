@@ -34,21 +34,6 @@ class OpFunctionDeclare extends BaseOpCode{
 		this.use_variables = null;
 		this.flags = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpFunctionDeclare){
-			this.op = rtl._clone(obj.op);
-			this.name = rtl._clone(obj.name);
-			this.result_type = rtl._clone(obj.result_type);
-			this.args = rtl._clone(obj.args);
-			this.childs = rtl._clone(obj.childs);
-			this.use_variables = rtl._clone(obj.use_variables);
-			this.flags = rtl._clone(obj.flags);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_function", "");
 		else if (variable_name == "name") this.name = rtl.correct(value, "string", "", "");

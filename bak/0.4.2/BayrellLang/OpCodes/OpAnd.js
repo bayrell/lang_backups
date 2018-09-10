@@ -27,15 +27,6 @@ class OpAnd extends OpValue2{
 		super._init();
 		this.op = "op_and";
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpAnd){
-			this.op = rtl._clone(obj.op);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_and", "");
 		else super.assignValue(variable_name, value);

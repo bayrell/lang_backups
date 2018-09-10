@@ -34,20 +34,6 @@ class OpViewDeclare extends BaseOpCode{
 		this.childs = null;
 		this.flags = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpViewDeclare){
-			this.op = rtl._clone(obj.op);
-			this.view_name = rtl._clone(obj.view_name);
-			this.view_extends = rtl._clone(obj.view_extends);
-			this.view_variables = rtl._clone(obj.view_variables);
-			this.childs = rtl._clone(obj.childs);
-			this.flags = rtl._clone(obj.flags);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_view", "");
 		else if (variable_name == "view_name") this.view_name = rtl.correct(value, "string", "", "");

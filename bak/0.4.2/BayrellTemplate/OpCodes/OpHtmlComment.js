@@ -30,15 +30,6 @@ class OpHtmlComment extends OpValue1{
 		super._init();
 		this.op = "op_html_comment";
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpHtmlComment){
-			this.op = rtl._clone(obj.op);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_html_comment", "");
 		else super.assignValue(variable_name, value);

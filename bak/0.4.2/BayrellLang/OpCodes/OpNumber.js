@@ -27,15 +27,6 @@ class OpNumber extends OpValueString{
 		super._init();
 		this.op = "op_number";
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpNumber){
-			this.op = rtl._clone(obj.op);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_number", "");
 		else super.assignValue(variable_name, value);

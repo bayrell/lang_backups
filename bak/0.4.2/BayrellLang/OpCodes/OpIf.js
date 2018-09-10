@@ -32,19 +32,6 @@ class OpIf extends BaseOpCode{
 		this.if_false = null;
 		this.if_else = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpIf){
-			this.op = rtl._clone(obj.op);
-			this.condition = rtl._clone(obj.condition);
-			this.if_true = rtl._clone(obj.if_true);
-			this.if_false = rtl._clone(obj.if_false);
-			this.if_else = rtl._clone(obj.if_else);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_if", "");
 		else if (variable_name == "condition") this.condition = rtl.correct(value, "BaseOpCode", null, "");

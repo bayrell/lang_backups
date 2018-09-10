@@ -35,19 +35,6 @@ class OpAssignDeclare extends BaseOpCode{
 		this.value = null;
 		this.flags = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpAssignDeclare){
-			this.op = rtl._clone(obj.op);
-			this.tp = rtl._clone(obj.tp);
-			this.name = rtl._clone(obj.name);
-			this.value = rtl._clone(obj.value);
-			this.flags = rtl._clone(obj.flags);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_assign_declare", "");
 		else if (variable_name == "tp") this.tp = rtl.correct(value, "BaseOpCode", null, "");

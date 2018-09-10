@@ -23,8 +23,6 @@ var RuntimeConstant = require('BayrellRuntime').RuntimeConstant;
 class ParserConstant{
 	getClassName(){return "BayrellParser.ParserConstant";}
 	static getParentClassName(){return "";}
-	_init(){
-	}
 }
 ParserConstant.ERROR_PARSER = RuntimeConstant.ERROR_MODULE_PARSER;
 ParserConstant.ERROR_PARSER_EOF = RuntimeConstant.ERROR_MODULE_PARSER - 1;

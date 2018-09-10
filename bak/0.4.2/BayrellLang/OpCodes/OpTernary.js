@@ -30,18 +30,6 @@ class OpTernary extends BaseOpCode{
 		this.if_true = null;
 		this.if_false = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpTernary){
-			this.op = rtl._clone(obj.op);
-			this.condition = rtl._clone(obj.condition);
-			this.if_true = rtl._clone(obj.if_true);
-			this.if_false = rtl._clone(obj.if_false);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_ternary", "");
 		else if (variable_name == "condition") this.condition = rtl.correct(value, "BaseOpCode", null, "");

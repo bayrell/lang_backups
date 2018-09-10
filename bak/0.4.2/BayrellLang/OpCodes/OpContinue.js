@@ -27,15 +27,6 @@ class OpContinue extends BaseOpCode{
 		super._init();
 		this.op = "op_continue";
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpContinue){
-			this.op = rtl._clone(obj.op);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_continue", "");
 		else super.assignValue(variable_name, value);

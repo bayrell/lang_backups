@@ -20,5 +20,12 @@ var CoreObject = require('./CoreObject.js');
 class SerializeContainer extends CoreObject{
 	getClassName(){return "Runtime.SerializeContainer";}
 	static getParentClassName(){return "CoreObject";}
+	_init(){
+		super._init();
+		this.display_class_name = true;
+		this.indent = "  ";
+		this.space = " ";
+		this.crlf = "\n";
+	}
 }
 module.exports = SerializeContainer;

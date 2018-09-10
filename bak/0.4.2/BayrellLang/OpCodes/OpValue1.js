@@ -28,16 +28,6 @@ class OpValue1 extends BaseOpCode{
 		this.op = "op_value";
 		this.value = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpValue1){
-			this.op = rtl._clone(obj.op);
-			this.value = rtl._clone(obj.value);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_value", "");
 		else if (variable_name == "value") this.value = rtl.correct(value, "BaseOpCode", null, "");

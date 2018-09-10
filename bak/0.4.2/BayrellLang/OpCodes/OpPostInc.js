@@ -27,15 +27,6 @@ class OpPostInc extends OpValue1{
 		super._init();
 		this.op = "op_post_inc";
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpPostInc){
-			this.op = rtl._clone(obj.op);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_post_inc", "");
 		else super.assignValue(variable_name, value);

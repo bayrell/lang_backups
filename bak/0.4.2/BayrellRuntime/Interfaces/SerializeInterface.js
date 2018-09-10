@@ -22,11 +22,6 @@ var Vector = require('../Vector.js');
 var ContextInterface = require('./ContextInterface.js');
 class SerializeInterface{
 	/**
-	 * Returns new Instance
-	 */
-	createNewInstance(){
-	}
-	/**
 	 * Returns classname of the object
 	 * @return string
 	 */

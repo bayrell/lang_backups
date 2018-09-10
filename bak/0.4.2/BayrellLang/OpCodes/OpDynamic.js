@@ -29,17 +29,6 @@ class OpDynamic extends BaseOpCode{
 		this.value = null;
 		this.name = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpDynamic){
-			this.op = rtl._clone(obj.op);
-			this.value = rtl._clone(obj.value);
-			this.name = rtl._clone(obj.name);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_dynamic", "");
 		else if (variable_name == "value") this.value = rtl.correct(value, "BaseOpCode", null, "");

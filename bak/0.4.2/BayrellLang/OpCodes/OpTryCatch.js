@@ -30,17 +30,6 @@ class OpTryCatch extends BaseOpCode{
 		this.op_try = null;
 		this.childs = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpTryCatch){
-			this.op = rtl._clone(obj.op);
-			this.op_try = rtl._clone(obj.op_try);
-			this.childs = rtl._clone(obj.childs);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_try_catch", "");
 		else if (variable_name == "op_try") this.op_try = rtl.correct(value, "Vector", null, "BaseOpCode");

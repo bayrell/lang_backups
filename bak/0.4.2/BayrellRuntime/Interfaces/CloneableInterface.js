@@ -24,8 +24,7 @@ class CloneableInterface{
 	/**
 	 * Returns new Instance
 	 */
-	createNewInstance(){
-	}
+	/* public CoreObject createNewInstance(); */
 	/**
 	 * Assign and clone data from other object
 	 * @param CoreObject obj

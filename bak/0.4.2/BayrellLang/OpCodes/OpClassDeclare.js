@@ -35,22 +35,6 @@ class OpClassDeclare extends BaseOpCode{
 		this.class_template = null;
 		this.flags = null;
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpClassDeclare){
-			this.op = rtl._clone(obj.op);
-			this.class_name = rtl._clone(obj.class_name);
-			this.class_extends = rtl._clone(obj.class_extends);
-			this.class_implements = rtl._clone(obj.class_implements);
-			this.class_variables = rtl._clone(obj.class_variables);
-			this.childs = rtl._clone(obj.childs);
-			this.class_template = rtl._clone(obj.class_template);
-			this.flags = rtl._clone(obj.flags);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_class", "");
 		else if (variable_name == "class_name") this.class_name = rtl.correct(value, "string", "", "");

@@ -155,9 +155,9 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 					if (res == ""){
 						return value;
 					}
-					return rtl.toString(res)+"~"+rtl.toString(value);
+					return rtl.toString(res)+"+"+rtl.toString(value);
 				}, "");
-				res += this.s("->set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
+				res += this.s(".set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
 			}
 		}
 		else if (raw_item != null){

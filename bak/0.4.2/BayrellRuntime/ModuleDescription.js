@@ -25,6 +25,10 @@ var ModuleDescriptionInterface = require('./Interfaces/ModuleDescriptionInterfac
 class ModuleDescription{
 	getClassName(){return "Runtime.ModuleDescription";}
 	static getParentClassName(){return "";}
+	_init(){
+		if (this.__implements__ == undefined){this.__implements__ = [];}
+		this.__implements__.push(ModuleDescriptionInterface);
+	}
 	/**
 	 * Returns module name
 	 * @return string

@@ -900,7 +900,7 @@ class TranslatorES6 extends CommonTranslator{
 		/* Static variables */
 		for (var i = 0; i < op_code.class_variables.count(); i++){
 			var variable = op_code.class_variables.item(i);
-			if (variable.flags != null && variable.flags.p_static == true){
+			if (variable.flags != null && (variable.isFlag("static") || variable.isFlag("const"))){
 				this.beginOperation();
 				var s = rtl.toString(this.current_namespace)+"."+rtl.toString(op_code.class_name)+"."+rtl.toString(variable.name)+" = "+rtl.toString(this.translateRun(variable.value))+";";
 				this.endOperation();
@@ -983,22 +983,25 @@ class TranslatorES6 extends CommonTranslator{
 		var res = "";
 		var has_serializable = false;
 		var has_cloneable = false;
-		var has_variables = class_variables != null && class_variables.count() > 0;
+		var has_variables = false;
 		var has_implements = class_implements != null && class_implements.count() > 0;
-		if (has_variables){
-			for (var i = 0; i < class_variables.count(); i++){
-				var variable = class_variables.item(i);
-				if (variable.isFlag("serializable")){
-					has_serializable = true;
-					has_cloneable = true;
-				}
+		for (var i = 0; i < class_variables.count(); i++){
+			var variable = class_variables.item(i);
+			if (variable.isFlag("serializable")){
+				has_serializable = true;
+			}
+			if (variable.isFlag("cloneable")){
+				has_cloneable = true;
+			}
+			if (!variable.isFlag("static") && !variable.isFlag("const")){
+				has_variables = true;
 			}
 		}
 		if (!this.is_interface){
 			res += this.s("getClassName(){"+"return "+rtl.toString(this.convertString(rtl.toString(this.current_namespace)+"."+rtl.toString(this.current_class_name)))+";}");
 			res += this.s("static getParentClassName(){"+"return "+rtl.toString(this.convertString(class_extends))+";}");
 		}
-		if (this.current_module_name != "Runtime" && this.current_class_name != "CoreObject"){
+		if (this.current_module_name != "Runtime" || this.current_class_name != "CoreObject"){
 			if (has_variables || has_implements){
 				res += this.s("_init(){");
 				this.levelInc();
@@ -1008,7 +1011,7 @@ class TranslatorES6 extends CommonTranslator{
 				if (class_variables != null){
 					for (var i = 0; i < class_variables.count(); i++){
 						var variable = class_variables.item(i);
-						if (!variable.isFlag("static")){
+						if (!variable.isFlag("static") && !variable.isFlag("const")){
 							this.beginOperation();
 							s = "this."+rtl.toString(variable.name)+" = "+rtl.toString(this.translateRun(variable.value))+";";
 							this.endOperation();
@@ -1030,18 +1033,13 @@ class TranslatorES6 extends CommonTranslator{
 				res += this.s("}");
 			}
 			if (has_cloneable){
-				res += this.s("createNewInstance(){");
-				this.levelInc();
-				res += this.s("return "+rtl.toString(this.getName("rtl"))+".newInstance( this.getClassName() );");
-				this.levelDec();
-				res += this.s("}");
 				res += this.s("assignObject(obj){");
 				this.levelInc();
 				res += this.s("if (obj instanceof "+rtl.toString(this.getName(this.current_class_name))+"){");
 				this.levelInc();
 				for (var i = 0; i < class_variables.count(); i++){
 					var variable = class_variables.item(i);
-					if (variable.isFlag("serializable")){
+					if (variable.isFlag("cloneable")){
 						res += this.s("this."+rtl.toString(variable.name)+" = "+rtl.toString(this.getName("rtl"))+"._clone("+"obj."+rtl.toString(variable.name)+");");
 					}
 				}

@@ -31,16 +31,6 @@ class OpHtmlValue extends OpValue1{
 		this.op = "op_html_value";
 		this.tp = "";
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpHtmlValue){
-			this.op = rtl._clone(obj.op);
-			this.tp = rtl._clone(obj.tp);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_html_value", "");
 		else if (variable_name == "tp") this.tp = rtl.correct(value, "string", "", "");

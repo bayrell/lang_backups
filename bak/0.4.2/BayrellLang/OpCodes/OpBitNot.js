@@ -27,15 +27,6 @@ class OpBitNot extends OpValue1{
 		super._init();
 		this.op = "op_bit_not";
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpBitNot){
-			this.op = rtl._clone(obj.op);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_bit_not", "");
 		else super.assignValue(variable_name, value);

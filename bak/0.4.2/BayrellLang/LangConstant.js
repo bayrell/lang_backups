@@ -23,8 +23,6 @@ var RuntimeConstant = require('BayrellRuntime').RuntimeConstant;
 class LangConstant{
 	getClassName(){return "BayrellLang.LangConstant";}
 	static getParentClassName(){return "";}
-	_init(){
-	}
 }
 LangConstant.ERROR_END_OF_THE_STRING_EXPECTED = RuntimeConstant.ERROR_MODULE_PARSER - 501;
 LangConstant.ERROR_PARSER_HEX_NUMBER_EXPECTED = RuntimeConstant.ERROR_MODULE_PARSER - 502;

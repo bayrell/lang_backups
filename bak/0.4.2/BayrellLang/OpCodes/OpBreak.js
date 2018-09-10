@@ -27,15 +27,6 @@ class OpBreak extends BaseOpCode{
 		super._init();
 		this.op = "op_break";
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpBreak){
-			this.op = rtl._clone(obj.op);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_break", "");
 		else super.assignValue(variable_name, value);

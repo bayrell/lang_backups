@@ -30,18 +30,6 @@ class OpAssign extends BaseOpCode{
 		this.value = null;
 		this.op_name = "";
 	}
-	createNewInstance(){
-		return rtl.newInstance( this.getClassName() );
-	}
-	assignObject(obj){
-		if (obj instanceof OpAssign){
-			this.op = rtl._clone(obj.op);
-			this.ident = rtl._clone(obj.ident);
-			this.value = rtl._clone(obj.value);
-			this.op_name = rtl._clone(obj.op_name);
-		}
-		super.assign(obj);
-	}
 	assignValue(variable_name, value){
 		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_assign", "");
 		else if (variable_name == "ident") this.ident = rtl.correct(value, "BaseOpCode", null, "");
