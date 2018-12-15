@@ -25,11 +25,12 @@ class AsyncThread extends CoreObject{
 	static getParentClassName(){return "CoreObject";}
 	_init(){
 		super._init();
-		this._jump = 0;
-		this._res = null;
-		this._err = null;
-		this._f = null;
-		this._catch_stack = null;
+		this.f = null;
+		this.pos = "0";
+		this.res = null;
+		this.err = null;
+		this.run_stack = null;
+		this.catch_stack = null;
 	}
 	/**
 	 * Constructor
@@ -42,149 +43,175 @@ class AsyncThread extends CoreObject{
 	 * Reset AsyncThread
 	 */
 	reset(){
-		this._jump = 0;
-		this._res = null;
-		this._err = null;
-		this._f = new Vector();
-		this._catch_stack = new Vector();
+		this.pos = "0";
+		this.res = null;
+		this.err = null;
+		this.run_stack = new Vector();
+		this.catch_stack = new Vector();
 	}
 	/**
-	 * Set jump position
-	 * @param int jump
-	 */
-	jump(pos){
-		this._jump = pos;
-		return "forward";
-	}
-	/**
-	 * Returns current jump position
-	 * @return int
+	 * Returns current position
+	 * @return string
 	 */
 	current(){
-		return this._jump;
+		return this.pos;
 	}
 	/**
 	 * Returns result of the prev function
 	 * @return mixed
 	 */
-	getResult(){
-		return this._res;
+	result(){
+		return this.res;
 	}
 	/**
 	 * Returns error of the prev function
 	 * @return mixed
 	 */
 	getError(){
-		return this._err;
+		return this.err;
+	}
+	/**
+	 * Clear error
+	 */
+	clearError(){
+		this.err = null;
 	}
 	/**
 	 * Resolve thread with result
 	 * @param mixed res
 	 */
 	resolve(res){
-		this._res = res;
+		this.res = res;
 		this.next();
+		this.forward();
 		return "resolve";
+	}
+	/**
+	 * Set position
+	 * @param string pos
+	 */
+	jump(pos){
+		this.pos = pos;
+		return "jump";
 	}
 	/**
 	 * Resolve Exception
 	 * @param mixed res
 	 */
 	error(err){
-		if (this._catch_stack.count() == 0){
-			this._err = err;
+		if (this.catch_stack.count() == 0){
+			this.err = err;
 			this.next(true);
 		}
 		else {
-			this._err = err;
-			this._jump = this._catch_stack.pop();
-			this.forward();
+			this.err = err;
+			this.pos = this.catch_stack.pop();
 		}
+		this.forward();
 		return "error";
 	}
 	/**
 	 * Push catch
-	 * @param string jump
+	 * @param string pos
 	 */
-	catchPush(jump){
-		this._catch_stack.push(jump);
+	catchPush(pos){
+		this.catch_stack.push(pos);
 	}
 	/**
 	 * Pop catch
 	 */
 	catchPop(){
-		this._catch_stack.pop();
+		this.catch_stack.pop();
 	}
 	/**
 	 * Call next
 	 */
 	next(is_error){
 		if (is_error == undefined) is_error=false;
-		if (this._f.count() == 0){
+		if (this.run_stack.count() == 0){
+			this.pos = "-1";
 			return ;
 		}
-		this._catch_stack.clear();
-		var task = this._f.pop();
-		/* Restore jump */
-		this._jump = task.jump;
+		var task = this.run_stack.pop();
+		/* Restore pos */
+		this.f = task.f;
+		this.pos = task.pos;
+		this.catch_stack = task.catch_stack;
 		if (is_error){
-			this._jump = -1;
+			if (this.catch_stack.count() == 0){
+				this.pos = "-1";
+			}
+			else {
+				this.pos = this.catch_stack.pop();
+			}
 		}
-		this.forward();
+		return "next";
 	}
 	/**
 	 * Forward call
 	 */
 	forward(){
+		var is_browser = rtl.isBrowser();
 		
-		setTimeout( ()=>{ this.call(); }, 1);
-	}
-	/**
-	 * Call current
-	 */
-	call(){
-		if (this._f.count() == 0){
-			this.end();
-			return ;
-		}
-		var task = this._f.last();
-		/* Call task function */
-		var res = null;
-		try{
-			res = rtl.call(task.f, (new Vector()).push(this));
-		}catch(_the_exception){
-			if (_the_exception instanceof Error){
-				var e = _the_exception;
-				res = null;
-				this.error(e);
-			}
-			else { throw _the_exception; }
-		}
-		/* If return next async function */
-		if (res instanceof Function){
-			var task2 = new AsyncTask();
-			task2.jump = this._jump;
-			task2.f = res;
-			this.forward();
-		}
-		else if (res == "forward"){
-			this.forward();
-		}
+		var _rtl; if (is_browser) _rtl = Runtime.rtl; else _rtl = rtl;
+		var _AsyncTask; if (is_browser) _AsyncTask = Runtime.AsyncTask; else _AsyncTask = AsyncTask;
+		var _Vector; if (is_browser) _Vector = Runtime.Vector; else _Vector = Vector;
+		setTimeout( 
+			()=>{
+				if (this.pos == "-1"){
+					if (this.err != null){
+						throw this.err;
+					}
+					return;
+				}
+				
+				/* Call task function */
+				var res = null;
+				try{
+					res = _rtl.call(this.f, [this]);
+				}
+				catch (e){
+					res = null;
+					this.error(e);
+				}
+				
+				/* If can forward */
+				if (res != null){
+				
+					/* If return next async function */
+					if (res instanceof Function){
+						var task = new _AsyncTask();
+						task.f = this.f;
+						task.pos = this.pos;
+						task.catch_stack = this.catch_stack;
+						this.run_stack.push(task);
+						this.catch_stack = new _Vector();
+						this.pos = "0";
+						this.f = res;
+					}
+					
+					/* Call forward */
+					if (res != "error" && res != "resolve"){
+						this.forward();
+					}
+				}
+			}, 1);
+		return "forward";
 	}
 	/**
 	 * Run async await
 	 */
 	run(f){
-		this.reset();
-		var task = new AsyncTask();
-		task.jump = 0;
-		task.f = f;
+		this.pos = "0";
+		this.f = f;
 		this.forward();
 	}
 	/**
 	 * Call if thread is ended
 	 */
 	end(){
+		this.pos = "-1";
+		return "end";
 	}
 }
 module.exports = AsyncThread;

@@ -225,7 +225,8 @@ class RuntimeUtils{
 	 * @param mixed obj
 	 * @return mixed
 	 */
-	static ObjectToPrimitive(obj){
+	static ObjectToPrimitive(obj, force_class_name){
+		if (force_class_name == undefined) force_class_name=false;
 		if (obj === null){
 			return null;
 		}
@@ -234,13 +235,16 @@ class RuntimeUtils{
 		}
 		if (obj instanceof Vector){
 			return obj.map((value) => {
-				return RuntimeUtils.ObjectToPrimitive(value);
+				return RuntimeUtils.ObjectToPrimitive(value, force_class_name);
 			});
 		}
 		if (obj instanceof Map){
 			obj = obj.map((key, value) => {
-				return RuntimeUtils.ObjectToPrimitive(value);
+				return RuntimeUtils.ObjectToPrimitive(value, force_class_name);
 			});
+			if (force_class_name){
+				obj.set("__class_name__", "");
+			}
 			return obj;
 		}
 		if (rtl.implements(obj, SerializeInterface)){
@@ -249,7 +253,7 @@ class RuntimeUtils{
 			obj.getVariablesNames(names);
 			names.each((variable_name) => {
 				var value = obj.takeValue(variable_name, null);
-				var value = RuntimeUtils.ObjectToPrimitive(value);
+				var value = RuntimeUtils.ObjectToPrimitive(value, force_class_name);
 				values.set(variable_name, value);
 			});
 			values.set("__class_name__", obj.getClassName());
@@ -262,25 +266,21 @@ class RuntimeUtils{
 	 * @param SerializeContainer container
 	 * @return mixed
 	 */
-	static PrimitiveToObject(obj, context){
-		if (context == undefined) context=null;
+	static PrimitiveToObject(obj){
 		if (obj === null){
 			return null;
 		}
 		if (rtl.isScalarValue(obj)){
 			return obj;
 		}
-		if (context == null){
-			context = RuntimeUtils.globalContext();
-		}
 		if (obj instanceof Vector){
 			return obj.map((value) => {
-				return RuntimeUtils.PrimitiveToObject(value, context);
+				return RuntimeUtils.PrimitiveToObject(value);
 			});
 		}
 		if (obj instanceof Map){
 			obj = obj.map((key, value) => {
-				return RuntimeUtils.PrimitiveToObject(value, context);
+				return RuntimeUtils.PrimitiveToObject(value);
 			});
 			if (!obj.has("__class_name__")){
 				return obj;
@@ -414,8 +414,9 @@ class RuntimeUtils{
 		
 		return value;
 	}
-	static ObjectToNative(value){
-		value = RuntimeUtils.ObjectToPrimitive(value);
+	static ObjectToNative(value, force_class_name){
+		if (force_class_name == undefined) force_class_name=false;
+		value = RuntimeUtils.ObjectToPrimitive(value, force_class_name);
 		value = RuntimeUtils.PrimitiveToNative(value);
 		return value;
 	}

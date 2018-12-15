@@ -102,6 +102,13 @@ class rtl{
 	
 	static class_implements(class_name, interface_name){
 		var obj = this.find_class(class_name);
+		var obj2 = this.find_class(interface_name);
+		
+		if (obj.__static_implements__.indexOf( obj2 ) == -1 ){
+			return false;
+		}
+		
+		return true;
 	}
 	/**
 	 * Returns true if class exists
@@ -164,6 +171,10 @@ class rtl{
 		return f.apply(obj, args);
 	}
 	/**
+	 * Call async method
+	 * @return Object
+	 */
+	/**
 	 * Returns value if value instanceof type_value, else returns def_value
 	 * @param var value
 	 * @param string type_value
@@ -193,7 +204,7 @@ class rtl{
 		if (rtl.checkValue(value, type_value)){
 			if ((type_value == "Runtime.Vector" || type_value == "Runtime.Map") && type_template != ""){
 				
-				return value._correctItemsByType($type_template);
+				return value._correctItemsByType(type_template);
 			}
 			return value;
 		}
@@ -267,17 +278,20 @@ class rtl{
 			return val.cloneNode(true);
 		}
 		else if (typeof val == 'object' && 
+			val.createNewInstance && typeof val.createNewInstance == "function" &&
+			val.assignObject && typeof val.assignObject == "function")
+		{
+			var res = val.createNewInstance();
+			if (res) res.assignObject(val);
+			return res;
+		}
+		else if (typeof val == 'object' && 
 			val.getClassName && typeof val.getClassName == "function" &&
 			val.assignObject && typeof val.assignObject == "function")
 		{
 			var res = null;
-			if (val.createNewInstance && typeof val.createNewInstance == "function"){
-				res = val.createNewInstance();
-			}
-			else{
-				if (isBrowser()) res = Runtime.rtl.newInstance( val.getClassName() );
-				else res = rtl.newInstance( val.getClassName() );
-			}
+			if (isBrowser()) res = Runtime.rtl.newInstance( val.getClassName() );
+			else res = rtl.newInstance( val.getClassName() );
 			if (res) res.assignObject(val);
 			return res;
 		}
@@ -443,7 +457,7 @@ class rtl{
 	 */
 	
 	static dump(value){
-		return console.log(value);
+		console.log(value);
 	}
 	/**
 	 * Returns random value x, where a <= x <= b

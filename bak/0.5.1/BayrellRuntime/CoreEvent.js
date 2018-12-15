@@ -17,15 +17,12 @@
  *  limitations under the License.
  */
 var CoreObject = require('./CoreObject.js');
-var Vector = require('./Vector.js');
-class AsyncTask extends CoreObject{
-	getClassName(){return "Runtime.AsyncTask";}
+class CoreEvent extends CoreObject{
+	getClassName(){return "Runtime.CoreEvent";}
 	static getParentClassName(){return "CoreObject";}
 	_init(){
 		super._init();
-		this.pos = null;
-		this.f = null;
-		this.catch_stack = null;
+		this.sender = null;
 	}
 }
-module.exports = AsyncTask;
+module.exports = CoreEvent;
