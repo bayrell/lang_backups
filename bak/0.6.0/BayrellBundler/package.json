@@ -1,0 +1,9 @@
+{
+  "description": "BayrellBundler",
+  "files": [
+    "*.js"
+  ],
+  "main": "index.js",
+  "name": "bayrell-bundler-nodejs",
+  "version": "0.6.0"
+}
