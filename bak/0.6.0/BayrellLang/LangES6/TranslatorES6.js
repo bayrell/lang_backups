@@ -90,6 +90,13 @@ var OpWhile = require('../OpCodes/OpWhile.js');
 var FunctionStack = require('./FunctionStack.js');
 class TranslatorES6 extends CommonTranslator{
 	/**
+	 * Returns full class name
+	 * @return string
+	 */
+	getCurrentClassName(){
+		return rtl.toString(this.current_namespace)+"."+rtl.toString(this.current_class_name);
+	}
+	/**
 	 * Returns true if function is async
 	 * @return bool
 	 */
@@ -1682,6 +1689,7 @@ class TranslatorES6 extends CommonTranslator{
 		}
 		var s = "";
 		var res = "";
+		var has_assignable = false;
 		var has_serializable = false;
 		var has_cloneable = false;
 		var has_variables = false;
@@ -1699,18 +1707,18 @@ class TranslatorES6 extends CommonTranslator{
 					has_cloneable = true;
 				}
 				if (variable.isFlag("assignable")){
-					has_serializable = true;
+					has_assignable = true;
 				}
 				if (!variable.isFlag("static") && !variable.isFlag("const")){
 					has_variables = true;
 				}
 				if (variable.hasAnnotations()){
-					has_methods_annotations = true;
+					has_fields_annotations = true;
 				}
 			}
 			if (variable instanceof OpFunctionDeclare){
 				if (variable.hasAnnotations()){
-					has_fields_annotations = true;
+					has_methods_annotations = true;
 				}
 			}
 		}
@@ -1757,7 +1765,7 @@ class TranslatorES6 extends CommonTranslator{
 				this.levelDec();
 				res += this.s("}");
 			}
-			if (has_cloneable){
+			if (has_cloneable || has_assignable){
 				res += this.s("assignObject(obj){");
 				this.levelInc();
 				res += this.s("if (obj instanceof "+rtl.toString(this.getName(this.current_class_name))+"){");
@@ -1778,7 +1786,7 @@ class TranslatorES6 extends CommonTranslator{
 				this.levelDec();
 				res += this.s("}");
 			}
-			if (has_serializable){
+			if (has_serializable || has_assignable){
 				var class_variables_serializable_count = 0;
 				res += this.s("assignValue(variable_name, value){");
 				this.levelInc();
@@ -1841,7 +1849,7 @@ class TranslatorES6 extends CommonTranslator{
 				this.levelDec();
 				res += this.s("}");
 			}
-			if (has_serializable || has_fields_annotations){
+			if (has_serializable || has_assignable || has_fields_annotations){
 				res += this.s("static getFieldsList(names){");
 				this.levelInc();
 				for (var i = 0; i < childs.count(); i++){
@@ -1850,7 +1858,7 @@ class TranslatorES6 extends CommonTranslator{
 						continue;
 					}
 					var is_struct = this.is_struct && !variable.isFlag("static") && !variable.isFlag("const");
-					if (variable.isFlag("public") && (variable.isFlag("serializable") || variable.isFlag("assignable") || is_struct)){
+					if (variable.isFlag("public") && (variable.isFlag("serializable") || variable.isFlag("assignable") || is_struct || variable.hasAnnotations())){
 						res += this.s("names.push("+rtl.toString(this.convertString(variable.name))+");");
 					}
 				}
@@ -1870,6 +1878,7 @@ class TranslatorES6 extends CommonTranslator{
 						this.levelInc();
 						res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
 						res += this.s(".set(\"kind\", \"field\")");
+						res += this.s(".set(\"class_name\", "+rtl.toString(this.convertString(this.getCurrentClassName()))+")");
 						res += this.s(".set(\"name\", "+rtl.toString(this.convertString(variable.name))+")");
 						res += this.s(".set(\"annotations\", ");
 						this.levelInc();
@@ -1922,6 +1931,7 @@ class TranslatorES6 extends CommonTranslator{
 						this.levelInc();
 						res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
 						res += this.s(".set(\"kind\", \"method\")");
+						res += this.s(".set(\"class_name\", "+rtl.toString(this.convertString(this.getCurrentClassName()))+")");
 						res += this.s(".set(\"name\", "+rtl.toString(this.convertString(variable.name))+")");
 						res += this.s(".set(\"annotations\", ");
 						this.levelInc();
@@ -1946,6 +1956,32 @@ class TranslatorES6 extends CommonTranslator{
 				this.levelDec();
 				res += this.s("}");
 			}
+		}
+		if (op_code.hasAnnotations()){
+			res += this.s("static getClassInfo(){");
+			this.levelInc();
+			res += this.s("return new "+rtl.toString(this.getName("IntrospectionInfo"))+"(");
+			this.levelInc();
+			res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
+			res += this.s(".set(\"kind\", \"class\")");
+			res += this.s(".set(\"class_name\", "+rtl.toString(this.convertString(this.getCurrentClassName()))+")");
+			res += this.s(".set(\"annotations\", ");
+			this.levelInc();
+			res += this.s("(new "+rtl.toString(this.getName("Vector"))+"())");
+			for (var j = 0; j < op_code.annotations.count(); j++){
+				var annotation = op_code.annotations.item(j);
+				this.pushOneLine(true);
+				var s_kind = this.translateRun(annotation.kind);
+				var s_options = this.translateRun(annotation.options);
+				this.popOneLine();
+				res += this.s(".push(new "+rtl.toString(s_kind)+"("+rtl.toString(s_options)+"))");
+			}
+			this.levelDec();
+			res += this.s(")");
+			this.levelDec();
+			res += this.s(");");
+			this.levelDec();
+			res += this.s("}");
 		}
 		return res;
 	}

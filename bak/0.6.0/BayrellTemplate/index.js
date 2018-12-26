@@ -26,7 +26,7 @@ function ObjectAssign(res, obj){
 }
 
 module.exports = {
-	VERSION: '0.6.0',
+	VERSION: '0.6.2',
 };
 
 /* OpCodes */
@@ -61,7 +61,7 @@ ObjectAssign(module.exports, require("./Utils.js"));
 else{
 
 module.exports = {
-	VERSION: '0.6.0',
+	VERSION: '0.6.2',
 	'OpCodes': {
 		'OpComponent': require("./OpCodes/OpComponent.js"),
 		'OpHtmlAttribute': require("./OpCodes/OpHtmlAttribute.js"),

@@ -26,7 +26,7 @@ function ObjectAssign(res, obj){
 }
 
 module.exports = {
-	VERSION: '0.6.0',
+	VERSION: '0.6.2',
 };
 
 /* Exceptions */
@@ -50,7 +50,7 @@ ObjectAssign(module.exports, require("./TokenPair.js"));
 else{
 
 module.exports = {
-	VERSION: '0.6.0',
+	VERSION: '0.6.2',
 	'Exceptions': {
 		'ParserEOF': require("./Exceptions/ParserEOF.js"),
 		'ParserError': require("./Exceptions/ParserError.js"),

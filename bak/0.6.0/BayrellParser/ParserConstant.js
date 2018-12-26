@@ -26,7 +26,7 @@ class ParserConstant{
 	getClassName(){return "BayrellParser.ParserConstant";}
 	static getParentClassName(){return "";}
 }
-ParserConstant.ERROR_PARSER = RuntimeConstant.ERROR_MODULE_PARSER;
-ParserConstant.ERROR_PARSER_EOF = RuntimeConstant.ERROR_MODULE_PARSER - 1;
-ParserConstant.ERROR_PARSER_EXPECTED = RuntimeConstant.ERROR_MODULE_PARSER - 2;
+ParserConstant.ERROR_PARSER = -1000;
+ParserConstant.ERROR_PARSER_EOF = -1001;
+ParserConstant.ERROR_PARSER_EXPECTED = -1002;
 module.exports = ParserConstant;

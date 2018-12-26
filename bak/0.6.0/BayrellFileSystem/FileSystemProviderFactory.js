@@ -30,6 +30,7 @@ class FileSystemProviderFactory extends ContextObject{
 	 * Returns new Instance
 	 */
 	newInstance(context){
+		if (context == undefined) context=null;
 		var obj = new FileSystemProvider(context);
 		return obj;
 	}

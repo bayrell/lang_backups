@@ -100,7 +100,7 @@ class TranslatorNodeJS extends TranslatorES6{
 			if (module_name == "RuntimeWeb"){
 				module_name = "BayrellRuntimeWeb";
 			}
-			module_name = this.convertModuleName(module_name);
+			module_name = rtl.convertNodeJSModuleName(module_name);
 			res = "var "+rtl.toString(class_name)+" = require('"+rtl.toString(module_name)+"')."+rtl.toString(module_path)+";";
 		}
 		return res;

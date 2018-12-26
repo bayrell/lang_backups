@@ -136,7 +136,7 @@ class Lib{
 		}
 		if (parser_factory != null && translator_factory != null && path != ""){
 			file.path = path;
-			file.content = BayrellLangUtils.translate(context, parser_factory, translator_factory, file.content);
+			file.content = BayrellLangUtils.translateSource(context, parser_factory, translator_factory, file.content);
 		}
 		return file;
 	}

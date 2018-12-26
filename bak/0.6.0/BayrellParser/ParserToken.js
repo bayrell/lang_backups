@@ -103,9 +103,12 @@ class ParserToken extends ParserReader{
 	 */
 	skipSystemChar(){
 		var look = this.lookChar();
-		while (this.isSkipChar(look)){
+		while (this.isSkipChar(look) && !this.isEOF()){
 			this.moveChar(look);
 			look = this.lookChar();
+			if (look == ""){
+				break;
+			}
 		}
 	}
 	/**

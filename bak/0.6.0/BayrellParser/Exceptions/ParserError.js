@@ -24,15 +24,15 @@ var RuntimeUtils = require('bayrell-runtime-nodejs').RuntimeUtils;
 var RuntimeException = require('bayrell-runtime-nodejs').Exceptions.RuntimeException;
 var ParserConstant = require('../ParserConstant.js');
 class ParserError extends RuntimeException{
-	constructor(s, line, col, context, prev){
+	constructor(s, code, context, prev){
 		if (prev == undefined) prev=null;
 		if (context == null){
 			context = RuntimeUtils.globalContext();
 		}
-		super(s, ParserConstant.ERROR_PARSER, context, prev);
-		this.line = line;
-		this.pos = col;
-		this.buildMessage();
+		if (code == -1){
+			code = ParserConstant.ERROR_PARSER;
+		}
+		super(s, code, context, prev);
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellParser.Exceptions.ParserError";}

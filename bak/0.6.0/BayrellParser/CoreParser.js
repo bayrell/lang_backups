@@ -197,7 +197,7 @@ class CoreParser extends ContextObject{
 	parserError(message){
 		var start_line = this.next_token.start_line;
 		var start_col = this.next_token.start_col;
-		return new ParserError(message, start_line, start_col, this.context());
+		return new ParserError(message, -1, this.context());
 	}
 	/**
 	 * Return next token

@@ -40,7 +40,7 @@ class FileSystemProvider extends ContextObject{
 		var arr = fsModule.readdirSync(basedir);
 		arr = arr.sort();
 		arr.forEach(function(s){
-			res.push( basedir + '/' + s );
+			res.push( s );
 		});
 		return res;
 	}
@@ -54,6 +54,7 @@ class FileSystemProvider extends ContextObject{
 		var res = new Vector();
 		var arr = this.getDirectoryListing(basedir);
 		arr.each((path) => {
+			var path = rtl.toString(basedir)+"/"+rtl.toString(path);
 			res.push(path);
 			if (this.isDir(path)){
 				res.appendVector(this.getDirectoryListing(path));
@@ -71,6 +72,7 @@ class FileSystemProvider extends ContextObject{
 		var res = new Vector();
 		var arr = this.getDirectoryListing(basedir);
 		arr.each((path) => {
+			var path = rtl.toString(basedir)+"/"+rtl.toString(path);
 			if (this.isDir(path)){
 				res.appendVector(this.getFilesRecursive(path));
 			}
@@ -121,6 +123,18 @@ class FileSystemProvider extends ContextObject{
 	 * @param string dirpath
 	 * @param boolean create_parent. Default is true
 	 */
+	fileExists(filepath){
+		if (filepath == undefined) filepath="";
+		
+		if (fsModule.existsSync(filepath))
+			return true;
+		return false;
+	}
+	/**
+	 * Make dir
+	 * @param string dirpath
+	 * @param boolean create_parent. Default is true
+	 */
 	makeDir(dirpath, create_parent){
 		if (dirpath == undefined) dirpath="";
 		if (create_parent == undefined) create_parent=false;
@@ -145,19 +159,6 @@ class FileSystemProvider extends ContextObject{
 	 */
 	isFile(path){
 		return !this.isDir(path);
-	}
-	/**
-	 * Make dir
-	 * @param string dirpath
-	 * @param boolean create_parent. Default is true
-	 */
-	makeDir(dirpath, create_parent){
-		if (dirpath == undefined) dirpath="";
-		if (create_parent == undefined) create_parent=false;
-		
-		if (fsModule.existsSync(dirpath))
-			return true;
-		shellModule.mkdir('-p', dirpath);
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellFileSystem.FileSystemProvider";}

@@ -59,12 +59,14 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 			res += this.s("use Runtime\\rtl;");
 			res += this.s("use Runtime\\Map;");
 			res += this.s("use Runtime\\Vector;");
-			res += this.s("use RuntimeWeb\\Lib as RuntimeWebLib;");
+			res += this.s("use Runtime\\IntrospectionInfo;");
+			res += this.s("use Runtime\\UIStruct;");
 			this.modules.set("rs", "Runtime.rs");
 			this.modules.set("rtl", "Runtime.rtl");
 			this.modules.set("Map", "Runtime.Map");
 			this.modules.set("Vector", "Runtime.Vector");
-			this.modules.set("RuntimeWebLib", "RuntimeWeb.Lib");
+			this.modules.set("IntrospectionInfo", "Runtime.IntrospectionInfo");
+			this.modules.set("UIStruct", "Runtime.UIStruct");
 		}
 		return res;
 	}
@@ -74,9 +76,10 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 	OpHtmlJson(op_code){
 		var value = "rs::json_encode("+rtl.toString(this.translateRun(op_code.value))+")";
 		var res = "";
-		res = "RuntimeWebLib::createElement(";
-		res += this.s("\"span\",");
+		res = "new UIStruct(";
 		res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
+		res += this.s("->set(\"name\", \"span\")");
+		res += this.s("->set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
 		res += this.s("->set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
 		res += this.s(")");
 		return res;
@@ -87,9 +90,10 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 	OpHtmlRaw(op_code){
 		var value = this.translateRun(op_code.value);
 		var res = "";
-		res = "RuntimeWebLib::createElement(";
-		res += this.s("\"span\",");
+		res = "new UIStruct(";
 		res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
+		res += this.s("->set(\"name\", \"span\")");
+		res += this.s("->set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
 		res += this.s("->set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
 		res += this.s(")");
 		return res;
@@ -104,13 +108,16 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 		this.levelInc();
 		/* isComponent */
 		if (this.modules.has(op_code.tag_name)){
-			res = "RuntimeWebLib::createComponent(";
-			res += this.s(rtl.toString(this.convertString(this.modules.item(op_code.tag_name)))+",");
+			res = "new UIStruct(";
+			res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
+			res += this.s("->set(\"kind\", \"component\")");
+			res += this.s("->set(\"name\", "+rtl.toString(this.convertString(this.modules.item(op_code.tag_name)))+")");
 			is_component = true;
 		}
 		else {
-			res = "RuntimeWebLib::createElement(";
-			res += this.s(rtl.toString(this.convertString(op_code.tag_name))+",");
+			res = "new UIStruct(";
+			res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
+			res += this.s("->set(\"name\", "+rtl.toString(this.convertString(op_code.tag_name))+")");
 		}
 		var raw_item = null;
 		if (!op_code.is_plain && op_code.childs != null && op_code.childs.count() == 1){
@@ -123,10 +130,10 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 			}
 		}
 		if (is_component){
-			res += this.s("$this->getElementAttrs()");
+			res += this.s("->set(\"props\", $this->getElementAttrs()");
 		}
 		else {
-			res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
+			res += this.s("->set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
 		}
 		if (op_code.attributes != null && op_code.attributes.count() > 0){
 			op_code.attributes.each((item) => {
@@ -182,19 +189,18 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 				res += this.s("->set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
 			}
 		}
+		res += this.s(")");
+		/* Childs */
 		if (raw_item == null && !op_code.is_plain){
-			res += ",";
-			if (op_code.childs == null || op_code.childs.count() == 0){
-				res += this.s("null");
-			}
-			else {
-				res += this.s("(new "+rtl.toString(this.getName("Vector"))+"())");
+			if (op_code.childs != null && op_code.childs.count() > 0){
+				res += this.s("->set(\"children\", (new "+rtl.toString(this.getName("Vector"))+"())");
 				op_code.childs.each((item) => {
 					if (item instanceof OpComment){
 						return ;
 					}
 					res += this.s("->push("+rtl.toString(this.translateRun(item))+")");
 				});
+				res += this.s(")");
 			}
 		}
 		this.levelDec();

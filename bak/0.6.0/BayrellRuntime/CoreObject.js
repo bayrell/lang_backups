@@ -19,6 +19,7 @@
 var rtl = require('./rtl.js');
 var Map = require('./Map.js');
 var Vector = require('./Vector.js');
+var RuntimeUtils = require('./RuntimeUtils.js');
 class CoreObject{
 	/** 
 	 * Constructor
@@ -102,8 +103,22 @@ class CoreObject{
 		var names = new Vector();
 		this.getVariablesNames(names);
 		names.each((name) => {
-			var value = values.get(name, null);
-			this.assignValue(name, value);
+			this.assignValue(name, values.get(name, null));
+		});
+		return this;
+	}
+	/**
+	 * Set new values instance by Map
+	 * @param Map<mixed> map
+	 * @return CoreObject
+	 */
+	setMap(values){
+		if (values == undefined) values=null;
+		if (values == null){
+			return ;
+		}
+		values.each((key, value) => {
+			this.assignValue(key, value);
 		});
 		return this;
 	}
@@ -116,8 +131,7 @@ class CoreObject{
 		var names = new Vector();
 		this.getVariablesNames(names);
 		names.each((name) => {
-			var value = this.takeValue(name, null);
-			values.set(name, value);
+			values.set(name, this.takeValue(name, null));
 		});
 		return values;
 	}
@@ -129,8 +143,7 @@ class CoreObject{
 	 */
 	callStaticMethod(method_name, args){
 		if (args == undefined) args=null;
-		var class_name = this.getClassName();
-		return rtl.callStaticMethod(class_name, method_name, args);
+		return rtl.callStaticMethod(this.getClassName(), method_name, args);
 	}
 	/**
 	 * Returns field info by field_name
@@ -178,26 +191,7 @@ class CoreObject{
 	 * @param Vector<string>
 	 */
 	getVariablesNames(names){
-		var classes = RuntimeUtils.getParents(this.getClassName());
-		for (var i = 0; i < classes.count(); i++){
-			var class_name = classes.item(i);
-			rtl.callStaticMethod(class_name, "getFieldsList", (new Vector()).push(names));
-			try{
-				rtl.callStaticMethod(class_name, "getVirtualFieldsList", (new Vector()).push(names));
-			}catch(_the_exception){
-				if (_the_exception instanceof Error){
-					var e = _the_exception;
-				}
-				else { throw _the_exception; }
-			}
-		}
-	}
-	/**
-	 * Returns names of variables to serialization
-	 * @param Vector<string>
-	 */
-	getFieldsNames(names){
-		this.getVariablesNames(names);
+		RuntimeUtils.getVariablesNames(this.getClassName(), names);
 	}
 	/**
 	 * Returns info of the public variable by name

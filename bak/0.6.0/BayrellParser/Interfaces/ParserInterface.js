@@ -31,7 +31,7 @@ class ParserInterface{
 	 * Get content of the file
 	 * @return {string}
 	 */
-	getContent(content){
+	getContent(){
 	}
 	/**
 	 * Get char of the content

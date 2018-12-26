@@ -51,6 +51,7 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 	OpNamespace(op_code){
 		super.OpNamespace(op_code);
 		this.modules.set("rs", "Runtime.rs");
+		this.modules.set("UIStruct", "Runtime.UIStruct");
 		return "";
 	}
 	/**
@@ -59,9 +60,10 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 	OpHtmlJson(op_code){
 		var value = rtl.toString(this.getName("rs"))+".json_encode("+rtl.toString(this.translateRun(op_code.value))+")";
 		var res = "";
-		res = "RuntimeWeb.Lib.createElement(";
-		res += this.s("\"span\",");
+		res = "new "+rtl.toString(this.getName("UIStruct"))+"(";
 		res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
+		res += this.s(".set(\"name\", \"span\")");
+		res += this.s(".set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
 		res += this.s(".set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", RuntimeWeb.Lib.html("+rtl.toString(value)+")"+")");
 		res += this.s(")");
 		return res;
@@ -72,9 +74,10 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 	OpHtmlRaw(op_code){
 		var value = this.translateRun(op_code.value);
 		var res = "";
-		res = "RuntimeWeb.Lib.createElement(";
-		res += this.s("\"span\",");
+		res = "new "+rtl.toString(this.getName("UIStruct"))+"(";
 		res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
+		res += this.s(".set(\"name\", \"span\")");
+		res += this.s(".set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
 		res += this.s(".set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", RuntimeWeb.Lib.html("+rtl.toString(value)+")"+")");
 		res += this.s(")");
 		return res;
@@ -89,13 +92,16 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 		this.levelInc();
 		/* isComponent */
 		if (this.modules.has(op_code.tag_name)){
-			res = "RuntimeWeb.Lib.createComponent(";
-			res += this.s(rtl.toString(this.modules.item(op_code.tag_name))+",");
+			res = "new "+rtl.toString(this.getName("UIStruct"))+"(";
+			res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
+			res += this.s(".set(\"kind\", \"component\")");
+			res += this.s(".set(\"name\", "+rtl.toString(this.convertString(this.modules.item(op_code.tag_name)))+")");
 			is_component = true;
 		}
 		else {
-			res = "RuntimeWeb.Lib.createElement(";
-			res += this.s(rtl.toString(this.convertString(op_code.tag_name))+",");
+			res = "new "+rtl.toString(this.getName("UIStruct"))+"(";
+			res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
+			res += this.s(".set(\"name\", "+rtl.toString(this.convertString(op_code.tag_name))+")");
 		}
 		var raw_item = null;
 		if (!op_code.is_plain && op_code.childs != null && op_code.childs.count() == 1){
@@ -108,10 +114,10 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 			}
 		}
 		if (is_component){
-			res += this.s("this.getElementAttrs()");
+			res += this.s(".set(\"props\", this.getElementAttrs()");
 		}
 		else {
-			res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
+			res += this.s(".set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
 		}
 		if (op_code.attributes != null && op_code.attributes.count() > 0){
 			op_code.attributes.each((item) => {
@@ -167,18 +173,20 @@ class TranslatorES6 extends BayrellLangTranslatorES6{
 				res += this.s(".set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", RuntimeWeb.Lib.html("+rtl.toString(value)+")"+")");
 			}
 		}
+		res += this.s(")");
+		/* Childs */
 		if (raw_item == null && !op_code.is_plain){
 			if (op_code.childs == null || op_code.childs.count() == 0){
 			}
 			else {
-				res += ",";
-				res += this.s("(new "+rtl.toString(this.getName("Vector"))+"())");
+				res += this.s(".set(\"children\", (new "+rtl.toString(this.getName("Vector"))+"())");
 				op_code.childs.each((item) => {
 					if (item instanceof OpComment){
 						return ;
 					}
 					res += this.s(".push("+rtl.toString(this.translateRun(item))+")");
 				});
+				res += this.s(")");
 			}
 		}
 		this.levelDec();

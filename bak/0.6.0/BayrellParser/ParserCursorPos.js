@@ -91,10 +91,12 @@ class ParserCursorPos extends ContextObject{
 	/**
 	 * Destructor
 	 */
-	destructor(){
+	/*
+	void destructor (){
 		this.parser = null;
-		super.destructor();
+		parent::destructor();
 	}
+	*/
 	/**
 	 * Move cursor pos by char
 	 * @param char ch

@@ -34,6 +34,8 @@ var OpComment = require('bayrell-lang-nodejs').OpCodes.OpComment;
 var OpConcat = require('bayrell-lang-nodejs').OpCodes.OpConcat;
 var OpDynamic = require('bayrell-lang-nodejs').OpCodes.OpDynamic;
 var OpFlags = require('bayrell-lang-nodejs').OpCodes.OpFlags;
+var OpFunctionArrowDeclare = require('bayrell-lang-nodejs').OpCodes.OpFunctionArrowDeclare;
+var OpFunctionDeclare = require('bayrell-lang-nodejs').OpCodes.OpFunctionDeclare;
 var OpIdentifier = require('bayrell-lang-nodejs').OpCodes.OpIdentifier;
 var OpNope = require('bayrell-lang-nodejs').OpCodes.OpNope;
 var OpString = require('bayrell-lang-nodejs').OpCodes.OpString;
@@ -57,10 +59,16 @@ class TemplateParser extends ParserBay{
 		if (flags != null && flags.p_declare || this.is_interface){
 			is_declare_function = true;
 		}
+		if (this.findNextToken("@")){
+			this.readAnnotation();
+			return ;
+		}
 		op_code = this.readDeclareArrowFunction(true, is_declare_function);
-		if (op_code){
+		if (op_code && op_code instanceof OpFunctionDeclare){
+			op_code.annotations = this.annotations;
 			op_code.flags = flags;
 			res.childs.push(op_code);
+			this.annotations = null;
 			return ;
 		}
 		op_code = this.readOperatorAssign();
@@ -72,11 +80,13 @@ class TemplateParser extends ParserBay{
 				flags = new OpFlags();
 			}
 			if (!flags.takeValue("protected") && !flags.takeValue("private")){
-				flags.assignFlag("serializable", true);
+				flags.assignFlag("assignable", true);
 			}
+			op_code.annotations = this.annotations;
 			op_code.flags = flags;
 			res.childs.push(op_code);
 			this.matchNextToken(";");
+			this.annotations = null;
 			return ;
 		}
 		throw this.parserError("Unknown operator");

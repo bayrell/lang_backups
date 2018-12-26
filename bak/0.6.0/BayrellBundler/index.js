@@ -26,7 +26,7 @@ function ObjectAssign(res, obj){
 }
 
 module.exports = {
-	VERSION: '0.6.0',
+	VERSION: '0.6.2',
 };
 
 /* Root */
@@ -40,7 +40,7 @@ ObjectAssign(module.exports, require("./Lib.js"));
 else{
 
 module.exports = {
-	VERSION: '0.6.0',
+	VERSION: '0.6.2',
 	'Build': require("./Build.js"),
 	'BundleFile': require("./BundleFile.js"),
 	'Bundler': require("./Bundler.js"),
