@@ -79,12 +79,12 @@ class OpComponent extends BaseOpCode{
 		}
 		super.assignObject(obj);
 	}
-	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_component", "");
-		else if (variable_name == "name") this.name = rtl.correct(value, "BayrellLang.OpCodes.BaseOpCode", "", "");
-		else if (variable_name == "alias") this.alias = rtl.correct(value, "string", "", "");
-		else if (variable_name == "args") this.args = rtl.correct(value, "Map", null, "string");
-		else super.assignValue(variable_name, value);
+	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
+		if (variable_name == "op"){this.op = rtl.correct(value,"string","op_component","");this.assignValueAfter("op",value,sender);}
+		else if (variable_name == "name"){this.name = rtl.correct(value,"BayrellLang.OpCodes.BaseOpCode","","");this.assignValueAfter("name",value,sender);}
+		else if (variable_name == "alias"){this.alias = rtl.correct(value,"string","","");this.assignValueAfter("alias",value,sender);}
+		else if (variable_name == "args"){this.args = rtl.correct(value,"Map",null,"string");this.assignValueAfter("args",value,sender);}
+		else super.assignValue(variable_name, value, sender);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
@@ -94,11 +94,14 @@ class OpComponent extends BaseOpCode{
 		else if (variable_name == "args") return this.args;
 		return super.takeValue(variable_name, default_value);
 	}
-	static getFieldsList(names){
-		names.push("op");
-		names.push("name");
-		names.push("alias");
-		names.push("args");
+	static getFieldsList(names, flag){
+		if (flag==undefined)flag=0;
+		if ((flag | 3)==3){
+			names.push("op");
+			names.push("name");
+			names.push("alias");
+			names.push("args");
+		}
 	}
 	static getFieldInfoByName(field_name){
 		return null;

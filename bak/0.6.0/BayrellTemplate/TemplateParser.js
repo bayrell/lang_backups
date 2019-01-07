@@ -476,9 +476,17 @@ class TemplateParser extends ParserBay{
 			if (look == "$"){
 				this.assignCurrentToken(this.current_token);
 				this.pushToken(new ParserBayToken(this.context(), this));
-				var name = this.readIdentifierName();
-				op_code = this.readCssAddOpCode(op_code, s, new OpIdentifier(name));
-				s = "";
+				if (this.findNextToken("{")){
+					this.matchNextToken("{");
+					op_code = this.readCssAddOpCode(op_code, s, this.readExpressionElement());
+					s = "";
+					this.matchNextToken("}");
+				}
+				else {
+					var name = this.readIdentifierName();
+					op_code = this.readCssAddOpCode(op_code, s, new OpIdentifier(name));
+					s = "";
+				}
 				this.popRestoreToken();
 			}
 			else if ((look == "." || look == "%") && !flag_is_media && !flag_is_css_body){

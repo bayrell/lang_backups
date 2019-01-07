@@ -69,12 +69,12 @@ class IntrospectionInfo extends CoreStruct{
 		}
 		super.assignObject(obj);
 	}
-	assignValue(variable_name, value){
-		if (variable_name == "class_name") this.class_name = rtl.correct(value, "string", "", "");
-		else if (variable_name == "kind") this.kind = rtl.correct(value, "string", "", "");
-		else if (variable_name == "name") this.name = rtl.correct(value, "string", "", "");
-		else if (variable_name == "annotations") this.annotations = rtl.correct(value, "Runtime.Vector", null, "Runtime.CoreStruct");
-		else super.assignValue(variable_name, value);
+	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
+		if (variable_name == "class_name"){this.class_name = rtl.correct(value,"string","","");this.assignValueAfter("class_name",value,sender);}
+		else if (variable_name == "kind"){this.kind = rtl.correct(value,"string","","");this.assignValueAfter("kind",value,sender);}
+		else if (variable_name == "name"){this.name = rtl.correct(value,"string","","");this.assignValueAfter("name",value,sender);}
+		else if (variable_name == "annotations"){this.annotations = rtl.correct(value,"Runtime.Vector",null,"Runtime.CoreStruct");this.assignValueAfter("annotations",value,sender);}
+		else super.assignValue(variable_name, value, sender);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
@@ -84,11 +84,14 @@ class IntrospectionInfo extends CoreStruct{
 		else if (variable_name == "annotations") return this.annotations;
 		return super.takeValue(variable_name, default_value);
 	}
-	static getFieldsList(names){
-		names.push("class_name");
-		names.push("kind");
-		names.push("name");
-		names.push("annotations");
+	static getFieldsList(names, flag){
+		if (flag==undefined)flag=0;
+		if ((flag | 3)==3){
+			names.push("class_name");
+			names.push("kind");
+			names.push("name");
+			names.push("annotations");
+		}
 	}
 	static getFieldInfoByName(field_name){
 		return null;

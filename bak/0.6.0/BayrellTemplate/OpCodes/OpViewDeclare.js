@@ -80,14 +80,14 @@ class OpViewDeclare extends BaseOpCode{
 		}
 		super.assignObject(obj);
 	}
-	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_view", "");
-		else if (variable_name == "view_name") this.view_name = rtl.correct(value, "string", "", "");
-		else if (variable_name == "view_extends") this.view_extends = rtl.correct(value, "BayrellLang.OpCodes.BaseOpCode", null, "");
-		else if (variable_name == "view_variables") this.view_variables = rtl.correct(value, "Runtime.Vector", null, "OpAssignDeclare");
-		else if (variable_name == "childs") this.childs = rtl.correct(value, "Runtime.Vector", null, "BayrellLang.OpCodes.BaseOpCode");
-		else if (variable_name == "flags") this.flags = rtl.correct(value, "BayrellLang.OpCodes.OpFlags", null, "");
-		else super.assignValue(variable_name, value);
+	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
+		if (variable_name == "op"){this.op = rtl.correct(value,"string","op_view","");this.assignValueAfter("op",value,sender);}
+		else if (variable_name == "view_name"){this.view_name = rtl.correct(value,"string","","");this.assignValueAfter("view_name",value,sender);}
+		else if (variable_name == "view_extends"){this.view_extends = rtl.correct(value,"BayrellLang.OpCodes.BaseOpCode",null,"");this.assignValueAfter("view_extends",value,sender);}
+		else if (variable_name == "view_variables"){this.view_variables = rtl.correct(value,"Runtime.Vector",null,"OpAssignDeclare");this.assignValueAfter("view_variables",value,sender);}
+		else if (variable_name == "childs"){this.childs = rtl.correct(value,"Runtime.Vector",null,"BayrellLang.OpCodes.BaseOpCode");this.assignValueAfter("childs",value,sender);}
+		else if (variable_name == "flags"){this.flags = rtl.correct(value,"BayrellLang.OpCodes.OpFlags",null,"");this.assignValueAfter("flags",value,sender);}
+		else super.assignValue(variable_name, value, sender);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
@@ -99,13 +99,16 @@ class OpViewDeclare extends BaseOpCode{
 		else if (variable_name == "flags") return this.flags;
 		return super.takeValue(variable_name, default_value);
 	}
-	static getFieldsList(names){
-		names.push("op");
-		names.push("view_name");
-		names.push("view_extends");
-		names.push("view_variables");
-		names.push("childs");
-		names.push("flags");
+	static getFieldsList(names, flag){
+		if (flag==undefined)flag=0;
+		if ((flag | 3)==3){
+			names.push("op");
+			names.push("view_name");
+			names.push("view_extends");
+			names.push("view_variables");
+			names.push("childs");
+			names.push("flags");
+		}
 	}
 	static getFieldInfoByName(field_name){
 		return null;

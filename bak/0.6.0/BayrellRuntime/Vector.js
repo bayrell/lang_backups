@@ -260,6 +260,7 @@ Runtime.Vector = class extends Array{
 	 * @param Vector<T> arr
 	 */
 	appendVector(arr){
+		if (!arr) return this;
 		function f(item){ this.push(item); };
 		arr.forEach(f.bind(this));
 		return this;
@@ -282,12 +283,18 @@ Runtime.Vector = class extends Array{
 	/**
 	 * Get last item
 	 */
-	getLastItem(default_value){
+	getLastItem(default_value, pos){
+		if (pos == undefined) pos = -1;
 		if (this.length == 0)
 			return default_value;
-		return this[this.length - 1];
+		if (this.length + pos + 1 == 0)
+			return default_value;	
+		return this[this.length + pos];
 	}
-	last(default_value){ return this.getLastItem(default_value); }
+	last(default_value, pos){
+		if (pos == undefined) pos = -1;
+		return this.getLastItem(default_value, pos); 
+	}
 	
 	
 	
@@ -375,6 +382,20 @@ Runtime.Vector = class extends Array{
 	
 	
 	/**
+	 * Each item recursive
+	 * @param func f
+	 * @param func childs Returns childs items
+	 * @param func kind. 1 - Node item first, -1 - Node item last
+	 */
+	recurse(f, childs, kind)
+	{
+		if (kind == undefined) kind=1;
+		return this;
+	}
+	
+	
+	
+	/**
 	 * Returns Vector
 	 * @param Vector<T> arr
 	 * @return Vector<T>
@@ -428,7 +449,7 @@ Runtime.Vector = class extends Array{
 	
 	/**
 	 * Returns sorted vector
-	 * @param callback f - Sort user function
+	 * @param func f - Sort user function
 	 */
 	sort(f){
 		if (f == undefined) super.sort();

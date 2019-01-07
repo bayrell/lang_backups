@@ -1788,7 +1788,7 @@ class TranslatorES6 extends CommonTranslator{
 			}
 			if (has_serializable || has_assignable){
 				var class_variables_serializable_count = 0;
-				res += this.s("assignValue(variable_name, value){");
+				res += this.s("assignValue(variable_name, value, sender){if(sender==undefined)sender=null;");
 				this.levelInc();
 				class_variables_serializable_count = 0;
 				for (var i = 0; i < childs.count(); i++){
@@ -1804,9 +1804,10 @@ class TranslatorES6 extends CommonTranslator{
 						if (variable.value != null){
 							def_val = this.translateRun(variable.value);
 						}
-						var s = "if (variable_name == "+rtl.toString(this.convertString(variable.name))+") ";
+						var s = "if (variable_name == "+rtl.toString(this.convertString(variable.name))+"){";
 						s += "this."+rtl.toString(variable.name)+" = ";
-						s += rtl.toString(this.getName("rtl"))+".correct(value, \""+rtl.toString(type_value)+"\", "+rtl.toString(def_val)+", \""+rtl.toString(type_template)+"\");";
+						s += rtl.toString(this.getName("rtl"))+".correct(value,\""+rtl.toString(type_value)+"\","+rtl.toString(def_val)+",\""+rtl.toString(type_template)+"\");";
+						s += "this.assignValueAfter("+rtl.toString(this.convertString(variable.name))+",value,sender);}";
 						if (class_variables_serializable_count == 0){
 							res += this.s(s);
 						}
@@ -1817,10 +1818,10 @@ class TranslatorES6 extends CommonTranslator{
 					}
 				}
 				if (class_variables_serializable_count == 0){
-					res += this.s("super.assignValue(variable_name, value);");
+					res += this.s("super.assignValue(variable_name, value, sender);");
 				}
 				else {
-					res += this.s("else super.assignValue(variable_name, value);");
+					res += this.s("else super.assignValue(variable_name, value, sender);");
 				}
 				this.levelDec();
 				res += this.s("}");
@@ -1850,18 +1851,57 @@ class TranslatorES6 extends CommonTranslator{
 				res += this.s("}");
 			}
 			if (has_serializable || has_assignable || has_fields_annotations){
-				res += this.s("static getFieldsList(names){");
+				res += this.s("static getFieldsList(names, flag){");
 				this.levelInc();
+				res += this.s("if (flag==undefined)flag=0;");
+				var vars = new Map();
 				for (var i = 0; i < childs.count(); i++){
 					var variable = childs.item(i);
 					if (!(variable instanceof OpAssignDeclare)){
 						continue;
 					}
+					if (!variable.isFlag("public")){
+						continue;
+					}
 					var is_struct = this.is_struct && !variable.isFlag("static") && !variable.isFlag("const");
-					if (variable.isFlag("public") && (variable.isFlag("serializable") || variable.isFlag("assignable") || is_struct || variable.hasAnnotations())){
-						res += this.s("names.push("+rtl.toString(this.convertString(variable.name))+");");
+					var is_static = variable.isFlag("static");
+					var is_serializable = variable.isFlag("serializable");
+					var is_assignable = variable.isFlag("assignable");
+					var has_annotation = variable.hasAnnotations();
+					if (is_struct){
+						is_serializable = true;
+						is_assignable = true;
+					}
+					if (is_serializable){
+						is_assignable = true;
+					}
+					var flag = 0;
+					if (is_serializable){
+						flag = flag | 1;
+					}
+					if (is_assignable){
+						flag = flag | 2;
+					}
+					if (has_annotation){
+						flag = flag | 4;
+					}
+					if (flag != 0){
+						if (!vars.has(flag)){
+							vars.set(flag, new Vector());
+						}
+						var v = vars.item(flag);
+						v.push(variable.name);
 					}
 				}
+				vars.each((flag, v) => {
+					res += this.s("if ((flag | "+rtl.toString(flag)+")=="+rtl.toString(flag)+"){");
+					this.levelInc();
+					v.each((varname) => {
+						res += this.s("names.push("+rtl.toString(this.convertString(varname))+");");
+					});
+					this.levelDec();
+					res += this.s("}");
+				});
 				this.levelDec();
 				res += this.s("}");
 				res += this.s("static getFieldInfoByName(field_name){");

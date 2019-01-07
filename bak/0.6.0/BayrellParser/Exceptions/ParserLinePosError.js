@@ -21,19 +21,23 @@ var Map = require('bayrell-runtime-nodejs').Map;
 var Vector = require('bayrell-runtime-nodejs').Vector;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var RuntimeUtils = require('bayrell-runtime-nodejs').RuntimeUtils;
-var ParserLinePosError = require('./ParserLinePosError.js');
+var ParserError = require('./ParserError.js');
 var ParserConstant = require('../ParserConstant.js');
-class ParserExpected extends ParserLinePosError{
-	constructor(s, line, col, file, context, prev){
+class ParserLinePosError extends ParserError{
+	constructor(s, line, col, file, code, context, prev){
 		if (file == undefined) file="";
 		if (prev == undefined) prev=null;
 		if (context == null){
 			context = RuntimeUtils.globalContext();
 		}
-		super(rtl.toString(s)+" expected", line, col, file, ParserConstant.ERROR_PARSER_EXPECTED, context, prev);
+		super(s, code, context, prev);
+		this.line = line;
+		this.pos = col;
+		this.file = file;
+		this.buildMessage();
 	}
 	/* ======================= Class Init Functions ======================= */
-	getClassName(){return "BayrellParser.Exceptions.ParserExpected";}
-	static getParentClassName(){return "ParserLinePosError";}
+	getClassName(){return "BayrellParser.Exceptions.ParserLinePosError";}
+	static getParentClassName(){return "ParserError";}
 }
-module.exports = ParserExpected;
+module.exports = ParserLinePosError;

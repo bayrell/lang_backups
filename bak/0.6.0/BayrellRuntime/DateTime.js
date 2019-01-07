@@ -418,14 +418,15 @@ class DateTime extends CoreObject{
 		}
 		super.assignObject(obj);
 	}
-	assignValue(variable_name, value){
-		super.assignValue(variable_name, value);
+	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
+		super.assignValue(variable_name, value, sender);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
 		return super.takeValue(variable_name, default_value);
 	}
-	static getFieldsList(names){
+	static getFieldsList(names, flag){
+		if (flag==undefined)flag=0;
 	}
 	static getFieldInfoByName(field_name){
 		return null;

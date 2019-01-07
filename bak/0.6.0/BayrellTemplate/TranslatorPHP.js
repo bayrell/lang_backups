@@ -225,9 +225,9 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 	 * @param BaseOpCode op_code - Abstract syntax tree
 	 * @returns string - The result
 	 */
-	translateRun(op_code){
+	translateItem(op_code){
 		if (op_code instanceof OpHtmlEscape){
-			return super.translateRun(op_code.value);
+			return super.translateItem(op_code.value);
 		}
 		else if (op_code instanceof OpHtmlJson){
 			return this.OpHtmlJson(op_code);
@@ -244,7 +244,7 @@ class TranslatorPHP extends BayrellLangTranslatorPHP{
 		else if (op_code instanceof OpHtmlView){
 			return this.OpHtmlView(op_code);
 		}
-		return super.translateRun(op_code);
+		return super.translateItem(op_code);
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellTemplate.TranslatorPHP";}

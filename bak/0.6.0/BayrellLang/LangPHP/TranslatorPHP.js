@@ -205,6 +205,12 @@ class TranslatorPHP extends CommonTranslator{
 	 * Static load
 	 */
 	OpStatic(op_code){
+		var op_code_last = this.op_code_stack.last(null, -2);
+		if (op_code_last instanceof OpAssign || op_code_last instanceof OpAssignDeclare || op_code_last instanceof OpDynamic){
+			if (op_code.name != rs.strtoupper(op_code.name)){
+				return rtl.toString(this.translateRun(op_code.value))+"::$"+rtl.toString(op_code.name);
+			}
+		}
 		return rtl.toString(this.translateRun(op_code.value))+"::"+rtl.toString(op_code.name);
 	}
 	/**
@@ -1212,7 +1218,7 @@ class TranslatorPHP extends CommonTranslator{
 			if (has_serializable || has_assignable){
 				var class_variables_serializable_count = 0;
 				var s1 = "public";
-				res += this.s(rtl.toString(s1)+" function assignValue($variable_name, $value){");
+				res += this.s(rtl.toString(s1)+" function assignValue($variable_name, $value, $sender = null){");
 				this.levelInc();
 				class_variables_serializable_count = 0;
 				for (var i = 0; i < childs.count(); i++){
@@ -1232,9 +1238,10 @@ class TranslatorPHP extends CommonTranslator{
 						if (variable.value != null){
 							def_val = this.translateRun(variable.value);
 						}
-						var s = "if ($variable_name == "+rtl.toString(this.convertString(variable.name))+") ";
+						var s = "if ($variable_name == "+rtl.toString(this.convertString(variable.name))+"){";
 						s += "$this->"+rtl.toString(var_prefix)+rtl.toString(variable.name)+" = ";
-						s += "rtl::correct($value, \""+rtl.toString(type_value)+"\", "+rtl.toString(def_val)+", \""+rtl.toString(type_template)+"\");";
+						s += "rtl::correct($value,\""+rtl.toString(type_value)+"\","+rtl.toString(def_val)+",\""+rtl.toString(type_template)+"\");";
+						s += "$this->assignValueAfter("+rtl.toString(this.convertString(variable.name))+",$value,$sender);}";
 						if (class_variables_serializable_count == 0){
 							res += this.s(s);
 						}
@@ -1245,10 +1252,10 @@ class TranslatorPHP extends CommonTranslator{
 					}
 				}
 				if (class_variables_serializable_count == 0){
-					res += this.s("parent::assignValue($variable_name, $value);");
+					res += this.s("parent::assignValue($variable_name, $value, $sender);");
 				}
 				else {
-					res += this.s("else parent::assignValue($variable_name, $value);");
+					res += this.s("else parent::assignValue($variable_name, $value, $sender);");
 				}
 				this.levelDec();
 				res += this.s("}");
@@ -1281,18 +1288,56 @@ class TranslatorPHP extends CommonTranslator{
 				res += this.s("}");
 			}
 			if (has_serializable || has_assignable || has_fields_annotations){
-				res += this.s("public static function getFieldsList($names){");
+				res += this.s("public static function getFieldsList($names, $flag=0){");
 				this.levelInc();
+				var vars = new Map();
 				for (var i = 0; i < childs.count(); i++){
 					var variable = childs.item(i);
 					if (!(variable instanceof OpAssignDeclare)){
 						continue;
 					}
+					if (!variable.isFlag("public")){
+						continue;
+					}
 					var is_struct = this.is_struct && !variable.isFlag("static") && !variable.isFlag("const");
-					if (variable.isFlag("public") && (variable.isFlag("serializable") || variable.isFlag("assignable") || is_struct || variable.hasAnnotations())){
-						res += this.s("$names->push("+rtl.toString(this.convertString(variable.name))+");");
+					var is_static = variable.isFlag("static");
+					var is_serializable = variable.isFlag("serializable");
+					var is_assignable = variable.isFlag("assignable");
+					var has_annotation = variable.hasAnnotations();
+					if (is_struct){
+						is_serializable = true;
+						is_assignable = true;
+					}
+					if (is_serializable){
+						is_assignable = true;
+					}
+					var flag = 0;
+					if (is_serializable){
+						flag = flag | 1;
+					}
+					if (is_assignable){
+						flag = flag | 2;
+					}
+					if (has_annotation){
+						flag = flag | 4;
+					}
+					if (flag != 0){
+						if (!vars.has(flag)){
+							vars.set(flag, new Vector());
+						}
+						var v = vars.item(flag);
+						v.push(variable.name);
 					}
 				}
+				vars.each((flag, v) => {
+					res += this.s("if (($flag | "+rtl.toString(flag)+")=="+rtl.toString(flag)+"){");
+					this.levelInc();
+					v.each((varname) => {
+						res += this.s("$names->push("+rtl.toString(this.convertString(varname))+");");
+					});
+					this.levelDec();
+					res += this.s("}");
+				});
 				this.levelDec();
 				res += this.s("}");
 				res += this.s("public static function getFieldInfoByName($field_name){");

@@ -27,6 +27,7 @@ var RuntimeException = require('bayrell-runtime-nodejs').Exceptions.RuntimeExcep
 var ParserEOF = require('./Exceptions/ParserEOF.js');
 var ParserError = require('./Exceptions/ParserError.js');
 var ParserExpected = require('./Exceptions/ParserExpected.js');
+var ParserLinePosError = require('./Exceptions/ParserLinePosError.js');
 var ParserInterface = require('./Interfaces/ParserInterface.js');
 var ParserCursorPos = require('./ParserCursorPos.js');
 var ParserToken = require('./ParserToken.js');
@@ -177,10 +178,10 @@ class CoreParser extends ContextObject{
 		var start_line = this.next_token.start_line;
 		var start_col = this.next_token.start_col;
 		if (message == "\n"){
-			return new ParserExpected("new line", start_line, start_col, this.context());
+			return new ParserExpected("new line", start_line, start_col, "", this.context());
 		}
 		else {
-			return new ParserExpected(message, start_line, start_col, this.context());
+			return new ParserExpected(message, start_line, start_col, "", this.context());
 		}
 	}
 	/**
@@ -189,7 +190,7 @@ class CoreParser extends ContextObject{
 	parserExpected(message){
 		var start_line = this.next_token.start_line;
 		var start_col = this.next_token.start_col;
-		return new ParserExpected(message, start_line, start_col, this.context());
+		return new ParserExpected(message, start_line, start_col, "", this.context());
 	}
 	/**
 	 * Throws expected error
@@ -197,7 +198,7 @@ class CoreParser extends ContextObject{
 	parserError(message){
 		var start_line = this.next_token.start_line;
 		var start_col = this.next_token.start_col;
-		return new ParserError(message, -1, this.context());
+		return new ParserLinePosError(message, start_line, start_col, "", -1, this.context());
 	}
 	/**
 	 * Return next token

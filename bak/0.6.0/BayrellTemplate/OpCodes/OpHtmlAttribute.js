@@ -59,11 +59,11 @@ class OpHtmlAttribute extends BaseOpCode{
 		}
 		super.assignObject(obj);
 	}
-	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_html_attribute", "");
-		else if (variable_name == "key") this.key = rtl.correct(value, "string", "", "");
-		else if (variable_name == "value") this.value = rtl.correct(value, "BayrellLang.OpCodes.BaseOpCode", null, "");
-		else super.assignValue(variable_name, value);
+	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
+		if (variable_name == "op"){this.op = rtl.correct(value,"string","op_html_attribute","");this.assignValueAfter("op",value,sender);}
+		else if (variable_name == "key"){this.key = rtl.correct(value,"string","","");this.assignValueAfter("key",value,sender);}
+		else if (variable_name == "value"){this.value = rtl.correct(value,"BayrellLang.OpCodes.BaseOpCode",null,"");this.assignValueAfter("value",value,sender);}
+		else super.assignValue(variable_name, value, sender);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
@@ -72,10 +72,13 @@ class OpHtmlAttribute extends BaseOpCode{
 		else if (variable_name == "value") return this.value;
 		return super.takeValue(variable_name, default_value);
 	}
-	static getFieldsList(names){
-		names.push("op");
-		names.push("key");
-		names.push("value");
+	static getFieldsList(names, flag){
+		if (flag==undefined)flag=0;
+		if ((flag | 3)==3){
+			names.push("op");
+			names.push("key");
+			names.push("value");
+		}
 	}
 	static getFieldInfoByName(field_name){
 		return null;

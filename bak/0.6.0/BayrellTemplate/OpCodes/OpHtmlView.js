@@ -44,10 +44,10 @@ class OpHtmlView extends OpChilds{
 		}
 		super.assignObject(obj);
 	}
-	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_html_view", "");
-		else if (variable_name == "variable") this.variable = rtl.correct(value, "string", "", "");
-		else super.assignValue(variable_name, value);
+	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
+		if (variable_name == "op"){this.op = rtl.correct(value,"string","op_html_view","");this.assignValueAfter("op",value,sender);}
+		else if (variable_name == "variable"){this.variable = rtl.correct(value,"string","","");this.assignValueAfter("variable",value,sender);}
+		else super.assignValue(variable_name, value, sender);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
@@ -55,9 +55,12 @@ class OpHtmlView extends OpChilds{
 		else if (variable_name == "variable") return this.variable;
 		return super.takeValue(variable_name, default_value);
 	}
-	static getFieldsList(names){
-		names.push("op");
-		names.push("variable");
+	static getFieldsList(names, flag){
+		if (flag==undefined)flag=0;
+		if ((flag | 3)==3){
+			names.push("op");
+			names.push("variable");
+		}
 	}
 	static getFieldInfoByName(field_name){
 		return null;

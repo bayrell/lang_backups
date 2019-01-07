@@ -38,10 +38,10 @@ class OpStructDeclare extends OpClassDeclare{
 		}
 		super.assignObject(obj);
 	}
-	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_struct", "");
-		else if (variable_name == "is_readonly") this.is_readonly = rtl.correct(value, "bool", false, "");
-		else super.assignValue(variable_name, value);
+	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
+		if (variable_name == "op"){this.op = rtl.correct(value,"string","op_struct","");this.assignValueAfter("op",value,sender);}
+		else if (variable_name == "is_readonly"){this.is_readonly = rtl.correct(value,"bool",false,"");this.assignValueAfter("is_readonly",value,sender);}
+		else super.assignValue(variable_name, value, sender);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
@@ -49,9 +49,12 @@ class OpStructDeclare extends OpClassDeclare{
 		else if (variable_name == "is_readonly") return this.is_readonly;
 		return super.takeValue(variable_name, default_value);
 	}
-	static getFieldsList(names){
-		names.push("op");
-		names.push("is_readonly");
+	static getFieldsList(names, flag){
+		if (flag==undefined)flag=0;
+		if ((flag | 3)==3){
+			names.push("op");
+			names.push("is_readonly");
+		}
 	}
 	static getFieldInfoByName(field_name){
 		return null;

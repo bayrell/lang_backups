@@ -71,15 +71,15 @@ class UIStruct extends CoreStruct{
 		}
 		super.assignObject(obj);
 	}
-	assignValue(variable_name, value){
-		if (variable_name == "id") this.id = rtl.correct(value, "string", "", "");
-		else if (variable_name == "key") this.key = rtl.correct(value, "string", "", "");
-		else if (variable_name == "name") this.name = rtl.correct(value, "string", "", "");
-		else if (variable_name == "kind") this.kind = rtl.correct(value, "string", "element", "");
-		else if (variable_name == "content") this.content = rtl.correct(value, "string", "", "");
-		else if (variable_name == "props") this.props = rtl.correct(value, "Runtime.Map", null, "mixed");
-		else if (variable_name == "children") this.children = rtl.correct(value, "Runtime.Vector", null, "mixed");
-		else super.assignValue(variable_name, value);
+	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
+		if (variable_name == "id"){this.id = rtl.correct(value,"string","","");this.assignValueAfter("id",value,sender);}
+		else if (variable_name == "key"){this.key = rtl.correct(value,"string","","");this.assignValueAfter("key",value,sender);}
+		else if (variable_name == "name"){this.name = rtl.correct(value,"string","","");this.assignValueAfter("name",value,sender);}
+		else if (variable_name == "kind"){this.kind = rtl.correct(value,"string","element","");this.assignValueAfter("kind",value,sender);}
+		else if (variable_name == "content"){this.content = rtl.correct(value,"string","","");this.assignValueAfter("content",value,sender);}
+		else if (variable_name == "props"){this.props = rtl.correct(value,"Runtime.Map",null,"mixed");this.assignValueAfter("props",value,sender);}
+		else if (variable_name == "children"){this.children = rtl.correct(value,"Runtime.Vector",null,"mixed");this.assignValueAfter("children",value,sender);}
+		else super.assignValue(variable_name, value, sender);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
@@ -92,14 +92,17 @@ class UIStruct extends CoreStruct{
 		else if (variable_name == "children") return this.children;
 		return super.takeValue(variable_name, default_value);
 	}
-	static getFieldsList(names){
-		names.push("id");
-		names.push("key");
-		names.push("name");
-		names.push("kind");
-		names.push("content");
-		names.push("props");
-		names.push("children");
+	static getFieldsList(names, flag){
+		if (flag==undefined)flag=0;
+		if ((flag | 3)==3){
+			names.push("id");
+			names.push("key");
+			names.push("name");
+			names.push("kind");
+			names.push("content");
+			names.push("props");
+			names.push("children");
+		}
 	}
 	static getFieldInfoByName(field_name){
 		return null;

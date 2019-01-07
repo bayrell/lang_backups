@@ -393,7 +393,7 @@ class CommonTranslator extends ContextObject{
 	 * @param BaseOpCode op_code - Abstract syntax tree
 	 * @returns string - The result
 	 */
-	translateRun(op_code){
+	translateItem(op_code){
 		if (op_code instanceof OpNope){
 			return this.translateChilds(op_code.childs);
 		}
@@ -577,6 +577,17 @@ class CommonTranslator extends ContextObject{
 		return "";
 	}
 	/**
+	 * Translate to language
+	 * @param BaseOpCode op_code - Abstract syntax tree
+	 * @returns string - The result
+	 */
+	translateRun(op_code){
+		this.op_code_stack.push(op_code);
+		var res = this.translateItem(op_code);
+		this.op_code_stack.pop();
+		return res;
+	}
+	/**
 	 * Reset translator to default settings
 	 */
 	resetTranslator(){
@@ -585,6 +596,7 @@ class CommonTranslator extends ContextObject{
 		this.current_opcode_level = 0;
 		this.max_opcode_level = 100;
 		this.indent_level = 0;
+		this.op_code_stack = new Vector();
 	}
 	/**
 	 * Translate to language
@@ -600,6 +612,7 @@ class CommonTranslator extends ContextObject{
 	static getParentClassName(){return "ContextObject";}
 	_init(){
 		super._init();
+		this.op_code_stack = null;
 		this.one_lines = null;
 		this.is_operation = false;
 		this.current_opcode_level = 0;

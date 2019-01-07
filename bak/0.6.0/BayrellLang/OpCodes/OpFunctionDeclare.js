@@ -83,16 +83,16 @@ class OpFunctionDeclare extends BaseOpCode{
 		}
 		super.assignObject(obj);
 	}
-	assignValue(variable_name, value){
-		if (variable_name == "op") this.op = rtl.correct(value, "string", "op_function", "");
-		else if (variable_name == "name") this.name = rtl.correct(value, "string", "", "");
-		else if (variable_name == "result_type") this.result_type = rtl.correct(value, "BayrellLang.OpCodes.BaseOpCode", null, "");
-		else if (variable_name == "args") this.args = rtl.correct(value, "Vector", null, "OpAssignDeclare");
-		else if (variable_name == "childs") this.childs = rtl.correct(value, "Vector", null, "BayrellLang.OpCodes.BaseOpCode");
-		else if (variable_name == "use_variables") this.use_variables = rtl.correct(value, "Vector", null, "string");
-		else if (variable_name == "flags") this.flags = rtl.correct(value, "BayrellLang.OpCodes.OpFlags", null, "");
-		else if (variable_name == "annotations") this.annotations = rtl.correct(value, "Vector", null, "BayrellLang.OpCodes.OpAnnotation");
-		else super.assignValue(variable_name, value);
+	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
+		if (variable_name == "op"){this.op = rtl.correct(value,"string","op_function","");this.assignValueAfter("op",value,sender);}
+		else if (variable_name == "name"){this.name = rtl.correct(value,"string","","");this.assignValueAfter("name",value,sender);}
+		else if (variable_name == "result_type"){this.result_type = rtl.correct(value,"BayrellLang.OpCodes.BaseOpCode",null,"");this.assignValueAfter("result_type",value,sender);}
+		else if (variable_name == "args"){this.args = rtl.correct(value,"Vector",null,"OpAssignDeclare");this.assignValueAfter("args",value,sender);}
+		else if (variable_name == "childs"){this.childs = rtl.correct(value,"Vector",null,"BayrellLang.OpCodes.BaseOpCode");this.assignValueAfter("childs",value,sender);}
+		else if (variable_name == "use_variables"){this.use_variables = rtl.correct(value,"Vector",null,"string");this.assignValueAfter("use_variables",value,sender);}
+		else if (variable_name == "flags"){this.flags = rtl.correct(value,"BayrellLang.OpCodes.OpFlags",null,"");this.assignValueAfter("flags",value,sender);}
+		else if (variable_name == "annotations"){this.annotations = rtl.correct(value,"Vector",null,"BayrellLang.OpCodes.OpAnnotation");this.assignValueAfter("annotations",value,sender);}
+		else super.assignValue(variable_name, value, sender);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
@@ -106,15 +106,18 @@ class OpFunctionDeclare extends BaseOpCode{
 		else if (variable_name == "annotations") return this.annotations;
 		return super.takeValue(variable_name, default_value);
 	}
-	static getFieldsList(names){
-		names.push("op");
-		names.push("name");
-		names.push("result_type");
-		names.push("args");
-		names.push("childs");
-		names.push("use_variables");
-		names.push("flags");
-		names.push("annotations");
+	static getFieldsList(names, flag){
+		if (flag==undefined)flag=0;
+		if ((flag | 3)==3){
+			names.push("op");
+			names.push("name");
+			names.push("result_type");
+			names.push("args");
+			names.push("childs");
+			names.push("use_variables");
+			names.push("flags");
+			names.push("annotations");
+		}
 	}
 	static getFieldInfoByName(field_name){
 		return null;
