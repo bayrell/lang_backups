@@ -426,7 +426,7 @@ class rtl{
 	
 	static toBool(val){
 		var res = false;
-		if (val == 'true') res = true;
+		if (val == true || val == 'true') return true;
 		var s_res = new String(res);
 		var s_val = new String(val);
 		if (s_res.localeCompare(s_val) == 0)

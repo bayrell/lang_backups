@@ -73,6 +73,7 @@ var OpNope = require('./OpCodes/OpNope.js');
 var OpNot = require('./OpCodes/OpNot.js');
 var OpNumber = require('./OpCodes/OpNumber.js');
 var OpOr = require('./OpCodes/OpOr.js');
+var OpPipe = require('./OpCodes/OpPipe.js');
 var OpPostDec = require('./OpCodes/OpPostDec.js');
 var OpPostInc = require('./OpCodes/OpPostInc.js');
 var OpPow = require('./OpCodes/OpPow.js');
@@ -312,6 +313,9 @@ class CommonTranslator extends ContextObject{
 	OpOr(op_code){
 		return "";
 	}
+	OpPipe(op_code){
+		return "";
+	}
 	OpPostDec(op_code){
 		return "";
 	}
@@ -541,6 +545,9 @@ class CommonTranslator extends ContextObject{
 		}
 		else if (op_code instanceof OpOr){
 			return this.OpOr(op_code);
+		}
+		else if (op_code instanceof OpPipe){
+			return this.OpPipe(op_code);
 		}
 		else if (op_code instanceof OpPostDec){
 			return this.OpPostDec(op_code);

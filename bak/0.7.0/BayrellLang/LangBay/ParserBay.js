@@ -75,6 +75,7 @@ var OpNope = require('../OpCodes/OpNope.js');
 var OpNot = require('../OpCodes/OpNot.js');
 var OpNumber = require('../OpCodes/OpNumber.js');
 var OpOr = require('../OpCodes/OpOr.js');
+var OpPipe = require('../OpCodes/OpPipe.js');
 var OpPostDec = require('../OpCodes/OpPostDec.js');
 var OpPostInc = require('../OpCodes/OpPostInc.js');
 var OpPow = require('../OpCodes/OpPow.js');
@@ -301,6 +302,37 @@ class ParserBay extends CommonParser{
 		}
 		var value = this.readCallDynamic(true, false, true, false);
 		return new OpMethod(value);
+	}
+	/**
+	 * Read pipe
+	 * @return BaseOpCode
+	 */
+	readPipe(){
+		var item = null;
+		var items = new Vector();
+		var is_return_value = false;
+		this.matchNextToken("pipe");
+		this.matchNextToken("(");
+		var value = this.readExpression();
+		this.matchNextToken(")");
+		while (this.findNextToken(">>")){
+			this.matchNextToken(">>");
+			if (this.findNextToken("method")){
+				item = this.readMethod();
+			}
+			else if (this.findNextToken("value")){
+				break;
+			}
+			else {
+				item = this.readCallDynamic(true, true, true, true);
+			}
+			items.push(item);
+		}
+		if (this.findNextToken("value")){
+			this.matchNextToken("value");
+			is_return_value = true;
+		}
+		return new OpPipe((new Map()).set("value", value).set("items", items).set("is_return_value", is_return_value));
 	}
 	/**
 	 * Read get class name
@@ -876,6 +908,9 @@ class ParserBay extends CommonParser{
 		}
 		else if (this.findNextToken("method")){
 			return this.readMethod();
+		}
+		else if (this.findNextToken("pipe")){
+			return this.readPipe();
 		}
 		else if (this.findNextToken("[")){
 			return this.readVector();

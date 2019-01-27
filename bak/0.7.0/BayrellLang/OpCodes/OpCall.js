@@ -32,12 +32,6 @@ class OpCall extends BaseOpCode{
 		this.value = value;
 		this.args = args;
 	}
-	/**
-	 * Destructor
-	 */
-	destructor(){
-		super.destructor();
-	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellLang.OpCodes.OpCall";}
 	static getParentClassName(){return "BaseOpCode";}

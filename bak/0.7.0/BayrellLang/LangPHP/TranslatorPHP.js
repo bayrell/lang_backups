@@ -72,6 +72,7 @@ var OpNope = require('../OpCodes/OpNope.js');
 var OpNot = require('../OpCodes/OpNot.js');
 var OpNumber = require('../OpCodes/OpNumber.js');
 var OpOr = require('../OpCodes/OpOr.js');
+var OpPipe = require('../OpCodes/OpPipe.js');
 var OpPostDec = require('../OpCodes/OpPostDec.js');
 var OpPostInc = require('../OpCodes/OpPostInc.js');
 var OpPow = require('../OpCodes/OpPow.js');
@@ -509,6 +510,21 @@ class TranslatorPHP extends CommonTranslator{
 			return this.copyStruct(op_code, (new Vector()));
 		}
 		return "$"+rtl.toString(op_code.name)+" = "+rtl.toString(this.copyStruct(op_code, (new Vector())))+";";
+	}
+	/**
+	 * Pipe
+	 */
+	OpPipe(op_code){
+		var res = "";
+		res = "RuntimeMaybe::of("+rtl.toString(this.translateItem(op_code.value))+")";
+		for (var i = 0; i < op_code.items.count(); i++){
+			var op_item = op_code.items.item(i);
+			res += this.s("->map("+rtl.toString(this.translateItem(op_item))+")");
+		}
+		if (op_code.is_return_value){
+			res += this.s("->value()");
+		}
+		return res;
 	}
 	/** ========================== Vector and Map ========================= */
 	/**
