@@ -16,42 +16,40 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-var CoreObject = require('./CoreObject.js');
-var CoreStruct = require('./CoreStruct.js');
-var rtl = require('./rtl.js');
-var CloneableInterface = require('./Interfaces/CloneableInterface.js');
-var SerializeInterface = require('./Interfaces/SerializeInterface.js');
-class CoreEvent extends CoreStruct{
+var CoreEvent = require('../CoreEvent.js');
+var CoreObject = require('../CoreObject.js');
+var rtl = require('../rtl.js');
+class StructChangeEvent extends CoreEvent{
 	/* ======================= Class Init Functions ======================= */
-	getClassName(){return "Runtime.CoreEvent";}
-	static getParentClassName(){return "CoreStruct";}
+	getClassName(){return "Runtime.Events.StructChangeEvent";}
+	static getParentClassName(){return "CoreEvent";}
 	_init(){
 		super._init();
-		this.sender = null;
+		this.obj = null;
 	}
 	assignObject(obj){
-		if (obj instanceof CoreEvent){
-			this.sender = rtl._clone(obj.sender);
+		if (obj instanceof StructChangeEvent){
+			this.obj = rtl._clone(obj.obj);
 		}
 		super.assignObject(obj);
 	}
 	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
-		if (variable_name == "sender"){this.sender = rtl.correct(value,"Runtime.CoreObject",null,"");this.assignValueAfter("sender",value,sender);}
+		if (variable_name == "obj"){this.obj = rtl.correct(value,"Runtime.CoreObject",null,"");this.assignValueAfter("obj",value,sender);}
 		else super.assignValue(variable_name, value, sender);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
-		if (variable_name == "sender") return this.sender;
+		if (variable_name == "obj") return this.obj;
 		return super.takeValue(variable_name, default_value);
 	}
 	static getFieldsList(names, flag){
 		if (flag==undefined)flag=0;
 		if ((flag | 3)==3){
-			names.push("sender");
+			names.push("obj");
 		}
 	}
 	static getFieldInfoByName(field_name){
 		return null;
 	}
 }
-module.exports = CoreEvent;
+module.exports = StructChangeEvent;

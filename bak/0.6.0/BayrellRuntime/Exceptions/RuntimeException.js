@@ -29,7 +29,7 @@ class RuntimeException extends ClassException{
 		if (prev == undefined) prev=null;
 		super(message, code, prev);
 		if (context == null){
-			context = RuntimeUtils.globalContext();
+			context = RuntimeUtils.getContext();
 		}
 		this.error_str = message;
 		this.context = context;

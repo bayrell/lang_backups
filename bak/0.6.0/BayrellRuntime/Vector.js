@@ -283,18 +283,12 @@ Runtime.Vector = class extends Array{
 	/**
 	 * Get last item
 	 */
-	getLastItem(default_value, pos){
-		if (pos == undefined) pos = -1;
+	getLastItem(default_value){
 		if (this.length == 0)
 			return default_value;
-		if (this.length + pos + 1 == 0)
-			return default_value;	
-		return this[this.length + pos];
+		return this[this.length - 1];
 	}
-	last(default_value, pos){
-		if (pos == undefined) pos = -1;
-		return this.getLastItem(default_value, pos); 
-	}
+	last(default_value){ return this.getLastItem(default_value); }
 	
 	
 	

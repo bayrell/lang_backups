@@ -19,6 +19,8 @@
 var CoreObject = require('./CoreObject.js');
 var Map = require('./Map.js');
 var rtl = require('./rtl.js');
+var StructChangeEvent = require('./Events/StructChangeEvent.js');
+var StructVariableChangeEvent = require('./Events/StructVariableChangeEvent.js');
 var SerializeInterface = require('./Interfaces/SerializeInterface.js');
 class CoreStruct extends CoreObject{
 	/** 
@@ -50,11 +52,41 @@ class CoreStruct extends CoreObject{
 		instance.onCreated();
 		return instance;
 	}
+	/**
+	 * Calls after assign new value
+	 * @param string variable_name
+	 * @param var value
+	 */
+	assignValueAfter(variable_name, value, sender){
+		if (sender == undefined) sender=null;
+		if (sender != null){
+			this.emitter.dispatch(new StructVariableChangeEvent((new Map()).set("sender", sender).set("obj", this).set("varname", variable_name).set("value", value)));
+		}
+		super.assignValueAfter(variable_name, value, sender);
+	}
+	/**
+	 * Send StructChangeEvent
+	 * @param string variable_name
+	 * @param var value
+	 */
+	changed(sender){
+		if (sender != null){
+			this.emitter.dispatch(new StructChangeEvent((new Map()).set("sender", sender).set("obj", this)));
+		}
+	}
+	/**
+	 * Returns model emitter
+	 * @return Emitter
+	 */
+	getEmitter(){
+		return this.emitter;
+	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.CoreStruct";}
 	static getParentClassName(){return "CoreObject";}
 	_init(){
 		super._init();
+		this.emitter = new Emitter();
 		if (this.__implements__ == undefined){this.__implements__ = [];}
 		this.__implements__.push(SerializeInterface);
 	}

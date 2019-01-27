@@ -96,12 +96,13 @@ class RuntimeUtils{
 	 * Returns names of variables to serialization
 	 * @param Vector<string>
 	 */
-	static getVariablesNames(class_name, names){
+	static getVariablesNames(class_name, names, flag){
+		if (flag == undefined) flag=0;
 		var classes = RuntimeUtils.getParents(class_name);
 		classes.prepend(class_name);
 		classes.each((class_name) => {
 			try{
-				rtl.callStaticMethod(class_name, "getFieldsList", (new Vector()).push(names));
+				rtl.callStaticMethod(class_name, "getFieldsList", (new Vector()).push(names).push(flag));
 			}catch(_the_exception){
 				if (_the_exception instanceof Error){
 					var e = _the_exception;
@@ -109,7 +110,7 @@ class RuntimeUtils{
 				else { throw _the_exception; }
 			}
 			try{
-				rtl.callStaticMethod(class_name, "getVirtualFieldsList", (new Vector()).push(names));
+				rtl.callStaticMethod(class_name, "getVirtualFieldsList", (new Vector()).push(names).push(flag));
 			}catch(_the_exception){
 				if (_the_exception instanceof Error){
 					var e = _the_exception;
@@ -275,7 +276,7 @@ class RuntimeUtils{
 		if (rtl.implements(obj, SerializeInterface)){
 			var names = new Vector();
 			var values = new Map();
-			obj.getVariablesNames(names);
+			obj.getVariablesNames(names, 1);
 			for (var i = 0; i < names.count(); i++){
 				var variable_name = names.item(i);
 				var value = obj.takeValue(variable_name, null);
@@ -333,7 +334,7 @@ class RuntimeUtils{
 			}
 			var instance = rtl.newInstance(class_name, null);
 			var names = new Vector();
-			instance.getVariablesNames(names);
+			instance.getVariablesNames(names, 1);
 			for (var i = 0; i < names.count(); i++){
 				var variable_name = names.item(i);
 				if (variable_name != "__class_name__"){
