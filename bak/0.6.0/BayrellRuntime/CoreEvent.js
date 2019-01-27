@@ -17,41 +17,26 @@
  *  limitations under the License.
  */
 var CoreObject = require('./CoreObject.js');
-var CoreStruct = require('./CoreStruct.js');
-var rtl = require('./rtl.js');
 var CloneableInterface = require('./Interfaces/CloneableInterface.js');
 var SerializeInterface = require('./Interfaces/SerializeInterface.js');
-class CoreEvent extends CoreStruct{
+class CoreEvent extends CoreObject{
+	constructor(sender){
+		if (sender == undefined) sender=null;
+		super();
+		this.sender = sender;
+	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.CoreEvent";}
-	static getParentClassName(){return "CoreStruct";}
+	static getParentClassName(){return "CoreObject";}
 	_init(){
 		super._init();
 		this.sender = null;
-	}
-	assignObject(obj){
-		if (obj instanceof CoreEvent){
-			this.sender = rtl._clone(obj.sender);
-		}
-		super.assignObject(obj);
-	}
-	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
-		if (variable_name == "sender"){this.sender = rtl.correct(value,"Runtime.CoreObject",null,"");this.assignValueAfter("sender",value,sender);}
-		else super.assignValue(variable_name, value, sender);
-	}
-	takeValue(variable_name, default_value){
-		if (default_value == undefined) default_value = null;
-		if (variable_name == "sender") return this.sender;
-		return super.takeValue(variable_name, default_value);
-	}
-	static getFieldsList(names, flag){
-		if (flag==undefined)flag=0;
-		if ((flag | 3)==3){
-			names.push("sender");
-		}
-	}
-	static getFieldInfoByName(field_name){
-		return null;
+		if (this.__implements__ == undefined){this.__implements__ = [];}
+		this.__implements__.push(CloneableInterface);
+		this.__implements__.push(SerializeInterface);
 	}
 }
+CoreEvent.__static_implements__ = [];
+CoreEvent.__static_implements__.push(CloneableInterface)
+CoreEvent.__static_implements__.push(SerializeInterface)
 module.exports = CoreEvent;

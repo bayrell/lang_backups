@@ -73,17 +73,22 @@ class CoreObject{
 	 * @param string variable_name
 	 * @param var value
 	 */
-	assignValue(variable_name, value, sender){
-		if (sender == undefined) sender=null;
-		this.assignValueAfter(variable_name, value, sender);
+	assignValue(variable_name, value){
+		this.assignValueAfter(variable_name, value);
 	}
 	/**
 	 * Calls after assign new value
 	 * @param string variable_name
 	 * @param var value
 	 */
-	assignValueAfter(variable_name, value, sender){
-		if (sender == undefined) sender=null;
+	assignValueAfter(variable_name, value){
+	}
+	/**
+	 * Calls after assign new value
+	 * @param string variable_name
+	 */
+	callAssignAfter(variable_name){
+		this.assignValueAfter(variable_name, this.takeValue(variable_name));
 	}
 	/**
 	 * Set new values instance by Map
@@ -96,7 +101,7 @@ class CoreObject{
 			return ;
 		}
 		var names = new Vector();
-		this.getVariablesNames(names, 2);
+		this.getVariablesNames(names);
 		names.each((name) => {
 			this.assignValue(name, values.get(name, null));
 		});
@@ -121,11 +126,10 @@ class CoreObject{
 	 * Dump serializable object to Map
 	 * @return Map<mixed>
 	 */
-	takeMap(flag){
-		if (flag == undefined) flag=2;
+	takeMap(){
 		var values = new Map();
 		var names = new Vector();
-		this.getVariablesNames(names, flag);
+		this.getVariablesNames(names);
 		names.each((name) => {
 			values.set(name, this.takeValue(name, null));
 		});
@@ -160,15 +164,13 @@ class CoreObject{
 	 * Returns public fields list
 	 * @param Vector<string> names
 	 */
-	static getFieldsList(names, flag){
-		if (flag == undefined) flag=0;
+	static getFieldsList(names){
 	}
 	/**
 	 * Returns public virtual fields names
 	 * @param Vector<string> names
 	 */
-	static getVirtualFieldsList(names, flag){
-		if (flag == undefined) flag=0;
+	static getVirtualFieldsList(names){
 	}
 	/**
 	 * Returns info of the public method by name
@@ -188,9 +190,8 @@ class CoreObject{
 	 * Returns names of variables to serialization
 	 * @param Vector<string>
 	 */
-	getVariablesNames(names, flag){
-		if (flag == undefined) flag=0;
-		RuntimeUtils.getVariablesNames(this.getClassName(), names, flag);
+	getVariablesNames(names){
+		RuntimeUtils.getVariablesNames(this.getClassName(), names);
 	}
 	/**
 	 * Returns info of the public variable by name

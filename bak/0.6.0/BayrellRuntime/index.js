@@ -30,7 +30,6 @@ module.exports = {
 };
 
 /* Exceptions */
-ObjectAssign(module.exports, require("./Exceptions/AssignStructValueError.js"));
 ObjectAssign(module.exports, require("./Exceptions/IndexOutOfRange.js"));
 ObjectAssign(module.exports, require("./Exceptions/KeyNotFound.js"));
 ObjectAssign(module.exports, require("./Exceptions/RuntimeException.js"));

@@ -52,13 +52,14 @@ class Context extends CoreObject{
 	 * Register module
 	 */
 	registerModule(module_name){
-		if (this._modules.indexOf(module_name) != -1){
+		var module_description_class_name = rtl.toString(module_name)+".ModuleDescription";
+		if (this._modules.indexOf(module_description_class_name) != -1){
 			return ;
 		}
+		this._modules.push(module_description_class_name);
+		/* Call onRegister */
 		var args = (new Vector()).push(this);
-		var module_description_class_name = rtl.toString(module_name)+".ModuleDescription";
-		/* Add module */
-		this._modules.push(module_name);
+		rtl.callStaticMethod(module_description_class_name, "onRegister", args);
 		/* Register required Modules*/
 		var modules = rtl.callStaticMethod(module_description_class_name, "getRequiredModules", args);
 		if (modules != null){
@@ -69,8 +70,6 @@ class Context extends CoreObject{
 				this.registerModule(module_name);
 			}
 		}
-		/* Call onRegister */
-		rtl.callStaticMethod(module_description_class_name, "onRegister", args);
 		return this;
 	}
 	/**
@@ -104,8 +103,7 @@ class Context extends CoreObject{
 		args.push(config);
 		var sz = this._modules.count();
 		for (var i = 0; i < sz; i++){
-			var module_name = this._modules.item(i);
-			var module_description_class_name = rtl.toString(module_name)+".ModuleDescription";
+			var module_description_class_name = this._modules.item(i);
 			rtl.callStaticMethod(module_description_class_name, "onReadConfig", args);
 		}
 		return this;
@@ -118,8 +116,7 @@ class Context extends CoreObject{
 		args.push(this);
 		var sz = this._modules.count();
 		for (var i = 0; i < sz; i++){
-			var module_name = this._modules.item(i);
-			var module_description_class_name = rtl.toString(module_name)+".ModuleDescription";
+			var module_description_class_name = this._modules.item(i);
 			rtl.callStaticMethod(module_description_class_name, "initContext", args);
 		}
 		return this;
