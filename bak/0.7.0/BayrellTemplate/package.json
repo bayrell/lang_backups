@@ -1,0 +1,10 @@
+{
+  "description": "Bayrell Template",
+  "files": [
+	"OpCodes/*.js",
+	"*.js"
+  ],
+  "main": "index.js",
+  "name": "bayrell-template-nodejs",
+  "version": "0.6.2"
+}
