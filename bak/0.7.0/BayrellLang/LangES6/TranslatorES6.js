@@ -1726,7 +1726,7 @@ class TranslatorES6 extends CommonTranslator{
 		var class_implements = op_code.class_implements;
 		var class_extends = "";
 		if (op_code.class_extends){
-			class_extends = this.getName(op_code.class_extends.value);
+			class_extends = this.modules.get(op_code.class_extends.value);
 		}
 		var s = "";
 		var res = "";

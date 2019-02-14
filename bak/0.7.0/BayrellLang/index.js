@@ -75,6 +75,7 @@ ObjectAssign(module.exports, require("./OpCodes/OpComment.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpCompare.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpConcat.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpContinue.js"));
+ObjectAssign(module.exports, require("./OpCodes/OpCopyStruct.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpDelete.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpDiv.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpDynamic.js"));
@@ -179,6 +180,7 @@ module.exports = {
 		'OpCompare': require("./OpCodes/OpCompare.js"),
 		'OpConcat': require("./OpCodes/OpConcat.js"),
 		'OpContinue': require("./OpCodes/OpContinue.js"),
+		'OpCopyStruct': require("./OpCodes/OpCopyStruct.js"),
 		'OpDelete': require("./OpCodes/OpDelete.js"),
 		'OpDiv': require("./OpCodes/OpDiv.js"),
 		'OpDynamic': require("./OpCodes/OpDynamic.js"),

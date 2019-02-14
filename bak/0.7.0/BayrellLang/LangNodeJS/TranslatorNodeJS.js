@@ -38,6 +38,9 @@ class TranslatorNodeJS extends TranslatorES6{
 		else if (name == "self"){
 			return this.current_class_name;
 		}
+		else if (name == "static"){
+			return "this";
+		}
 		return name;
 	}
 	/**
