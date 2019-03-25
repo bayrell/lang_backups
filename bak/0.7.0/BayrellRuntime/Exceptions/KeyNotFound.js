@@ -29,6 +29,6 @@ class KeyNotFound extends RuntimeException{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.Exceptions.KeyNotFound";}
-	static getParentClassName(){return "RuntimeException";}
+	static getParentClassName(){return "Runtime.Exceptions.RuntimeException";}
 }
 module.exports = KeyNotFound;

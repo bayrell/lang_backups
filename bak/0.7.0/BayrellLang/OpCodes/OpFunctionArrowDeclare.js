@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var BaseOpCode = require('./BaseOpCode.js');
 var OpFunctionDeclare = require('./OpFunctionDeclare.js');
@@ -26,7 +28,7 @@ var OpFlags = require('./OpFlags.js');
 class OpFunctionArrowDeclare extends OpFunctionDeclare{
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellLang.OpCodes.OpFunctionArrowDeclare";}
-	static getParentClassName(){return "OpFunctionDeclare";}
+	static getParentClassName(){return "BayrellLang.OpCodes.OpFunctionDeclare";}
 	_init(){
 		super._init();
 		this.op = "op_arrow_function";

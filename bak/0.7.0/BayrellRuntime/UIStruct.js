@@ -61,7 +61,7 @@ class UIStruct extends CoreStruct{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.UIStruct";}
-	static getParentClassName(){return "CoreStruct";}
+	static getParentClassName(){return "Runtime.CoreStruct";}
 	_init(){
 		super._init();
 		this.TYPE_ELEMENT = "element";

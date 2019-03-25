@@ -61,7 +61,7 @@ class CoreStruct extends CoreObject{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.CoreStruct";}
-	static getParentClassName(){return "CoreObject";}
+	static getParentClassName(){return "Runtime.CoreObject";}
 	_init(){
 		super._init();
 		if (this.__implements__ == undefined){this.__implements__ = [];}

@@ -32,7 +32,7 @@ class Reference extends CoreObject{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.Reference";}
-	static getParentClassName(){return "CoreObject";}
+	static getParentClassName(){return "Runtime.CoreObject";}
 	_init(){
 		super._init();
 		this.uq = rtl.unique();

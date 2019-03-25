@@ -18,14 +18,16 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var BaseOpCode = require('./BaseOpCode.js');
 var OpValue2 = require('./OpValue2.js');
 class OpStringItem extends OpValue2{
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellLang.OpCodes.OpStringItem";}
-	static getParentClassName(){return "OpValue2";}
+	static getParentClassName(){return "BayrellLang.OpCodes.OpValue2";}
 	_init(){
 		super._init();
 		this.op = "op_string_item";

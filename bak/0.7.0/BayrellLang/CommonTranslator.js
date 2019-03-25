@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var rs = require('bayrell-runtime-nodejs').rs;
 var ContextObject = require('bayrell-runtime-nodejs').ContextObject;
@@ -377,6 +379,9 @@ class CommonTranslator extends ContextObject{
 		return "";
 	}
 	/* =========================== HTML OP Codes ========================== */
+	OpHtmlEscape(op_code){
+		return "";
+	}
 	OpHtmlJson(op_code){
 		return "";
 	}
@@ -609,6 +614,9 @@ class CommonTranslator extends ContextObject{
 		else if (op_code instanceof OpWhile){
 			return this.OpWhile(op_code);
 		}
+		else if (op_code instanceof OpHtmlEscape){
+			return this.OpHtmlEscape(op_code);
+		}
 		else if (op_code instanceof OpHtmlJson){
 			return this.OpHtmlJson(op_code);
 		}
@@ -659,7 +667,7 @@ class CommonTranslator extends ContextObject{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellLang.CommonTranslator";}
-	static getParentClassName(){return "ContextObject";}
+	static getParentClassName(){return "Runtime.ContextObject";}
 	_init(){
 		super._init();
 		this.op_code_stack = null;

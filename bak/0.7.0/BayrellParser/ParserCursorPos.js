@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var re = require('bayrell-runtime-nodejs').re;
 var rs = require('bayrell-runtime-nodejs').rs;
@@ -135,7 +137,7 @@ class ParserCursorPos extends ContextObject{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellParser.ParserCursorPos";}
-	static getParentClassName(){return "ContextObject";}
+	static getParentClassName(){return "Runtime.ContextObject";}
 	_init(){
 		super._init();
 		this.parser = null;

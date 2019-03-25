@@ -18,28 +18,61 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var Vector = require('bayrell-runtime-nodejs').Vector;
 var BaseOpCode = require('./BaseOpCode.js');
 var OpHtmlAttribute = require('./OpHtmlAttribute.js');
 class OpHtmlTag extends BaseOpCode{
 	/**
-	 * Constructor
+	 * Find attribute by attr_name
+	 * @param string attr_name
+	 * @return OpHtmlAttribute
 	 */
-	constructor(){
-		super();
-		this.childs = new Vector();
+	findAttribute(attr_name){
+		if (this.attributes == null){
+			return null;
+		}
+		for (var i = 0; i < this.attributes.count(); i++){
+			var item = this.attributes.item(i);
+			if (item.key == attr_name){
+				return item;
+			}
+		}
+		return null;
 	}
 	/**
-	 * Destructor
+	 * Remove attribute by attr_name
+	 * @param string attr_name
 	 */
-	destructor(){
-		super.destructor();
+	removeAttribute(attr_name){
+		this.attributes = this.attributes.filter((item) => {
+			return item.key != attr_name;
+		});
+	}
+	/**
+	 * Set attribute by attr_name
+	 * @param string attr_name
+	 * @param mixed value
+	 */
+	setAttribute(attr_name, value){
+		if (this.attributes == null){
+			return ;
+		}
+		for (var i = 0; i < this.attributes.count(); i++){
+			var item = this.attributes.item(i);
+			if (item.key == attr_name){
+				item.value = value;
+				return ;
+			}
+		}
+		this.attributes.push(new OpHtmlAttribute((new Map()).set("key", attr_name).set("value", value)));
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellLang.OpCodes.OpHtmlTag";}
-	static getParentClassName(){return "BaseOpCode";}
+	static getParentClassName(){return "BayrellLang.OpCodes.BaseOpCode";}
 	_init(){
 		super._init();
 		this.op = "op_html_tag";

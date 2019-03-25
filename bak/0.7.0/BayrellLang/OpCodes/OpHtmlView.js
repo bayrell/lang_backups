@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var OpChilds = require('./OpChilds.js');
 class OpHtmlView extends OpChilds{
@@ -31,7 +33,7 @@ class OpHtmlView extends OpChilds{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellLang.OpCodes.OpHtmlView";}
-	static getParentClassName(){return "OpChilds";}
+	static getParentClassName(){return "BayrellLang.OpCodes.OpChilds";}
 	_init(){
 		super._init();
 		this.op = "op_html_view";

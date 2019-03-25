@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var ContextObject = require('bayrell-runtime-nodejs').ContextObject;
 var FileSystemInterface = require('bayrell-common-nodejs').FileSystem.FileSystemInterface;
@@ -162,7 +164,7 @@ class FileSystemProvider extends ContextObject{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellFileSystem.FileSystemProvider";}
-	static getParentClassName(){return "ContextObject";}
+	static getParentClassName(){return "Runtime.ContextObject";}
 	_init(){
 		super._init();
 		if (this.__implements__ == undefined){this.__implements__ = [];}

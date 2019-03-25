@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var BaseOpCode = require('./BaseOpCode.js');
 class OpVector extends BaseOpCode{
@@ -37,7 +39,7 @@ class OpVector extends BaseOpCode{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellLang.OpCodes.OpVector";}
-	static getParentClassName(){return "BaseOpCode";}
+	static getParentClassName(){return "BayrellLang.OpCodes.BaseOpCode";}
 	_init(){
 		super._init();
 		this.op = "op_vector";

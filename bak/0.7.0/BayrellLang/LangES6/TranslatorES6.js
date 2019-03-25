@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var re = require('bayrell-runtime-nodejs').re;
 var rs = require('bayrell-runtime-nodejs').rs;
@@ -652,12 +654,18 @@ class TranslatorES6 extends CommonTranslator{
 	 * Copy struct
 	 */
 	copyStruct(op_code, names){
+		var old_is_operation = this.beginOperation();
+		var res = "";
 		if (op_code.item instanceof OpCopyStruct){
 			names.push(op_code.name);
 			var name = rs.implode(".", names);
-			return rtl.toString(name)+".copy( new "+rtl.toString(this.getName("Map"))+"({ "+rtl.toString(this.convertString(op_code.item.name))+": "+rtl.toString(this.copyStruct(op_code.item, names))+" })  )";
+			res = rtl.toString(name)+".copy( new "+rtl.toString(this.getName("Map"))+"({ "+rtl.toString(this.convertString(op_code.item.name))+": "+rtl.toString(this.copyStruct(op_code.item, names))+" })  )";
 		}
-		return this.translateItem(op_code.item);
+		else {
+			res = this.translateItem(op_code.item);
+		}
+		this.endOperation(old_is_operation);
+		return res;
 	}
 	/**
 	 * Copy struct
@@ -674,9 +682,11 @@ class TranslatorES6 extends CommonTranslator{
 	OpPipe(op_code){
 		var res = "";
 		res = rtl.toString(this.getName("Maybe"))+".of("+rtl.toString(this.translateItem(op_code.value))+")";
-		for (var i = 0; i < op_code.items.count(); i++){
-			var op_item = op_code.items.item(i);
-			res += this.s(".map("+rtl.toString(this.translateItem(op_item))+")");
+		if (op_code.items != null){
+			for (var i = 0; i < op_code.items.count(); i++){
+				var op_item = op_code.items.item(i);
+				res += this.s(".map("+rtl.toString(this.translateItem(op_item))+")");
+			}
 		}
 		if (op_code.is_return_value){
 			res += this.s(".value()");
@@ -1351,7 +1361,9 @@ class TranslatorES6 extends CommonTranslator{
 			this.modules.set("rtl", "Runtime.rtl");
 			this.modules.set("rs", "Runtime.rs");
 			this.modules.set("Map", "Runtime.Map");
+			this.modules.set("Dict", "Runtime.Dict");
 			this.modules.set("Vector", "Runtime.Vector");
+			this.modules.set("Collection", "Runtime.Collection");
 			this.modules.set("IntrospectionInfo", "Runtime.IntrospectionInfo");
 			this.modules.set("UIStruct", "Runtime.UIStruct");
 		}
@@ -1726,7 +1738,12 @@ class TranslatorES6 extends CommonTranslator{
 		var class_implements = op_code.class_implements;
 		var class_extends = "";
 		if (op_code.class_extends){
-			class_extends = this.modules.get(op_code.class_extends.value);
+			if (this.modules.has(op_code.class_extends.value)){
+				class_extends = this.modules.item(op_code.class_extends.value);
+			}
+			else {
+				class_extends = op_code.class_extends.value;
+			}
 		}
 		var s = "";
 		var res = "";
@@ -1783,6 +1800,9 @@ class TranslatorES6 extends CommonTranslator{
 					for (var i = 0; i < childs.count(); i++){
 						var variable = childs.item(i);
 						if (!(variable instanceof OpAssignDeclare)){
+							continue;
+						}
+						if (variable.value == null){
 							continue;
 						}
 						var var_prefix = "";
@@ -2172,17 +2192,23 @@ class TranslatorES6 extends CommonTranslator{
 		return rs.strtoupper(ch) == ch && ch != "";
 	}
 	/**
+	 * Html escape
+	 */
+	OpHtmlEscape(op_code){
+		var value = this.translateRun(op_code.value);
+		return rtl.toString(this.getName("rs"))+".htmlEscape("+rtl.toString(value)+")";
+	}
+	/**
 	 * OpHtmlJson
 	 */
 	OpHtmlJson(op_code){
 		var value = rtl.toString(this.getName("rs"))+".json_encode("+rtl.toString(this.translateRun(op_code.value))+")";
 		var res = "";
-		res = "new "+rtl.toString(this.getName("UIStruct"))+"(";
-		res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
-		res += this.s(".set(\"name\", \"span\")");
-		res += this.s(".set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
-		res += this.s(".set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", RuntimeWeb.Lib.html("+rtl.toString(value)+")"+")");
-		res += this.s(")");
+		res = "new "+rtl.toString(this.getName("UIStruct"))+"(new "+rtl.toString(this.getName("Map"))+"({";
+		res += this.s("\"name\":\"span\",");
+		res += this.s("\"props\": new "+rtl.toString(this.getName("Map"))+"({");
+		res += this.s("\"rawHTML\":"+rtl.toString(value));
+		res += this.s("})})");
 		return res;
 	}
 	/**
@@ -2191,12 +2217,11 @@ class TranslatorES6 extends CommonTranslator{
 	OpHtmlRaw(op_code){
 		var value = this.translateRun(op_code.value);
 		var res = "";
-		res = "new "+rtl.toString(this.getName("UIStruct"))+"(";
-		res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
-		res += this.s(".set(\"name\", \"span\")");
-		res += this.s(".set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
-		res += this.s(".set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", RuntimeWeb.Lib.html("+rtl.toString(value)+")"+")");
-		res += this.s(")");
+		res = "new "+rtl.toString(this.getName("UIStruct"))+"(new "+rtl.toString(this.getName("Map"))+"({";
+		res += this.s("\"name\":\"span\",");
+		res += this.s("\"props\": new "+rtl.toString(this.getName("Map"))+"({");
+		res += this.s("\"rawHTML\":"+rtl.toString(value));
+		res += this.s("})})");
 		return res;
 	}
 	/**
@@ -2206,19 +2231,16 @@ class TranslatorES6 extends CommonTranslator{
 		var is_component = false;
 		var res = "";
 		this.pushOneLine(false);
-		this.levelInc();
 		/* isComponent */
 		if (this.modules.has(op_code.tag_name)){
-			res = "new "+rtl.toString(this.getName("UIStruct"))+"(";
-			res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
-			res += this.s(".set(\"kind\", \"component\")");
-			res += this.s(".set(\"name\", "+rtl.toString(this.convertString(this.modules.item(op_code.tag_name)))+")");
+			res = rtl.toString(this.getName("rtl"))+".normalizeUI(new "+rtl.toString(this.getName("UIStruct"))+"(new "+rtl.toString(this.getName("Map"))+"({";
+			res += this.s("\"kind\":\"component\",");
+			res += this.s("\"name\":"+rtl.toString(this.convertString(this.modules.item(op_code.tag_name)))+",");
 			is_component = true;
 		}
 		else {
-			res = "new "+rtl.toString(this.getName("UIStruct"))+"(";
-			res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
-			res += this.s(".set(\"name\", "+rtl.toString(this.convertString(op_code.tag_name))+")");
+			res = rtl.toString(this.getName("rtl"))+".normalizeUI(new "+rtl.toString(this.getName("UIStruct"))+"(new "+rtl.toString(this.getName("Map"))+"({";
+			res += this.s("\"name\":"+rtl.toString(this.convertString(op_code.tag_name))+",");
 		}
 		var raw_item = null;
 		if (!op_code.is_plain && op_code.childs != null && op_code.childs.count() == 1){
@@ -2231,16 +2253,19 @@ class TranslatorES6 extends CommonTranslator{
 			}
 		}
 		if (is_component){
-			res += this.s(".set(\"props\", this.getElementAttrs()");
+			res += this.s("\"props\": this.getElementAttrs()");
 		}
 		else {
-			res += this.s(".set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
+			res += this.s("\"props\": (new "+rtl.toString(this.getName("Map"))+"())");
 		}
+		this.levelInc();
 		if (op_code.attributes != null && op_code.attributes.count() > 0){
 			op_code.attributes.each((item) => {
+				var old_operation = this.beginOperation(true);
 				this.pushOneLine(true);
 				var value = this.translateRun(item.value);
 				this.popOneLine();
+				this.endOperation(old_operation);
 				res += this.s(".set("+rtl.toString(this.convertString(item.key))+", "+rtl.toString(value)+")");
 			});
 		}
@@ -2277,37 +2302,39 @@ class TranslatorES6 extends CommonTranslator{
 					}
 					return rtl.toString(res)+"+"+rtl.toString(value);
 				}, "");
-				res += this.s(".set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
+				res += this.s("\"rawHTML\":"+rtl.toString(value)+",");
 			}
 		}
 		else if (raw_item != null){
 			if (raw_item instanceof OpHtmlJson){
 				var value = rtl.toString(this.getName("rs"))+".json_encode("+rtl.toString(this.translateRun(raw_item.value))+")";
-				res += this.s(".set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", RuntimeWeb.Lib.html("+rtl.toString(value)+")"+")");
+				res += this.s("\"rawHTML\":"+rtl.toString(value)+",");
 			}
 			else if (raw_item instanceof OpHtmlRaw){
 				var value = this.translateRun(raw_item.value);
-				res += this.s(".set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", RuntimeWeb.Lib.html("+rtl.toString(value)+")"+")");
+				res += this.s("\"rawHTML\":"+rtl.toString(value)+",");
 			}
 		}
-		res += this.s(")");
+		this.levelDec();
+		res += this.s(",");
 		/* Childs */
 		if (raw_item == null && !op_code.is_plain){
 			if (op_code.childs == null || op_code.childs.count() == 0){
 			}
 			else {
-				res += this.s(".set(\"children\", (new "+rtl.toString(this.getName("Vector"))+"())");
+				res += this.s("\"children\": new "+rtl.toString(this.getName("Vector"))+"([");
+				this.levelInc();
 				op_code.childs.each((item) => {
 					if (item instanceof OpComment){
 						return ;
 					}
-					res += this.s(".push("+rtl.toString(this.translateRun(item))+")");
+					res += this.s(rtl.toString(this.translateRun(item))+",");
 				});
-				res += this.s(")");
+				this.levelDec();
+				res += this.s("])");
 			}
 		}
-		this.levelDec();
-		res += this.s(")");
+		res += this.s("})))");
 		this.popOneLine();
 		return res;
 	}
@@ -2315,8 +2342,8 @@ class TranslatorES6 extends CommonTranslator{
 	 * Html tag
 	 */
 	OpHtmlView(op_code){
-		this.pushOneLine(false);
 		var res = "(new "+rtl.toString(this.getName("Vector"))+"())";
+		this.pushOneLine(false);
 		op_code.childs.each((item) => {
 			res += this.s(".push("+rtl.toString(this.translateRun(item))+")");
 		});
@@ -2368,7 +2395,7 @@ class TranslatorES6 extends CommonTranslator{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellLang.LangES6.TranslatorES6";}
-	static getParentClassName(){return "CommonTranslator";}
+	static getParentClassName(){return "BayrellLang.CommonTranslator";}
 	_init(){
 		super._init();
 		this.modules = null;

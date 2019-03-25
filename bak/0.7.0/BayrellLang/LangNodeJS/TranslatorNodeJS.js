@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var re = require('bayrell-runtime-nodejs').re;
 var rs = require('bayrell-runtime-nodejs').rs;
@@ -52,7 +54,7 @@ class TranslatorNodeJS extends TranslatorES6{
 		this.current_module_name = arr.item(0);
 		this.modules.clear();
 		if (this.current_module_name != "Runtime"){
-			return "var rtl = require('bayrell-runtime-nodejs').rtl;"+rtl.toString(this.s("var Map = require('bayrell-runtime-nodejs').Map;"))+rtl.toString(this.s("var Vector = require('bayrell-runtime-nodejs').Vector;"))+rtl.toString(this.s("var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;"));
+			return "var rtl = require('bayrell-runtime-nodejs').rtl;"+rtl.toString(this.s("var Map = require('bayrell-runtime-nodejs').Map;"))+rtl.toString(this.s("var Dict = require('bayrell-runtime-nodejs').Dict;"))+rtl.toString(this.s("var Vector = require('bayrell-runtime-nodejs').Vector;"))+rtl.toString(this.s("var Collection = require('bayrell-runtime-nodejs').Collection;"))+rtl.toString(this.s("var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;"));
 		}
 		return "";
 	}
@@ -219,6 +221,6 @@ class TranslatorNodeJS extends TranslatorES6{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellLang.LangNodeJS.TranslatorNodeJS";}
-	static getParentClassName(){return "TranslatorES6";}
+	static getParentClassName(){return "BayrellLang.LangES6.TranslatorES6";}
 }
 module.exports = TranslatorNodeJS;

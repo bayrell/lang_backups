@@ -588,6 +588,14 @@ class rtl{
 		if (context == undefined) context=null;
 		rtl.callStaticMethod("Runtime.RuntimeUtils", "translate", (new Vector()).push(message).push(params).push(locale).push(context));
 	}
+	/**
+	 * Normalize UIStruct
+	 * @param mixed data
+	 * @return UIStruct
+	 */
+	static normalizeUI(data){
+		rtl.callStaticMethod("Runtime.RuntimeUtils", "normalizeUI", (new Vector()).push(data));
+	}
 	/* =================== Deprecated =================== */
 	/**
 	 * Call method

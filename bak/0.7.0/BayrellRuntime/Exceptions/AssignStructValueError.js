@@ -28,6 +28,6 @@ class AssignStructValueError extends RuntimeException{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.Exceptions.AssignStructValueError";}
-	static getParentClassName(){return "RuntimeException";}
+	static getParentClassName(){return "Runtime.Exceptions.RuntimeException";}
 }
 module.exports = AssignStructValueError;

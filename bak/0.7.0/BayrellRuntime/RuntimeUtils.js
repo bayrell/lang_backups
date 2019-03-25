@@ -581,6 +581,42 @@ class RuntimeUtils{
 		}
 		return message;
 	}
+	/**
+	 * Normalize UIStruct
+	 */
+	static normalizeUIVector(data){
+		if (data instanceof Vector){
+			var res = new Vector();
+			for (var i = 0; i < data.count(); i++){
+				var item = res.item(i);
+				if (item instanceof Vector){
+					var new_item = this.normalizeUIVector(item);
+					res.appendVector(new_item);
+				}
+				else if (item instanceof UIStruct){
+					res.push(item);
+				}
+				else if (rlt.isString(item)){
+					res.push(new UIStruct((new Map()).set("kind", UIStruct.TYPE_STRING).set("content", rtl.toString(data))));
+				}
+			}
+			return res;
+		}
+		return null;
+	}
+	/**
+	 * Normalize UIStruct
+	 */
+	normalizeUI(data){
+		if (data instanceof UIStruct){
+			data = data.copy((new Map()).set("children", this.normalizeUIVector(data.children)));
+			return data;
+		}
+		else if (this.isString(data)){
+			return new UIStruct((new Map()).set("kind", UIStruct.TYPE_STRING).set("content", rtl.toString(data)));
+		}
+		return null;
+	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.RuntimeUtils";}
 	static getParentClassName(){return "";}

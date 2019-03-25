@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var RuntimeUtils = require('bayrell-runtime-nodejs').RuntimeUtils;
 var ParserError = require('./ParserError.js');
@@ -33,6 +35,6 @@ class ParserEOF extends ParserError{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellParser.Exceptions.ParserEOF";}
-	static getParentClassName(){return "ParserError";}
+	static getParentClassName(){return "BayrellParser.Exceptions.ParserError";}
 }
 module.exports = ParserEOF;

@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var re = require('bayrell-runtime-nodejs').re;
 var rs = require('bayrell-runtime-nodejs').rs;
@@ -218,13 +220,23 @@ class TranslatorPHP extends CommonTranslator{
 	 * Static load
 	 */
 	OpStatic(op_code){
+		var is_flag = false;
 		var op_code_last = this.op_code_stack.last(null, -2);
-		if (op_code_last instanceof OpAssign || op_code_last instanceof OpAssignDeclare || op_code_last instanceof OpDynamic){
-			if (op_code.name != rs.strtoupper(op_code.name)){
-				return rtl.toString(this.translateRun(op_code.value))+"::$"+rtl.toString(op_code.name);
+		if (op_code.name == rs.strtoupper(op_code.name)){
+			is_flag = true;
+		}
+		if (op_code_last instanceof OpCall){
+			is_flag = true;
+		}
+		if (op_code.value instanceof OpIdentifier){
+			if (!this.modules.has(op_code.value.value)){
+				return "(new \\Runtime\\Callback("+"$"+rtl.toString(op_code.value.value)+"->getClassName(), "+rtl.toString(this.convertString(op_code.name))+"))";
 			}
 		}
-		return rtl.toString(this.translateRun(op_code.value))+"::"+rtl.toString(op_code.name);
+		if (is_flag){
+			return rtl.toString(this.translateRun(op_code.value))+"::"+rtl.toString(op_code.name);
+		}
+		return rtl.toString(this.translateRun(op_code.value))+"::$"+rtl.toString(op_code.name);
 	}
 	/**
 	 * Template Identifier
@@ -495,12 +507,18 @@ class TranslatorPHP extends CommonTranslator{
 	 * Copy struct
 	 */
 	copyStruct(op_code, names){
+		var old_is_operation = this.beginOperation();
+		var res = "";
 		if (op_code.item instanceof OpCopyStruct){
 			names.push(op_code.name);
 			var name = "$"+rtl.toString(rs.implode("->", names));
-			return rtl.toString(name)+"->copy( new Map([ "+rtl.toString(this.convertString(op_code.item.name))+" => "+rtl.toString(this.copyStruct(op_code.item, names))+" ])  )";
+			res = rtl.toString(name)+"->copy( new Map([ "+rtl.toString(this.convertString(op_code.item.name))+" => "+rtl.toString(this.copyStruct(op_code.item, names))+" ])  )";
 		}
-		return this.translateItem(op_code.item);
+		else {
+			res = this.translateItem(op_code.item);
+		}
+		this.endOperation(old_is_operation);
+		return res;
 	}
 	/**
 	 * Copy struct
@@ -517,9 +535,11 @@ class TranslatorPHP extends CommonTranslator{
 	OpPipe(op_code){
 		var res = "";
 		res = "RuntimeMaybe::of("+rtl.toString(this.translateItem(op_code.value))+")";
-		for (var i = 0; i < op_code.items.count(); i++){
-			var op_item = op_code.items.item(i);
-			res += this.s("->map("+rtl.toString(this.translateItem(op_item))+")");
+		if (op_code.items != null){
+			for (var i = 0; i < op_code.items.count(); i++){
+				var op_item = op_code.items.item(i);
+				res += this.s("->map("+rtl.toString(this.translateItem(op_item))+")");
+			}
 		}
 		if (op_code.is_return_value){
 			res += this.s("->value()");
@@ -568,6 +588,11 @@ class TranslatorPHP extends CommonTranslator{
 		}
 		else if (op_code.value instanceof OpStatic){
 			var name = op_code.value.name;
+			if (op_code.value.value instanceof OpIdentifier){
+				if (!this.modules.has(op_code.value.value.value)){
+					return "(new \\Runtime\\Callback("+"$"+rtl.toString(op_code.value.value.value)+"->getClassName(), "+rtl.toString(this.convertString(name))+"))";
+				}
+			}
 			var obj = this.translateRun(op_code.value.value);
 			return "new \\Runtime\\Callback("+rtl.toString(obj)+"::class, "+rtl.toString(this.convertString(name))+")";
 		}
@@ -845,12 +870,16 @@ class TranslatorPHP extends CommonTranslator{
 			res += this.s("use Runtime\\rtl;");
 			res += this.s("use Runtime\\Map;");
 			res += this.s("use Runtime\\Vector;");
+			res += this.s("use Runtime\\Dict;");
+			res += this.s("use Runtime\\Collection;");
 			res += this.s("use Runtime\\IntrospectionInfo;");
 			res += this.s("use Runtime\\UIStruct;");
 			this.modules.set("rs", "Runtime.rs");
 			this.modules.set("rtl", "Runtime.rtl");
 			this.modules.set("Map", "Runtime.Map");
+			this.modules.set("Dict", "Runtime.Dict");
 			this.modules.set("Vector", "Runtime.Vector");
+			this.modules.set("Collection", "Runtime.Collection");
 			this.modules.set("IntrospectionInfo", "Runtime.IntrospectionInfo");
 			this.modules.set("UIStruct", "Runtime.UIStruct");
 		}
@@ -1187,6 +1216,9 @@ class TranslatorPHP extends CommonTranslator{
 					for (var i = 0; i < childs.count(); i++){
 						var variable = childs.item(i);
 						if (!(variable instanceof OpAssignDeclare)){
+							continue;
+						}
+						if (variable.value == null){
 							continue;
 						}
 						var var_prefix = "";
@@ -1556,17 +1588,23 @@ class TranslatorPHP extends CommonTranslator{
 		return rs.strtoupper(ch) == ch && ch != "";
 	}
 	/**
+	 * Html escape
+	 */
+	OpHtmlEscape(op_code){
+		var value = this.translateRun(op_code.value);
+		return "rs::htmlEscape("+rtl.toString(value)+")";
+	}
+	/**
 	 * OpHtmlJson
 	 */
 	OpHtmlJson(op_code){
 		var value = "rs::json_encode("+rtl.toString(this.translateRun(op_code.value))+")";
 		var res = "";
-		res = "new UIStruct(";
-		res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
-		res += this.s("->set(\"name\", \"span\")");
-		res += this.s("->set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
-		res += this.s("->set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
-		res += this.s(")");
+		res = "new UIStruct(new "+rtl.toString(this.getName("Map"))+"([";
+		res += this.s("\"name\"=>\"span\",");
+		res += this.s("\"props\"=>new "+rtl.toString(this.getName("Map"))+"(");
+		res += this.s("\"rawHTML\"=>"+rtl.toString(value));
+		res += this.s("])]))");
 		return res;
 	}
 	/**
@@ -1575,12 +1613,11 @@ class TranslatorPHP extends CommonTranslator{
 	OpHtmlRaw(op_code){
 		var value = this.translateRun(op_code.value);
 		var res = "";
-		res = "new UIStruct(";
-		res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
-		res += this.s("->set(\"name\", \"span\")");
-		res += this.s("->set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
-		res += this.s("->set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
-		res += this.s(")");
+		res = "new UIStruct(new "+rtl.toString(this.getName("Map"))+"([";
+		res += this.s("\"name\"=>\"span\",");
+		res += this.s("\"props\"=>new "+rtl.toString(this.getName("Map"))+"(");
+		res += this.s("\"rawHTML\"=>"+rtl.toString(value));
+		res += this.s("])]))");
 		return res;
 	}
 	/**
@@ -1590,19 +1627,16 @@ class TranslatorPHP extends CommonTranslator{
 		var is_component = false;
 		var res = "";
 		this.pushOneLine(false);
-		this.levelInc();
 		/* isComponent */
 		if (this.modules.has(op_code.tag_name)){
-			res = "new UIStruct(";
-			res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
-			res += this.s("->set(\"kind\", \"component\")");
-			res += this.s("->set(\"name\", "+rtl.toString(this.convertString(this.modules.item(op_code.tag_name)))+")");
+			res = "rtl::normalizeUI(new UIStruct(new "+rtl.toString(this.getName("Map"))+"([";
+			res += this.s("\"kind\"=>\"component\",");
+			res += this.s("\"name\"=>"+rtl.toString(this.convertString(this.modules.item(op_code.tag_name)))+",");
 			is_component = true;
 		}
 		else {
-			res = "new UIStruct(";
-			res += this.s("(new "+rtl.toString(this.getName("Map"))+"())");
-			res += this.s("->set(\"name\", "+rtl.toString(this.convertString(op_code.tag_name))+")");
+			res = "rtl::normalizeUI(new UIStruct(new "+rtl.toString(this.getName("Map"))+"([";
+			res += this.s("\"name\"=>"+rtl.toString(this.convertString(op_code.tag_name))+",");
 		}
 		var raw_item = null;
 		if (!op_code.is_plain && op_code.childs != null && op_code.childs.count() == 1){
@@ -1615,16 +1649,19 @@ class TranslatorPHP extends CommonTranslator{
 			}
 		}
 		if (is_component){
-			res += this.s("->set(\"props\", $this->getElementAttrs()");
+			res += this.s("\"props\"=>$this->getElementAttrs()");
 		}
 		else {
-			res += this.s("->set(\"props\", (new "+rtl.toString(this.getName("Map"))+"())");
+			res += this.s("\"props\"=>(new "+rtl.toString(this.getName("Map"))+"())");
 		}
+		this.levelInc();
 		if (op_code.attributes != null && op_code.attributes.count() > 0){
 			op_code.attributes.each((item) => {
+				var old_operation = this.beginOperation(true);
 				this.pushOneLine(true);
 				var value = this.translateRun(item.value);
 				this.popOneLine();
+				this.endOperation(old_operation);
 				res += this.s("->set("+rtl.toString(this.convertString(item.key))+", "+rtl.toString(value)+")");
 			});
 		}
@@ -1661,35 +1698,37 @@ class TranslatorPHP extends CommonTranslator{
 					}
 					return rtl.toString(res)+"."+rtl.toString(value);
 				}, "");
-				res += this.s("->set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
+				res += this.s("\"rawHtml\"=>"+rtl.toString(value)+",");
 			}
 		}
 		else if (raw_item != null){
 			if (raw_item instanceof OpHtmlJson){
 				var value = "rs::json_encode("+rtl.toString(this.translateRun(raw_item.value))+")";
-				res += this.s("->set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
+				res += this.s("\"rawHtml\"=>"+rtl.toString(value)+",");
 			}
 			else if (raw_item instanceof OpHtmlRaw){
 				var value = this.translateRun(raw_item.value);
-				res += this.s("->set("+rtl.toString(this.convertString("dangerouslySetInnerHTML"))+", "+rtl.toString(value)+")");
+				res += this.s("\"rawHtml\"=>"+rtl.toString(value)+",");
 			}
 		}
-		res += this.s(")");
+		this.levelDec();
+		res += this.s(",");
 		/* Childs */
 		if (raw_item == null && !op_code.is_plain){
 			if (op_code.childs != null && op_code.childs.count() > 0){
-				res += this.s("->set(\"children\", (new "+rtl.toString(this.getName("Vector"))+"())");
+				res += this.s("\"children\" => new "+rtl.toString(this.getName("Vector"))+"([");
+				this.levelInc();
 				op_code.childs.each((item) => {
 					if (item instanceof OpComment){
 						return ;
 					}
-					res += this.s("->push("+rtl.toString(this.translateRun(item))+")");
+					res += this.s(rtl.toString(this.translateRun(item))+",");
 				});
-				res += this.s(")");
+				this.levelDec();
+				res += this.s("])");
 			}
 		}
-		this.levelDec();
-		res += this.s(")");
+		res += this.s("])))");
 		this.popOneLine();
 		return res;
 	}
@@ -1697,12 +1736,13 @@ class TranslatorPHP extends CommonTranslator{
 	 * Html tag
 	 */
 	OpHtmlView(op_code){
+		var res = "new Vector([";
 		this.pushOneLine(false);
-		var res = "(new Vector())";
 		op_code.childs.each((item) => {
-			res += this.s("->push("+rtl.toString(this.translateRun(item))+")");
+			res += this.s(rtl.toString(this.translateRun(item))+",");
 		});
 		this.popOneLine();
+		res += this.s("]");
 		return res;
 	}
 	/** =========================== Preprocessor ========================== */
@@ -1750,7 +1790,7 @@ class TranslatorPHP extends CommonTranslator{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellLang.LangPHP.TranslatorPHP";}
-	static getParentClassName(){return "CommonTranslator";}
+	static getParentClassName(){return "BayrellLang.CommonTranslator";}
 	_init(){
 		super._init();
 		this.modules = null;

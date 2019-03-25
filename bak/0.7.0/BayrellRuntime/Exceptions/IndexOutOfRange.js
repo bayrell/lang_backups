@@ -28,6 +28,6 @@ class IndexOutOfRange extends RuntimeException{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.Exceptions.IndexOutOfRange";}
-	static getParentClassName(){return "RuntimeException";}
+	static getParentClassName(){return "Runtime.Exceptions.RuntimeException";}
 }
 module.exports = IndexOutOfRange;

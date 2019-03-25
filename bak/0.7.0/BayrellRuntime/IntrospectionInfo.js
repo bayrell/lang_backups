@@ -83,7 +83,7 @@ class IntrospectionInfo extends CoreStruct{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.IntrospectionInfo";}
-	static getParentClassName(){return "CoreStruct";}
+	static getParentClassName(){return "Runtime.CoreStruct";}
 	_init(){
 		super._init();
 		this.ITEM_CLASS = "class";

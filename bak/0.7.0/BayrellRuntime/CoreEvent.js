@@ -22,7 +22,7 @@ var rtl = require('./rtl.js');
 class CoreEvent extends CoreStruct{
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.CoreEvent";}
-	static getParentClassName(){return "CoreStruct";}
+	static getParentClassName(){return "Runtime.CoreStruct";}
 	_init(){
 		super._init();
 		this.__sender = null;

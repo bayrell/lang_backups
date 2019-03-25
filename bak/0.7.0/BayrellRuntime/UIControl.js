@@ -22,7 +22,7 @@ var Reference = require('./Reference.js');
 class UIControl extends CoreStruct{
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.UIControl";}
-	static getParentClassName(){return "CoreStruct";}
+	static getParentClassName(){return "Runtime.CoreStruct";}
 	_init(){
 		super._init();
 		this.__key = "";

@@ -96,6 +96,7 @@ ObjectAssign(module.exports, require("./OpCodes/OpNope.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpNot.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpNumber.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpOr.js"));
+ObjectAssign(module.exports, require("./OpCodes/OpPipe.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpPostDec.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpPostInc.js"));
 ObjectAssign(module.exports, require("./OpCodes/OpPow.js"));
@@ -201,6 +202,7 @@ module.exports = {
 		'OpNot': require("./OpCodes/OpNot.js"),
 		'OpNumber': require("./OpCodes/OpNumber.js"),
 		'OpOr': require("./OpCodes/OpOr.js"),
+		'OpPipe': require("./OpCodes/OpPipe.js"),
 		'OpPostDec': require("./OpCodes/OpPostDec.js"),
 		'OpPostInc': require("./OpCodes/OpPostInc.js"),
 		'OpPow': require("./OpCodes/OpPow.js"),

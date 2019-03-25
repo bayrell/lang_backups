@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Utils = require('bayrell-runtime-nodejs').Utils;
@@ -35,6 +37,6 @@ class AssertError extends RuntimeException{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellCommon.Exceptions.AssertError";}
-	static getParentClassName(){return "RuntimeException";}
+	static getParentClassName(){return "Runtime.Exceptions.RuntimeException";}
 }
 module.exports = AssertError;

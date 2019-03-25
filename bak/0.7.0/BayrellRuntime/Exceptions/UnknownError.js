@@ -28,6 +28,6 @@ class UnknownError extends RuntimeException{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.Exceptions.UnknownError";}
-	static getParentClassName(){return "RuntimeException";}
+	static getParentClassName(){return "Runtime.Exceptions.RuntimeException";}
 }
 module.exports = UnknownError;

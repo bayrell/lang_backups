@@ -245,7 +245,7 @@ class Context extends CoreObject{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.Context";}
-	static getParentClassName(){return "CoreObject";}
+	static getParentClassName(){return "Runtime.CoreObject";}
 	_init(){
 		super._init();
 		this._modules = null;

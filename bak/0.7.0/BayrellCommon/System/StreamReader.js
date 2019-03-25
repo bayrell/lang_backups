@@ -18,7 +18,9 @@
  */
 var rtl = require('bayrell-runtime-nodejs').rtl;
 var Map = require('bayrell-runtime-nodejs').Map;
+var Dict = require('bayrell-runtime-nodejs').Dict;
 var Vector = require('bayrell-runtime-nodejs').Vector;
+var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var CoreObject = require('bayrell-runtime-nodejs').CoreObject;
 class StreamReader extends CoreObject{
@@ -90,7 +92,7 @@ class StreamReader extends CoreObject{
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellCommon.System.StreamReader";}
-	static getParentClassName(){return "CoreObject";}
+	static getParentClassName(){return "Runtime.CoreObject";}
 	_init(){
 		super._init();
 		this.stream = null;
