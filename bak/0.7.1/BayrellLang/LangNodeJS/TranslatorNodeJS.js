@@ -121,6 +121,7 @@ class TranslatorNodeJS extends TranslatorES6{
 	 */
 	OpClassDeclareHeader(op_code){
 		var res = "";
+		this.ui_struct_class_name.push(rtl.toString(this.current_namespace)+"."+rtl.toString(this.current_class_name));
 		this.beginOperation();
 		res += "class "+rtl.toString(op_code.class_name);
 		if (op_code.class_extends != ""){
