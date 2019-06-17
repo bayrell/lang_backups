@@ -1,0 +1,16 @@
+{
+  "description": "Bayrell File System Provider",
+  "license": "Apache-2.0",
+  "contributors": [
+    {
+      "name": "Ildar Bikmamatov",
+      "email": "support@bayrell.org"
+    }
+  ],
+  "files": [
+	"*.js"
+  ],
+  "main": "index.js",
+  "name": "bayrell-file-system-nodejs",
+  "version": "0.7.2-1"
+}

@@ -1,0 +1,18 @@
+{
+  "description": "Bayrell Parser",
+  "license": "Apache-2.0",
+  "contributors": [
+    {
+      "name": "Ildar Bikmamatov",
+      "email": "support@bayrell.org"
+    }
+  ],
+  "files": [
+	"Exceptions/*.js",
+	"Interfaces/*.js",
+	"*.js"
+  ],
+  "main": "index.js",
+  "name": "bayrell-parser-nodejs",
+  "version": "0.7.2-1"
+}

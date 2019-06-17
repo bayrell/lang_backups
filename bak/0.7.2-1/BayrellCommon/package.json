@@ -1,0 +1,14 @@
+{
+  "description": "Bayrell Common Library",
+  "files": [
+    "Exceptions/*.js",
+    "FileSystem/*.js",
+    "Providers/*.js",
+    "System/*.js",
+    "Types/*.js",
+	"*.js"
+  ],
+  "main": "index.js",
+  "name": "bayrell-common-nodejs",
+  "version": "0.7.2"
+}
