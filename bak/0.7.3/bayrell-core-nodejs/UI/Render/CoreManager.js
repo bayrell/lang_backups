@@ -29,9 +29,16 @@ var Emitter = require('bayrell-runtime-nodejs').Emitter;
 var Reference = require('bayrell-runtime-nodejs').Reference;
 var RuntimeUtils = require('bayrell-runtime-nodejs').RuntimeUtils;
 var ContextInterface = require('bayrell-runtime-nodejs').Interfaces.ContextInterface;
-var ControllerAnnotation = require('../Annotations/ControllerAnnotation.js');
+var AnnotationEvent = require('../Annotations/AnnotationEvent.js');
+var BindModel = require('../Annotations/BindModel.js');
 var ModelChange = require('../Events/ModelChange.js');
 class CoreManager extends ContextObject{
+	/**
+	 * Returns parent controller name
+	 */
+	getParentControllerName(){
+		return this.ui.controller;
+	}
 	/**
 	 * Constructor
 	 */
@@ -41,7 +48,7 @@ class CoreManager extends ContextObject{
 		/* Analyze controllers annotaions */
 		var introspection = RuntimeUtils.getIntrospection(this.getClassName());
 		introspection.each((info) => {
-			var annotations = (rtl.method(info.getClassName(), "filterAnnotations"))("Core.UI.Annotations.ControllerAnnotation", info);
+			var annotations = (rtl.method(info.getClassName(), "filterAnnotations"))("", info);
 			annotations.each((annotation) => {
 				this.initAnnotation(info, annotation);
 			});
@@ -83,22 +90,40 @@ class CoreManager extends ContextObject{
 	/**
 	 * Set parent manager
 	 */
-	setParentManager(parent_manager, parent_controller_name){
-		if (this.parent_controller_name != "" && this.parent_manager != null){
-			var controller = this.parent_manager.takeValue(this.parent_controller_name, null);
-			if (controller != null){
-				controller.signal_in.removeEmitter(this.signal_in);
-				this.signal_out.removeEmitter(controller.signal_out);
+	setParentManager(parent_manager, ui){
+		/* Remove old annotations */
+		if (this.annotations_emitter != null){
+			this.signal_out.removeEmitter(this.annotations_emitter);
+			this.annotations_emitter = null;
+		}
+		this.ui = ui;
+		this.parent_manager = parent_manager;
+		/*
+		if (parent_manager != null and parent_controller_name != "")
+		{
+			UIControl parent_controller = parent_manager.takeValue(parent_controller_name, null);
+			if (parent_controller != null)
+			{
+				parent_controller.signal_in.addEmitter( this.signal_in );
+				this.signal_out.addEmitter( parent_controller.signal_out );
 			}
 		}
-		this.parent_controller_name = parent_controller_name;
-		this.parent_manager = parent_manager;
-		if (parent_manager != null && parent_controller_name != ""){
-			var parent_controller = parent_manager.takeValue(parent_controller_name, null);
-			if (parent_controller != null){
-				parent_controller.signal_in.addEmitter(this.signal_in);
-				this.signal_out.addEmitter(parent_controller.signal_out);
+		*/
+		/* Build annotations */
+		var annotations = new Vector();
+		if (ui.annotations != null){
+			annotations = ui.annotations.toVector();
+		}
+		if (ui.bind != ""){
+			annotations.push(new BindModel((new Map()).set("model", ui.bind)));
+		}
+		if (annotations != null && annotations.count() > 0){
+			this.annotations_emitter = new Emitter();
+			for (var i = 0; i < annotations.count(); i++){
+				var annotation = annotations.item(i);
+				(rtl.method(annotation.getClassName(), "addEmitter"))(this.parent_manager, this.annotations_emitter, ui, annotation);
 			}
+			this.signal_out.addEmitter(this.annotations_emitter);
 		}
 	}
 	/**
@@ -200,8 +225,9 @@ class CoreManager extends ContextObject{
 		this._model_updated_by_driver = true;
 		this.signal_in = new Emitter();
 		this.signal_out = new Emitter();
-		this.parent_controller_name = "";
+		this.annotations_emitter = null;
 		this.parent_manager = null;
+		this.ui = null;
 	}
 	static getFieldsList(names, flag){
 		if (flag==undefined)flag=0;

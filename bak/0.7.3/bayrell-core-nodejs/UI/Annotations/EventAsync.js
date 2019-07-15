@@ -24,36 +24,39 @@ var Vector = require('bayrell-runtime-nodejs').Vector;
 var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var UIStruct = require('bayrell-runtime-nodejs').UIStruct;
-var ControllerAnnotation = require('./ControllerAnnotation.js');
+var AnnotationEvent = require('./AnnotationEvent.js');
 var ChangeEvent = require('../Events/UserEvent/ChangeEvent.js');
-class EventAsync extends ControllerAnnotation{
+class EventAsync extends AnnotationEvent{
 	/**
-	 * Init controller
+	 * OnEvent
 	 */
-	static initController(controller, manager, annotation, controller_name){
-		controller.addSignalOut(this.onEvent(manager, annotation), (new Vector()).push(annotation.event));
+	events(){
+		return (new Vector()).push(this.event);
 	}
 	/**
-	 * On change
+	 * OnEvent
 	 */
-	static onEvent(manager, annotation){
-		return (event) => {
-			if (annotation.cancel){
-				event.cancel();
-			}
-			else if (annotation.preventDefault){
-				event.preventDefault();
-			}
-			event = event.copy();
-			var f = rtl.methodAwait(manager, annotation.method_name);
-			f(event);
+	static onEvent(manager, e){
+		if (e.annotation.cancel){
+			e.event.cancel();
 		}
+		else if (e.annotation.preventDefault){
+			e.event.preventDefault();
+		}
+		var f = rtl.methodAwait(manager, e.annotation.method_name);
+		f(e);
+	}
+	/**
+	 * Add Emitter
+	 */
+	static addEmitter(manager, emitter, ui, annotation){
+		emitter.addMethod(this.onEventFactory(manager, ui, annotation), (new Vector()).push(annotation.event));
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Core.UI.Annotations.EventAsync";}
 	static getCurrentNamespace(){return "Core.UI.Annotations";}
 	static getCurrentClassName(){return "Core.UI.Annotations.EventAsync";}
-	static getParentClassName(){return "Core.UI.Annotations.ControllerAnnotation";}
+	static getParentClassName(){return "Core.UI.Annotations.AnnotationEvent";}
 	_init(){
 		super._init();
 		var names = Object.getOwnPropertyNames(this);

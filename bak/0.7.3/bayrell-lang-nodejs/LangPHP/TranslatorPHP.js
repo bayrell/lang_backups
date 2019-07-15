@@ -505,7 +505,7 @@ class TranslatorPHP extends CommonTranslator{
 			var ch = "";
 			for (var i = 0; i < op_code.args.count(); i++){
 				var op = op_code.args.item(i);
-				s += ch + this.s(this.translateRun(op));
+				s += rtl.toString(ch)+rtl.toString(this.s(this.translateRun(op)));
 				ch = ", ";
 			}
 		}
@@ -965,9 +965,8 @@ class TranslatorPHP extends CommonTranslator{
 	/**
 	 * Function declare
 	 */
-	OpFunctionDeclare(op_code, end_semicolon, use_vars){
-		if (end_semicolon == undefined) end_semicolon=false;
-		if (use_vars == undefined) use_vars=null;
+	OpFunctionDeclare(op_code){
+		var use_vars = null;
 		var res = "";
 		var ch = "";
 		var s = "";
@@ -1082,10 +1081,10 @@ class TranslatorPHP extends CommonTranslator{
 				}
 			}
 			else if (op_code.return_function != null){
-				res += this.s("return "+rtl.toString(this.translateItem(op_code.return_function)));
+				res += this.s("return "+rtl.toString(this.translateItem(op_code.return_function))+";");
 			}
 			this.levelDec();
-			res += this.s("}"+rtl.toString((end_semicolon) ? (";") : ("")));
+			res += this.s("}");
 			this.popOneLine();
 		}
 		this.current_function_name.pop();
@@ -1712,7 +1711,7 @@ class TranslatorPHP extends CommonTranslator{
 	 * Returns true if key is props
 	 */
 	isOpHtmlTagProps(key){
-		if (key == "@key" || key == "@control" || key == "@model" || key == "@bind" || key == "@events"){
+		if (key == "@key" || key == "@control" || key == "@model" || key == "@ref" || key == "@bind" || key == "@annotations"){
 			return false;
 		}
 		return true;
@@ -1750,6 +1749,10 @@ class TranslatorPHP extends CommonTranslator{
 					var value = this.translateRun(item.value);
 					res += this.s("\"key\"=>"+rtl.toString(value)+",");
 				}
+				else if (key == "@ref"){
+					var value = this.translateRun(item.value);
+					res += this.s("\"reference\"=>"+rtl.toString(value)+",");
+				}
 				else if (key == "@control"){
 					var value = this.translateRun(item.value);
 					res += this.s("\"controller\"=>"+rtl.toString(value)+",");
@@ -1762,9 +1765,9 @@ class TranslatorPHP extends CommonTranslator{
 					var value = this.translateRun(item.value);
 					res += this.s("\"bind\"=> "+rtl.toString(value)+",");
 				}
-				else if (key == "@events"){
+				else if (key == "@annotations"){
 					var value = this.translateRun(item.value);
-					res += this.s("\"events\"=> "+rtl.toString(value)+",");
+					res += this.s("\"annotations\"=> "+rtl.toString(value)+",");
 				}
 			});
 		}

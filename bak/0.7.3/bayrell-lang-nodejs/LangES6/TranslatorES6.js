@@ -2394,7 +2394,7 @@ class TranslatorES6 extends CommonTranslator{
 	 * Returns true if key is props
 	 */
 	isOpHtmlTagProps(key){
-		if (key == "@key" || key == "@control" || key == "@model" || key == "@bind" || key == "@events"){
+		if (key == "@key" || key == "@control" || key == "@model" || key == "@ref" || key == "@bind" || key == "@annotations"){
 			return false;
 		}
 		return true;
@@ -2432,6 +2432,10 @@ class TranslatorES6 extends CommonTranslator{
 					var value = this.translateRun(item.value);
 					res += this.s("\"key\": "+rtl.toString(value)+",");
 				}
+				else if (key == "@ref"){
+					var value = this.translateRun(item.value);
+					res += this.s("\"reference\": "+rtl.toString(value)+",");
+				}
 				else if (key == "@control"){
 					var value = this.translateRun(item.value);
 					res += this.s("\"controller\": "+rtl.toString(value)+",");
@@ -2444,9 +2448,9 @@ class TranslatorES6 extends CommonTranslator{
 					var value = this.translateRun(item.value);
 					res += this.s("\"bind\": "+rtl.toString(value)+",");
 				}
-				else if (key == "@events"){
+				else if (key == "@annotations"){
 					var value = this.translateRun(item.value);
-					res += this.s("\"events\": "+rtl.toString(value)+",");
+					res += this.s("\"annotations\": "+rtl.toString(value)+",");
 				}
 			});
 		}

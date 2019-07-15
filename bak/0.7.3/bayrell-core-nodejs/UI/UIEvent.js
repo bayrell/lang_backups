@@ -2,7 +2,7 @@
 /*!
  *  Bayrell Core Library
  *
- *  (c) Copyright 2018-2019 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2018 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,67 +24,54 @@ var Vector = require('bayrell-runtime-nodejs').Vector;
 var Collection = require('bayrell-runtime-nodejs').Collection;
 var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;
 var UIStruct = require('bayrell-runtime-nodejs').UIStruct;
-var AnnotationEvent = require('./AnnotationEvent.js');
-var ModelChange = require('../Events/ModelChange.js');
-var ChangeEvent = require('../Events/UserEvent/ChangeEvent.js');
-class BindModel extends AnnotationEvent{
-	/**
-	 * OnEvent
-	 */
-	events(){
-		return (new Vector()).push("Core.UI.Events.ModelChange").push("Core.UI.Events.UserEvent.ChangeEvent");
-	}
-	/**
-	 * OnEvent
-	 */
-	static onEvent(manager, e){
-		if (e.event instanceof ChangeEvent){
-			var map = new Map();
-			map.set(e.annotation.model, e.event.value);
-			manager.updateModel(map);
-		}
-		if (e.event instanceof ModelChange){
-			var map = new Map();
-			map.set(e.annotation.model, e.event.model);
-			manager.updateModel(map);
-		}
-	}
-	/**
-	 * Add Emitter
-	 */
-	static addEmitter(manager, emitter, ui, annotation){
-		emitter.addMethod(this.onEventFactory(manager, ui, annotation), (new Vector()).push("Core.UI.Events.ModelChange").push("Core.UI.Events.UserEvent.ChangeEvent"));
-	}
+var CoreEvent = require('bayrell-runtime-nodejs').CoreEvent;
+var CoreStruct = require('bayrell-runtime-nodejs').CoreStruct;
+var Emitter = require('bayrell-runtime-nodejs').Emitter;
+var Reference = require('bayrell-runtime-nodejs').Reference;
+var UIStruct = require('bayrell-runtime-nodejs').UIStruct;
+var AnnotationEvent = require('./Annotations/AnnotationEvent.js');
+var CoreManager = require('./Render/CoreManager.js');
+class UIEvent extends CoreStruct{
 	/* ======================= Class Init Functions ======================= */
-	getClassName(){return "Core.UI.Annotations.BindModel";}
-	static getCurrentNamespace(){return "Core.UI.Annotations";}
-	static getCurrentClassName(){return "Core.UI.Annotations.BindModel";}
-	static getParentClassName(){return "Core.UI.Annotations.AnnotationEvent";}
+	getClassName(){return "Core.UI.UIEvent";}
+	static getCurrentNamespace(){return "Core.UI";}
+	static getCurrentClassName(){return "Core.UI.UIEvent";}
+	static getParentClassName(){return "Runtime.CoreStruct";}
 	_init(){
 		super._init();
 		var names = Object.getOwnPropertyNames(this);
-		this.__model = "";
-		if (names.indexOf("model") == -1)Object.defineProperty(this, "model", { get: function() { return this.__model; }, set: function(value) { throw new Runtime.Exceptions.AssignStructValueError("model") }});
+		this.ref = null;
+		this.annotation = null;
+		this.event = null;
+		this.ui = null;
 	}
 	assignObject(obj){
-		if (obj instanceof BindModel){
-			this.__model = obj.__model;
+		if (obj instanceof UIEvent){
 		}
 		super.assignObject(obj);
 	}
 	assignValue(variable_name, value, sender){if(sender==undefined)sender=null;
-		if (variable_name == "model")this.__model = rtl.convert(value,"string","","");
+		if (variable_name == "ref")this.ref = rtl.convert(value,"Runtime.Reference",null,"");
+		else if (variable_name == "annotation")this.annotation = rtl.convert(value,"Core.UI.Annotations.AnnotationEvent",null,"");
+		else if (variable_name == "event")this.event = rtl.convert(value,"Runtime.CoreEvent",null,"");
+		else if (variable_name == "ui")this.ui = rtl.convert(value,"Runtime.UIStruct",null,"");
 		else super.assignValue(variable_name, value, sender);
 	}
 	takeValue(variable_name, default_value){
 		if (default_value == undefined) default_value = null;
-		if (variable_name == "model") return this.__model;
+		if (variable_name == "ref") return this.ref;
+		else if (variable_name == "annotation") return this.annotation;
+		else if (variable_name == "event") return this.event;
+		else if (variable_name == "ui") return this.ui;
 		return super.takeValue(variable_name, default_value);
 	}
 	static getFieldsList(names, flag){
 		if (flag==undefined)flag=0;
-		if ((flag | 3)==3){
-			names.push("model");
+		if ((flag | 2)==2){
+			names.push("ref");
+			names.push("annotation");
+			names.push("event");
+			names.push("ui");
 		}
 	}
 	static getFieldInfoByName(field_name){
@@ -96,4 +83,4 @@ class BindModel extends AnnotationEvent{
 		return null;
 	}
 }
-module.exports = BindModel;
+module.exports = UIEvent;
