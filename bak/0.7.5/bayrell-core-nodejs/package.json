@@ -1,0 +1,28 @@
+{
+  "description": "Bayrell Core Library",
+  "license": "Apache-2.0",
+  "contributors": [
+    {
+      "name": "Ildar Bikmamatov",
+      "email": "support@bayrell.org"
+    }
+  ],
+  "files": [
+    "FileSystem/*.js",
+    "FileSystem/Provider/*.js",
+    "Http/*.js",
+    "Interfaces/*.js",
+    "UI/*.js",
+    "UI/Animations/*.js",
+    "UI/Annotations/*.js",
+    "UI/Events/*.js",
+    "UI/Events/KeyboardEvent/*.js",
+    "UI/Events/MouseEvent/*.js",
+    "UI/Events/UserEvent/*.js",
+    "UI/Render/*.js",
+    "*.js"
+  ],
+  "main": "index.js",
+  "name": "bayrell-core-nodejs",
+  "version": "0.7.3"
+}

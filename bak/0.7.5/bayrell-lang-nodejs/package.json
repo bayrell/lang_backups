@@ -1,0 +1,58 @@
+{
+  "_args": [
+    [
+      "bayrell-lang-nodejs-0.7.5.tgz",
+      "/root/faydel_app"
+    ]
+  ],
+  "_from": "bayrell-lang-nodejs-0.7.5.tgz",
+  "_id": "bayrell-lang-nodejs@0.7.5",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/bayrell-lang-nodejs",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": null,
+    "raw": "bayrell-lang-nodejs-0.7.5.tgz",
+    "rawSpec": "bayrell-lang-nodejs-0.7.5.tgz",
+    "scope": null,
+    "spec": "/root/faydel_app/bayrell-lang-nodejs-0.7.5.tgz",
+    "type": "local"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "file:bayrell-lang-nodejs-0.7.5.tgz",
+  "_shasum": "78c13a0de182627b57b693cd73286c30d95891e5",
+  "_shrinkwrap": null,
+  "_spec": "bayrell-lang-nodejs-0.7.5.tgz",
+  "_where": "/root/faydel_app",
+  "contributors": [
+    {
+      "name": "Ildar Bikmamatov",
+      "email": "support@bayrell.org"
+    }
+  ],
+  "dependencies": {},
+  "description": "Bayrell Lang",
+  "devDependencies": {},
+  "files": [
+    "*.js",
+    "Exceptions/*.js",
+    "LangBay/*.js",
+    "LangES6/*.js",
+    "LangNodeJS/*.js",
+    "LangPHP/*.js",
+    "OpCodes/*.js",
+    "Parser/*.js",
+    "Parser/Exceptions/*.js",
+    "Parser/Interfaces/*.js",
+    "Search/*.js"
+  ],
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "name": "bayrell-lang-nodejs",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "version": "0.7.5"
+}
