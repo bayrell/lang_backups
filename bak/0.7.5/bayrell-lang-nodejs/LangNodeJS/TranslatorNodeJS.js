@@ -63,7 +63,7 @@ class TranslatorNodeJS extends TranslatorES6{
 			this.modules.set("Collection", "Runtime.Collection");
 			this.modules.set("IntrospectionInfo", "Runtime.IntrospectionInfo");
 			this.modules.set("UIStruct", "Runtime.UIStruct");
-			return "var rtl = require('bayrell-runtime-nodejs').rtl;"+rtl.toString(this.s("var rs = require('bayrell-runtime-nodejs').rs;"))+rtl.toString(this.s("var Map = require('bayrell-runtime-nodejs').Map;"))+rtl.toString(this.s("var Dict = require('bayrell-runtime-nodejs').Dict;"))+rtl.toString(this.s("var Vector = require('bayrell-runtime-nodejs').Vector;"))+rtl.toString(this.s("var Collection = require('bayrell-runtime-nodejs').Collection;"))+rtl.toString(this.s("var IntrospectionInfo = require('bayrell-runtime-nodejs').IntrospectionInfo;"))+rtl.toString(this.s("var UIStruct = require('bayrell-runtime-nodejs').UIStruct;"));
+			return "var rtl = use.require('bayrell-runtime-nodejs').rtl;"+rtl.toString(this.s("var rs = use.require('bayrell-runtime-nodejs').rs;"))+rtl.toString(this.s("var Map = use.require('bayrell-runtime-nodejs').Map;"))+rtl.toString(this.s("var Dict = use.require('bayrell-runtime-nodejs').Dict;"))+rtl.toString(this.s("var Vector = use.require('bayrell-runtime-nodejs').Vector;"))+rtl.toString(this.s("var Collection = use.require('bayrell-runtime-nodejs').Collection;"))+rtl.toString(this.s("var IntrospectionInfo = use.require('bayrell-runtime-nodejs').IntrospectionInfo;"))+rtl.toString(this.s("var UIStruct = use.require('bayrell-runtime-nodejs').UIStruct;"));
 		}
 		return "";
 	}
@@ -123,7 +123,7 @@ class TranslatorNodeJS extends TranslatorES6{
 				module_name = "BayrellCore";
 			}
 			module_name = rtl.convertNodeJSModuleName(module_name);
-			res = "var "+rtl.toString(class_name)+" = require('"+rtl.toString(module_name)+"')."+rtl.toString(module_path)+";";
+			res = "var "+rtl.toString(class_name)+" = use.require('"+rtl.toString(module_name)+"')."+rtl.toString(module_path)+";";
 		}
 		return res;
 	}
@@ -230,6 +230,18 @@ class TranslatorNodeJS extends TranslatorES6{
 			}
 		}
 		return false;
+	}
+	/**
+	 * Translate to language
+	 * @param BaseOpCode op_code - Abstract syntax tree
+	 * @returns string - The result
+	 */
+	translateOpCode(op_code){
+		this.resetTranslator();
+		var s = "\"use strict;\""+rtl.toString(this.crlf)+
+			"var use = require('bayrell').use;"+rtl.toString(this.crlf);
+		s += this.translateRun(op_code);
+		return s;
 	}
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "BayrellLang.LangNodeJS.TranslatorNodeJS";}

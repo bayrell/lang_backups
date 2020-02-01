@@ -1,18 +1,75 @@
 {
-  "description": "Bayrell Runtime Library",
-  "license": "Apache-2.0",
+  "_args": [
+    [
+      "bayrell-runtime-nodejs",
+      "/root/faydel_app"
+    ]
+  ],
+  "_from": "bayrell-runtime-nodejs@latest",
+  "_hasShrinkwrap": false,
+  "_id": "bayrell-runtime-nodejs@0.7.3",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/bayrell-runtime-nodejs",
+  "_nodeVersion": "8.11.4",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/bayrell-runtime-nodejs_0.7.3_1560841456421_0.20883110277930483"
+  },
+  "_npmUser": {
+    "email": "npm@bayrell.org",
+    "name": "bayrell"
+  },
+  "_npmVersion": "6.4.1",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "bayrell-runtime-nodejs",
+    "raw": "bayrell-runtime-nodejs",
+    "rawSpec": "",
+    "scope": null,
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/bayrell-runtime-nodejs/-/bayrell-runtime-nodejs-0.7.3.tgz",
+  "_shasum": "d2c6117d0603948e699c615c75a878a7d2c2d570",
+  "_shrinkwrap": null,
+  "_spec": "bayrell-runtime-nodejs",
+  "_where": "/root/faydel_app",
   "contributors": [
     {
       "name": "Ildar Bikmamatov",
       "email": "support@bayrell.org"
     }
   ],
-  "files": [
-    "Exceptions/*.js",
-    "Interfaces/*.js",
-    "*.js"
-  ],
+  "dependencies": {},
+  "description": "Bayrell Runtime Library",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "fileCount": 42,
+    "integrity": "sha512-zKH75Autp4EcUtZcrrGipK7W68w+qQ3+8Zlmh1BX7jFfAy0rswQzkVeD/hLb7f1L/YHOr6x/+4rNDQmoMGe6vg==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJdCIzxCRA9TVsSAnZWagAAFagP/16n02q7tHitUJ7kLjNG\nYXs0FMTVqeOhhsfepYVkPoV/NHTQjiyO6E18hqKd4uAfuI+3ORMfeBFCGHJH\nd244B+7evn0zOqNGzEiPj1QnDgC9lGwi6i+GMX4CMkvmQPlV+nfT8Nr7s6d0\nIYvLt2N6pD3u7BM55KTj5PRgRh41tFaNleE+TLIHBVuqxarnxtjYaYb3BWcQ\nGIiQFBl8+nMMCPo6EkeyBEZS382tBTVtl73aeEq/MPsNnI4qEq9asF1VmSdM\neHb1myVj0p8cUoyJ5RNPBGfQlgstcrAlkAdMl7nrWilIxQag+8nQoiiRRhiy\nwock14nzoIvJqCh/1Nsc7AUO3dgdPF9wyfz9323fiUCAkde7/rAs2GA0ln+a\nerNQ2vLJ3eY73+KgESyieACYWhwf1ys/a1Gk8y+3mP/e7Uxjkhcr60yLKPN8\n1B0+F6zh8RcsgTpPKWXD8CGojzisxlSq0E0eDUGUvn9PF2tSr5t6gGy27nB5\n0ejBWkXpLr/ER68WPr8m0zXJAWLjQl/u7iVRiUK6aKpdek2Rv/QXUYWvzOlz\nxUwAaQrcixn1JhZxdZL81CwqTxczWM9mDSYvOaZocUr8ju0L+80zQjDRZs49\n8EGoynu9Gf8ej3bOCTC3XrrvCHpNE6VgV2wsiq4glnBdEip+NY5z7tbLEZln\n+dHu\r\n=ox98\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "d2c6117d0603948e699c615c75a878a7d2c2d570",
+    "tarball": "https://registry.npmjs.org/bayrell-runtime-nodejs/-/bayrell-runtime-nodejs-0.7.3.tgz",
+    "unpackedSize": 185035
+  },
+  "license": "Apache-2.0",
   "main": "index.js",
+  "maintainers": [
+    {
+      "name": "bayrell",
+      "email": "npm@bayrell.org"
+    },
+    {
+      "name": "vistoyn",
+      "email": "vistoyn@gmail.com"
+    }
+  ],
   "name": "bayrell-runtime-nodejs",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
   "version": "0.7.3"
 }

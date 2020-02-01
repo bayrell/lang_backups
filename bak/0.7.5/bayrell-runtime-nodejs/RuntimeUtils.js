@@ -671,6 +671,17 @@ class RuntimeUtils{
 		}
 		return null;
 	}
+	
+	/**
+	 * Equal two struct by key
+	 */
+	static equalItemKey(key){
+		return (item1, value) => {
+			return item1.takeValue(key) == value;
+		}
+	}
+	
+	
 	/* ======================= Class Init Functions ======================= */
 	getClassName(){return "Runtime.RuntimeUtils";}
 	static getCurrentNamespace(){return "Runtime";}

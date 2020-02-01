@@ -1953,7 +1953,7 @@ class ParserBay extends CommonParser{
 		if (op_code && op_code instanceof OpFunctionDeclare){
 			op_code.annotations = this.annotations;
 			op_code.flags = flags;
-			if (op_code.isFlag("lambda")){
+			if (op_code.isFlag("lambda") || op_code.isFlag("pure")){
 				flags.assignValue("static", true);
 			}
 			res.childs.push(op_code);

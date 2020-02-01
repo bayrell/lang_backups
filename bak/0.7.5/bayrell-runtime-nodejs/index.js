@@ -64,6 +64,7 @@ module.exports = {
 	'Map': require("./Map.js"),
 	'Maybe': require("./Maybe.js"),
 	'ModuleDescription': require("./ModuleDescription.js"),
+	'lib': require("./lib.js"),
 	're': require("./re.js"),
 	'Reference': require("./Reference.js"),
 	'rs': require("./rs.js"),
@@ -73,4 +74,5 @@ module.exports = {
 	'UIStruct': require("./UIStruct.js"),
 	'Vector': require("./Vector.js"),
 };
+
 }

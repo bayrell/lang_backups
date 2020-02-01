@@ -1347,7 +1347,7 @@ class TranslatorES6 extends CommonTranslator{
 			if (!this.isAsync()){
 				this.levelDec();
 			}
-			is_else = "else";
+			is_else = "else ";
 		}
 		if (try_catch_childs_sz > 0){
 			if (this.isAsync()){
@@ -1713,7 +1713,7 @@ class TranslatorES6 extends CommonTranslator{
 				continue;
 			}
 			this.pushOneLine(true);
-			s = "if ("+rtl.toString(variable.name)+" == undefined) "+rtl.toString(variable.name)+"="+rtl.toString(this.translateRun(variable.value))+";";
+			s = "if (typeof "+rtl.toString(variable.name)+" == 'undefined') "+rtl.toString(variable.name)+"="+rtl.toString(this.translateRun(variable.value))+";";
 			this.popOneLine();
 			res += this.s(s);
 		}
@@ -1827,6 +1827,8 @@ class TranslatorES6 extends CommonTranslator{
 				res += this.s(rtl.toString(name)+".__static_implements__.push("+rtl.toString(this.getName(value))+")");
 			}
 		}
+		res += this.s("window['class."+rtl.toString(this.currentClassName())+"'] = "+
+			rtl.toString(this.currentClassName())+";");
 		return res;
 	}
 	/**
@@ -1939,6 +1941,11 @@ class TranslatorES6 extends CommonTranslator{
 			res += this.s("static getCurrentNamespace(){"+"return "+rtl.toString(this.convertString(this.current_namespace))+";}");
 			res += this.s("static getCurrentClassName(){"+"return "+rtl.toString(this.convertString(rtl.toString(this.current_namespace)+"."+rtl.toString(this.current_class_name)))+";}");
 			res += this.s("static getParentClassName(){"+"return "+rtl.toString(this.convertString(class_extends))+";}");
+		}
+		else
+		{
+			res += this.s("static getCurrentNamespace(){"+"return "+rtl.toString(this.convertString(this.current_namespace))+";}");
+			res += this.s("static getCurrentClassName(){"+"return "+rtl.toString(this.convertString(rtl.toString(this.current_namespace)+"."+rtl.toString(this.current_class_name)))+";}");
 		}
 		if (this.current_module_name != "Runtime" || this.current_class_name != "CoreObject"){
 			if (has_variables || has_implements){
