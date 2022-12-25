@@ -1,0 +1,44 @@
+{
+  "_from": "bayrell@^0.10.0",
+  "_id": "bayrell@0.10.0",
+  "_inBundle": false,
+  "_integrity": "sha512-c4R0PDzqItS/MWqFyIk5JGIMzBhcJl+qqcPRj0fXhaSTgGNdZIHAHJpzwxPgWmnoXoP4OYugQkgBqm3pVTJzKw==",
+  "_location": "/bayrell",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "bayrell@^0.10.0",
+    "name": "bayrell",
+    "escapedName": "bayrell",
+    "rawSpec": "^0.10.0",
+    "saveSpec": null,
+    "fetchSpec": "^0.10.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/bayrell/-/bayrell-0.10.0.tgz",
+  "_shasum": "547524018f43b255a9fef66f5bc2a6686d7d9f98",
+  "_spec": "bayrell@^0.10.0",
+  "_where": "/www/bay.example/bayrell-web-lang/compiler",
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "Ildar Bikmamatov",
+      "email": "support@bayrell.org"
+    }
+  ],
+  "dependencies": {
+    "path": "^0.12.7"
+  },
+  "deprecated": false,
+  "description": "Bayrell Runtime Library",
+  "files": [
+    "*.js"
+  ],
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "name": "bayrell",
+  "version": "0.10.0"
+}
